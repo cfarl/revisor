@@ -1,0 +1,153 @@
+﻿Emma seee juntou ao grupo.
+Emma deixou o grupo.
+O esquadrão de Blocter se juntou ao grupo.
+O esquadrão de Blocter deixou o grupo.
+O esquadrão de Pagus se juntou ao grupo.
+O esquadrão de Pagus deixou o grupo.
+Os esquadrões de Torgal e Emma se juntaram ao grupo.
+Os esquadrões de Torgal e Emma deixaram o grupo.
+Os esquadrões de David e Torgal se juntaram ao grupo.
+Os esquadrões de David e Torgal deixaram o grupo.
+David e os Quatro Generais se juntaram ao grupo.
+David deixou o grupo.
+David se juntou ao grupo.
+O grupo foi dissolvido.
+O grupo foi reunido.
+David, Torgal e Blocter deixaram o grupo.
+David, Torgal e Blocter se juntaram ao grupo.
+Emmy se juntou ao grupo.
+Irina se juntou ao grupo.
+Irina deixou o grupo.
+Missão concluída!
+Você não conseguiu cumprir os objetivos da batalha...
+A batalha durou muito tempo e a vontade\r\nde lutar se foi...
+Missão\n: Derrote os traficantes de escravos!
+Missão\n: Derrote os ativistas anti-remanescentes!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Ídolo Ardente!
+Missão\n: Derrote Namul Sin e Niram Sin!
+Missão\n: Derrote a força principal do exército do Conquistador!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Portal do Inferno!
+Missão\n: Derrote Jager e o Lob Omen!
+Missão\n: Derrote o esquadrão de comando e ataque sua base!
+Missão\n: Derrote Snievan!
+Missão\n: Derrote o esquadrão de comando e ataque sua base!
+Missão\n: Derrote Zuido!
+Missão\n: Derrote o esquadrão de comando e ataque sua base!
+Missão\n: Derrote Ludope!
+Missão\n: Derrote o esquadrão de comando e ataque sua base!
+Missão\n: Derrote Hannah e Hinnah!
+Missão\n: Derrote o esquadrão de comando e ataque sua base!
+Missão\n: Derrote Young!
+Missão\n: Derrote o esquadrão de comando e ataque sua base!
+Missão\n: Derrote Milton!
+Missão\n: Derrote o Ciclope!
+Missão\n: Derrote a Ala Melvilana!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote a força principal das tropas de elite!
+Missão\n: Derrote o Ídolo Glacial!
+Missão\n: Derrote o Conquistador!
+Missão\n: Derrote o Conquistador!
+Missão\n: Derrote o Conquistador!
+Missão\n: Derrote o Conquistador!
+Missão\n: Derrote o Conquistador!
+Missão\n: Derrote o Conquistador!
+Missão\n: Derrote o Conquistador!
+Missão\n: Derrote o Conquistador!
+Missão\n: Derrote o líder dos bandidos!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote as forças do Terceiro Comitê!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o assassino!
+Missão\n: Derrote Vespalia!
+Missão\n: Derrote a Rainha Absoluta!
+Missão\n: Derrote o Mantroskylo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o vidente!
+Missão\n: Derrote o Soberano das Artes Místicas!
+Missão\n: Derrote Soberano das Armas!
+Missão\n: Derrote o Escudeiro Soberano!
+Missão\n: Derrote o Devorador de Almas!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Dragão Selvagem!
+Missão\n: Derrote o Leão Feroz!
+Missão\n: Derrote o Assassino de Heróis!
+Missão\n: Derrote o Dragão Ancestral!
+Missão\n: Derrote Validus!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Mantroskylo!
+Missão\n: Derrote Nordis do Terceiro Comitê!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Mantroskylo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Guerreiro Yerva!
+Missão\n: Derrote Namul Sin e Niram Sin!
+Missão\n: Derrote os traficantes de escravos!
+Missão\n: Derrote os monstros!
+Missão\n: Derrote os monstros!
+Missão\n: Derrote os monstros!
+Missão\n: Derrote todos os monstros!
+Missão\n: Derrote a rainha!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Ídolo Carregado!
+Missão\n: Derrote o Condenado!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Lob Omen!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o Dragão Celestial!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Missão\n: Derrote o inimigo!
+Extra Missão\n: Derrote o Dragão Eldritch!
+Extra Missão\n: Derrote os Monarcas dos Jhana!
+Extra Missão\n: Derrote o Portal Flamejante!
+Extra Missão\n: Derrote o modelo padrão do Ciclope!
+Extra Missão\n: Destrua todos os Ídolos!
+Extra Missão\n: Derrote o Remanescente Esquecido!
+Extra Missão\n: Derrote os Sete Iluminados
+Extra Missão\n: Derrote o Conquistador Iluminado
+1.23457E+25
+Parameters dummy text
+param_name\naumentou!
+Aprendeu\nparam_name
+Aprendeu\nparam_name
+Aprendeu\nparam_name
+Aprendeu\nparam_name
+Artes aprimoradas! Aprendeu\nparam_name
+Artes místicas aprimoradas! Aprendeu\nparam_name
+Itens aprimorados! Aprendeu\nparam_name
+param_name\nsubiu de nível!
+Aprendeu\nnovas artes de combate
+Aprendeu\nartes com itens
+param_name\nficou mais forte!
+Classe alterada para\nparam_name

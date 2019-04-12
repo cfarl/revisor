@@ -1,0 +1,25 @@
+unit UFormTraducao;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type
+  TFormTraducao = class(TForm)
+    MemoTraducaoConsultada: TMemo;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FormTraducao: TFormTraducao;
+
+implementation
+
+{$R *.dfm}
+
+end.
