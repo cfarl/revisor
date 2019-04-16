@@ -2,7 +2,7 @@ Ferramenta de Apoio para Tradução e Revisão de Textos
 
 <a href="https://ibb.co/St8XwGG"><img src="https://i.ibb.co/Mc4DkQQ/tool.jpg" alt="tool" border="0"></a>
 
-Última versão: <a href="https://github.com/cfarl/revisor/blob/master/distribuicao/ProjetoRevisor_2019_04_12_v3.zip">Download</a>
+Última versão: 1.2019.04.16 <a href="https://github.com/cfarl/revisor/blob/master/distribuicao/ProjetoRevisor_2019_04_16.zip">Download</a>
 
 Funcionalidades básicas: 
 
@@ -28,7 +28,7 @@ Você pode passar para a próxima linha da grid clicando nela ou, usando crtl + 
 
 5) Recursos de tradução
 
-Selecione um texto no editor de tradução ou no editor contendo a frase em inglês e pressione a tecla ctrl + G. Será exibida uma janela com a tradução da seleção no Google Translator, Reverso Context, Urban Dictionary e Imagens do Google.
+Selecione um texto no editor de tradução ou no editor contendo a frase em inglês e pressione a tecla ctrl + G. Será exibida uma janela com a tradução da seleção no Google Translator, Reverso Context, Urban Dictionary, Bing e Imagens do Google.
 
 6) Recursos adicionais
 
@@ -44,6 +44,8 @@ user=<usuário do servidor proxy>
 password=<senha do usuário do servidor proxy>
 
 8) Recursos para o futuro
+
+Adição de pesquisa por palavras.
 
 Adição de glossário para análise da tradução de seus termos nas frases da grid.
 

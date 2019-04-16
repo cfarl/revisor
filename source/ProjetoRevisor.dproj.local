@@ -2,15 +2,15 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2019/03/20 16:04:10.000.164,=C:\Documents and Settings\Cbuilder\Meus documentos\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>2019/03/20 16:13:52.000.282,C:\Documents and Settings\Cbuilder\Desktop\Projeto_Revisor\URevisor.dfm=C:\Documents and Settings\Cbuilder\Meus documentos\Embarcadero\Studio\Projects\Unit2.dfm</Transaction>
-    <Transaction>2019/03/20 16:13:52.000.282,C:\Documents and Settings\Cbuilder\Desktop\Projeto_Revisor\URevisor.pas=C:\Documents and Settings\Cbuilder\Meus documentos\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>2019/03/20 17:03:44.000.872,C:\Documents and Settings\Cbuilder\Desktop\Projeto_Revisor\ProjetoRevisor.dproj=C:\Documents and Settings\Cbuilder\Meus documentos\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>2019/03/20 16:13:52.000.282,C:\Documents and Settings\Cbuilder\Meus documentos\Embarcadero\Studio\Projects\Unit2.dfm=C:\Documents and Settings\Cbuilder\Desktop\Projeto_Revisor\URevisor.dfm</Transaction>
+    <Transaction>2019/03/20 16:13:52.000.282,C:\Documents and Settings\Cbuilder\Meus documentos\Embarcadero\Studio\Projects\Unit2.pas=C:\Documents and Settings\Cbuilder\Desktop\Projeto_Revisor\URevisor.pas</Transaction>
+    <Transaction>2019/03/20 17:03:44.000.872,C:\Documents and Settings\Cbuilder\Meus documentos\Embarcadero\Studio\Projects\Project2.dproj=C:\Documents and Settings\Cbuilder\Desktop\Projeto_Revisor\ProjetoRevisor.dproj</Transaction>
     <Transaction>2019/04/11 18:35:13.000.119,=F:\Projeto_Revisor\Unit1.pas</Transaction>
-    <Transaction>2019/04/11 18:37:21.000.499,F:\Projeto_Revisor\UFormTraducao.pas=F:\Projeto_Revisor\Unit1.pas</Transaction>
-    <Transaction>2019/04/11 18:37:21.000.499,F:\Projeto_Revisor\UFormTraducao.dfm=F:\Projeto_Revisor\Unit1.dfm</Transaction>
+    <Transaction>2019/04/11 18:37:21.000.499,F:\Projeto_Revisor\Unit1.dfm=F:\Projeto_Revisor\UFormTraducao.dfm</Transaction>
+    <Transaction>2019/04/11 18:37:21.000.499,F:\Projeto_Revisor\Unit1.pas=F:\Projeto_Revisor\UFormTraducao.pas</Transaction>
     <Transaction>2019/04/12 16:14:09.000.918,=F:\Projeto_Revisor\Unit1.pas</Transaction>
-    <Transaction>2019/04/12 16:20:22.000.416,F:\Projeto_Revisor\USobre.pas=F:\Projeto_Revisor\Unit1.pas</Transaction>
-    <Transaction>2019/04/12 16:20:22.000.416,F:\Projeto_Revisor\USobre.dfm=F:\Projeto_Revisor\Unit1.dfm</Transaction>
+    <Transaction>2019/04/12 16:20:22.000.416,F:\Projeto_Revisor\Unit1.dfm=F:\Projeto_Revisor\USobre.dfm</Transaction>
+    <Transaction>2019/04/12 16:20:22.000.416,F:\Projeto_Revisor\Unit1.pas=F:\Projeto_Revisor\USobre.pas</Transaction>
     <Transaction>2019/04/12 16:36:07.000.230,=F:\Projeto_Revisor\Unit1.pas</Transaction>
     <Transaction>2019/04/12 16:52:20.000.960,F:\Projeto_Revisor\UFormTraducao.pas=</Transaction>
   </Transactions>

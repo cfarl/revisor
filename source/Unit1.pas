@@ -14,6 +14,7 @@ uses
    Vcl.Dialogs,
    Vcl.StdCtrls,
    REST.Client,
+   REST.Types,
    HTTPApp,
    Data.Bind.Components,
    Data.Bind.ObjectScope,
@@ -23,14 +24,11 @@ uses
    IPPeerClient;
 
 type
-   TService = (Google_Translate = 0, Reverso = 1, UrbanDictionary = 2, Google_Images = 3);
+   TService = (Google_Translate = 0, Reverso = 1, UrbanDictionary = 2, Bing_Translate = 3);
 
 type
    TForm1 = class(TForm)
     edTextoTraduzir: TEdit;
-      RESTClient1: TRESTClient;
-      RESTRequest1: TRESTRequest;
-      RESTResponse1: TRESTResponse;
       PageControl1: TPageControl;
       TabSheet1: TTabSheet;
       TabSheet2: TTabSheet;
@@ -40,6 +38,11 @@ type
       WebBrowser2: TWebBrowser;
       TabSheet4: TTabSheet;
       WebBrowser3: TWebBrowser;
+    TabSheet5: TTabSheet;
+    Memo2: TMemo;
+    RESTClient1: TRESTClient;
+    RESTRequest1: TRESTRequest;
+    RESTResponse1: TRESTResponse;
       procedure RESTRequest1AfterExecute(Sender: TCustomRESTRequest);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
@@ -77,23 +80,26 @@ begin
       Form1.RestClient1.ProxyPassword := password ;
     End;
   finally
-    SL.Free;
+//    SL.Free;
   end;
 end;
 
 procedure TForm1.PageControl1Change(Sender: TObject);
 begin
  if(PageControl1.ActivePage = TabSheet1) then Begin
-   RESTClient1.BaseURL := 'http://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=pt-BR&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=gt&q='
-      + HTTPEncode(edTextoTraduzir.Text);
+   RESTClient1.BaseURL := 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=pt-BR&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=gt&q=' +
+      edTextoTraduzir.Text;
    Serviço := Google_Translate;
    RESTRequest1.Execute;
    exit ;
  End;
 
   if(PageControl1.ActivePage = TabSheet2) then Begin
-   RESTClient1.BaseURL := 'http://context.reverso.net/traducao/ingles-portugues/' + HTTPEncode(edTextoTraduzir.Text);
+   RESTClient1.BaseURL := 'https://context.reverso.net/traducao/ingles-portugues/' + HTTPEncode(edTextoTraduzir.Text);
    Serviço := Reverso;
+   RESTRequest1.Params.Clear;
+   RESTRequest1.ClearBody;
+   RESTRequest1.Method := rmGET;
    RESTRequest1.Execute;
    exit ;
  End;
@@ -101,14 +107,48 @@ begin
   if(PageControl1.ActivePage = TabSheet3) then Begin
    RESTClient1.BaseURL := 'https://www.urbandictionary.com/define.php?term=' + HTTPEncode(edTextoTraduzir.Text);
    Serviço := UrbanDictionary;
+   RESTRequest1.Params.Clear;
+   RESTRequest1.ClearBody;
+   RESTRequest1.Method := rmGET;
    RESTRequest1.Execute;
    exit ;
  End;
 
   if(PageControl1.ActivePage = TabSheet4) then Begin
-   WebBrowser3.Navigate('http://www.google.com/search?q=' + HTTPEncode(edTextoTraduzir.Text) + '&safe=off&tbm=isch');
+   WebBrowser3.Navigate('https://www.google.com/search?q=' + HTTPEncode(edTextoTraduzir.Text) + '&safe=off&tbm=isch');
    PageControl1.TabIndex := 3;
    exit ;
+ End;
+
+ if(PageControl1.ActivePage = TabSheet5) then Begin
+   RESTClient1.BaseURL := 'https://www.bing.com/ttranslate';
+   Serviço := Bing_Translate;
+   RESTRequest1.Params.Clear;
+   RESTRequest1.ClearBody;
+   RESTRequest1.Method := rmPOST;
+
+   with RESTRequest1.Params.AddItem do
+   begin
+      name := 'text';
+      Value := edTextoTraduzir.Text;
+      Kind := pkGETorPOST;
+   end;
+
+   with RESTRequest1.Params.AddItem do
+   begin
+      name := 'from';
+      Value := 'en';
+      Kind := pkGETorPOST;
+   end;
+
+   with RESTRequest1.Params.AddItem do
+   begin
+      name := 'to';
+      Value := 'pt';
+      Kind := pkGETorPOST;
+   end;
+
+   RESTRequest1.Execute;
  End;
 
 
@@ -217,6 +257,7 @@ begin
             try
                Source.Text := RESTResponse1.Content;
             finally
+               //Source.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Urban.html');
             end;
 
             PageControl1.TabIndex := 2;
@@ -234,7 +275,7 @@ begin
                   repeat
                      Inc(I);
                      Line := Line + Trim(Source.Strings[I]);
-                  until (Pos('<div class="panel trending-words-panel"', Source.Strings[I]) > 0);
+                  until (Pos('id="columnist">', Source.Strings[I]) > 0);
 
                   HTML.Add('<div class="def-panel">');
                   HTML.Add('<div class="row">');
@@ -282,10 +323,11 @@ begin
 
          end;
 
-      (* Google_Images:
-        begin
-
-        end; *)
+      Bing_Translate:
+         begin
+            Memo2.Text := RESTResponse1.Content;
+            PageControl1.TabIndex := 4;
+         end;
    end;
 end;
 

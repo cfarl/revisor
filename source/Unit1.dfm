@@ -50,10 +50,6 @@ object Form1: TForm1
     object TabSheet2: TTabSheet
       Caption = 'Reverso'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object WebBrowser1: TWebBrowser
         Left = 0
         Top = 0
@@ -76,10 +72,6 @@ object Form1: TForm1
     object TabSheet3: TTabSheet
       Caption = 'UrbanDictionary'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object WebBrowser2: TWebBrowser
         Left = 0
         Top = 0
@@ -102,10 +94,6 @@ object Form1: TForm1
     object TabSheet4: TTabSheet
       Caption = 'Google Imagens'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object WebBrowser3: TWebBrowser
         Left = 0
         Top = 0
@@ -125,16 +113,25 @@ object Form1: TForm1
           00000000000000000100000000000000000000000000000000000000}
       end
     end
+    object TabSheet5: TTabSheet
+      Caption = 'Bing'
+      ImageIndex = 4
+      object Memo2: TMemo
+        Left = 0
+        Top = 0
+        Width = 731
+        Height = 462
+        Align = alClient
+        ScrollBars = ssVertical
+        TabOrder = 0
+      end
+    end
   end
   object RESTClient1: TRESTClient
     Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
     AcceptCharset = 'UTF-8, *;q=0.8'
     Params = <>
     HandleRedirects = True
-    ProxyPassword = 'portal703a'
-    ProxyPort = 80
-    ProxyServer = 'proxy-internet.redecamara.camara.gov.br'
-    ProxyUsername = 'P_6984'
     Left = 246
     Top = 108
   end

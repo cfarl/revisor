@@ -37,7 +37,6 @@ object frRevisor: TfrRevisor
     Height = 545
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 980
     object Splitter1: TSplitter
       Left = 1
       Top = 393
@@ -74,7 +73,6 @@ object frRevisor: TfrRevisor
       Align = alTop
       Alignment = taLeftJustify
       TabOrder = 0
-      ExplicitWidth = 978
       object MemoIngles: TRichEdit
         Left = 89
         Top = 1
@@ -94,7 +92,6 @@ object frRevisor: TfrRevisor
         Zoom = 100
         OnChange = MemoInglesChange
         OnKeyDown = MemoInglesKeyDown
-        ExplicitWidth = 888
       end
       object Panel4: TPanel
         Left = 1
@@ -142,7 +139,6 @@ object frRevisor: TfrRevisor
       Align = alClient
       Alignment = taLeftJustify
       TabOrder = 1
-      ExplicitWidth = 978
       object Panel5: TPanel
         Left = 1
         Top = 1
@@ -184,7 +180,6 @@ object frRevisor: TfrRevisor
         TabOrder = 1
         Zoom = 100
         OnChange = MemoEspanholChange
-        ExplicitWidth = 888
       end
     end
     object pnTraduzido: TPanel
@@ -194,7 +189,6 @@ object frRevisor: TfrRevisor
       Height = 264
       Align = alTop
       TabOrder = 2
-      ExplicitWidth = 978
       object Panel6: TPanel
         Left = 1
         Top = 1
@@ -307,7 +301,6 @@ object frRevisor: TfrRevisor
         OnKeyPress = MemoTraduzidoKeyPress
         OnKeyUp = MemoTraduzidoKeyUp
         OnSelectionChange = MemoTraduzidoSelectionChange
-        ExplicitWidth = 791
       end
       object pnRepetido: TPanel
         Left = 89
@@ -590,7 +583,6 @@ object frRevisor: TfrRevisor
     Height = 400
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 980
     object Panel3: TPanel
       Left = 1
       Top = 1
@@ -599,7 +591,6 @@ object frRevisor: TfrRevisor
       Align = alTop
       Anchors = [akTop, akRight]
       TabOrder = 0
-      ExplicitWidth = 978
       object pnBotoesCarregar: TPanel
         Left = 1
         Top = 243
@@ -607,7 +598,6 @@ object frRevisor: TfrRevisor
         Height = 60
         Align = alBottom
         TabOrder = 0
-        ExplicitWidth = 976
         object btCarregar: TButton
           Left = 571
           Top = 16
@@ -789,7 +779,6 @@ object frRevisor: TfrRevisor
         Height = 242
         Align = alClient
         TabOrder = 1
-        ExplicitWidth = 976
         object pnAbrirArquivosInglesTraduzidoEspanhol: TPanel
           Left = 1
           Top = 121
@@ -797,7 +786,6 @@ object frRevisor: TfrRevisor
           Height = 120
           Align = alTop
           TabOrder = 0
-          ExplicitWidth = 974
           DesignSize = (
             1023
             120)
@@ -834,7 +822,6 @@ object frRevisor: TfrRevisor
             ShowHint = True
             TabOrder = 0
             OnClick = btEscolherArquivoTraduzidoClick
-            ExplicitLeft = 860
           end
           object btEscolherArquivoIngles: TButton
             Left = 909
@@ -848,7 +835,6 @@ object frRevisor: TfrRevisor
             ShowHint = True
             TabOrder = 1
             OnClick = btEscolherArquivoInglesClick
-            ExplicitLeft = 860
           end
           object edIngles: TEdit
             Left = 83
@@ -857,7 +843,6 @@ object frRevisor: TfrRevisor
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 2
-            ExplicitWidth = 770
           end
           object edTraduzido: TEdit
             Left = 100
@@ -866,7 +851,6 @@ object frRevisor: TfrRevisor
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 3
-            ExplicitWidth = 753
           end
           object edEspanhol: TEdit
             Left = 96
@@ -875,7 +859,6 @@ object frRevisor: TfrRevisor
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 4
-            ExplicitWidth = 757
           end
           object btEscolherArquivoEspanhol: TButton
             Left = 908
@@ -889,7 +872,6 @@ object frRevisor: TfrRevisor
             ShowHint = True
             TabOrder = 5
             OnClick = btEscolherArquivoEspanholClick
-            ExplicitLeft = 859
           end
         end
         object pnAbrirPastasInglesTraduzidoEspanhol: TPanel
@@ -900,7 +882,6 @@ object frRevisor: TfrRevisor
           Align = alTop
           TabOrder = 1
           Visible = False
-          ExplicitWidth = 974
           DesignSize = (
             1023
             120)
@@ -932,7 +913,6 @@ object frRevisor: TfrRevisor
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 0
-            ExplicitWidth = 772
           end
           object btEscolherPastaIngles: TButton
             Left = 899
@@ -946,7 +926,6 @@ object frRevisor: TfrRevisor
             ShowHint = True
             TabOrder = 1
             OnClick = btEscolherPastaInglesClick
-            ExplicitLeft = 850
           end
           object edPastaTraduzido: TEdit
             Left = 90
@@ -955,7 +934,6 @@ object frRevisor: TfrRevisor
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 2
-            ExplicitWidth = 755
           end
           object btEscolherPastaTraduzido: TButton
             Left = 899
@@ -969,7 +947,6 @@ object frRevisor: TfrRevisor
             ShowHint = True
             TabOrder = 3
             OnClick = btEscolherPastaTraduzidoClick
-            ExplicitLeft = 850
           end
           object edPastaEspanhol: TEdit
             Left = 86
@@ -978,7 +955,6 @@ object frRevisor: TfrRevisor
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 4
-            ExplicitWidth = 759
           end
           object btEscolherPastaEspanhol: TButton
             Left = 900
@@ -992,7 +968,6 @@ object frRevisor: TfrRevisor
             ShowHint = True
             TabOrder = 5
             OnClick = btEscolherPastaEspanholClick
-            ExplicitLeft = 851
           end
         end
       end
@@ -1004,7 +979,6 @@ object frRevisor: TfrRevisor
       Height = 35
       Align = alBottom
       TabOrder = 1
-      ExplicitWidth = 978
       object Label8: TLabel
         Left = 1
         Top = 1
@@ -1093,8 +1067,7 @@ object frRevisor: TfrRevisor
         Font.Style = [fsBold]
         ParentFont = False
         Layout = tlCenter
-        ExplicitLeft = 191
-        ExplicitTop = -3
+        ExplicitHeight = 13
       end
       object lbTotalArquivos: TLabel
         Left = 235
@@ -1104,7 +1077,6 @@ object frRevisor: TfrRevisor
         Align = alLeft
         Caption = '-'
         Layout = tlCenter
-        ExplicitLeft = 199
         ExplicitHeight = 13
       end
       object Label26: TLabel
@@ -1137,7 +1109,6 @@ object frRevisor: TfrRevisor
         BevelOuter = bvNone
         TabOrder = 0
         Visible = False
-        ExplicitLeft = 652
         object Label22: TLabel
           Left = 128
           Top = 0
@@ -1260,7 +1231,6 @@ object frRevisor: TfrRevisor
       OnDrawCell = StringGrid1DrawCell
       OnKeyUp = StringGrid1KeyUp
       OnSelectCell = StringGrid1SelectCell
-      ExplicitWidth = 978
     end
     object BitBtn1: TBitBtn
       Left = 6
