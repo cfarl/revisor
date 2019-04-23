@@ -159,6 +159,7 @@ type
     procedure salvarArquivoAtual ;
     procedure salvarTodosArquivos ;
     function getArquivosCarregados: TStringList ;
+    function removeQuebrasLinha(texto: string) : string ;
   public
     { Public declarations }
   end;
@@ -282,67 +283,6 @@ Begin
   nomeArquivos.Free ;
 End;
 
-//------------------------------------------------------
-// Salva o conteudo da grid no arquivo
-//------------------------------------------------------
-{
-procedure TForm2.salvarGrid ;
-var textoArquivo: TStringList ;
-    Row: integer ;
-    textoTraduzido, arquivoAtual: string ;
-    linhaGrid, i: integer;
-begin
-    if(not mudouTexto) then exit ;
-
-    // Se foi marcada a opcao arquivos, salva o arquivo traduzido
-    if((edTraduzido.Text <> '') and (rdCargaArquivos.Checked)) then
-    Begin
-      textoArquivo := TStringList.Create;
-      for Row := 1 to StringGrid1.RowCount -1 do
-      Begin
-        textoTraduzido := StringGrid1.Cells[2, Row] ;
-        textoArquivo.Add(textoTraduzido) ;
-      End;
-
-      // Salva o arquivo
-      textoArquivo.SaveToFile(edTraduzido.Text, encodingArquivos);
-    End;
-
-    // // Se foi marcada a opcao pasta, salva o arquivo atual
-    if((edPastaTraduzido.Text <> '') and (rdCargaPastas.Checked) and (lbArquivo.Caption <> '-')) then
-    Begin
-        // Recupera o nome do arquivo atual
-        arquivoAtual :=  edPastaTraduzido.Text + lbArquivo.Caption ;
-        arquivoAtual := arquivoAtual.TrimRight ;
-
-        // Carrega linhas do arquivo
-        textoArquivo := TStringList.Create;
-        textoArquivo.LoadFromFile(edPastaTraduzido.Text + lbArquivo.Caption, encodingArquivos);
-
-        // Encontra a linha onde começa o texto do arquivo
-        linhaGrid := 0;
-        while (StringsNomeArquivo[linhaGrid] <> lbArquivo.Caption) do
-          linhaGrid := linhaGrid + 1 ;
-
-        // Substitui as linhas do arquivo pelas linhas da grid
-        linhaGrid := linhaGrid + 1;
-        for i := 0 to textoArquivo.Count - 1 do Begin
-            if(linhaGrid < StringGrid1.RowCount) then begin
-              textoArquivo[i] := StringGrid1.Cells[2, linhaGrid];
-              linhaGrid := linhaGrid + 1 ;
-            end;
-        End;
-
-        // Salva o arquivo
-        textoArquivo.SaveToFile(arquivoAtual, encodingArquivos);
-        textoArquivo.Free ;
-    End;
-
-    //Seta flag para não salvar
-    mudouTexto := false ;
-
-end;
- }
 
 //----------------------------------------------------------------
 // Método chamado quando uma nova linha é selecionada na grid
@@ -414,6 +354,10 @@ begin
         if(StringGrid1.Row < StringGrid1.RowCount-1) then
           StringGrid1.Row :=  StringGrid1.Row + 1;
 
+        // Mantém a linha selecionada no meio da grid
+        if(StringGrid1.Row > 6) then
+          StringGrid1.TopRow := StringGrid1.Row - 5 ;
+
         // Cancela a tecla pressionada e redesenha a grid
         Key := ord(#0);
         StringGrid1.Repaint ;
@@ -425,6 +369,10 @@ begin
         // Avanca para a linha anterior da grid
         if(StringGrid1.Row > 1) then
           StringGrid1.Row :=  StringGrid1.Row -1;
+
+        // Mantém a linha selecionada no meio da grid
+        if(StringGrid1.Row > 6) then
+          StringGrid1.TopRow := StringGrid1.Row - 5 ;
 
         // Cancela a tecla pressionada e redesenha a grid
         Key := ord(#0);
@@ -565,6 +513,9 @@ begin
    SelStartBak := editor.SelStart;
    SelLengthBak := editor.SelLength;
    editor.SelectAll;
+   editor.SelAttributes.Size := 12;   //Reset font size
+   editor.SelAttributes.Style := [];  //Reset font style
+
    if(estilo = 'Windows') then
       editor.SelAttributes.Color := clBlack
    else
@@ -794,13 +745,14 @@ var traducao: string ;
     i: integer ;
 Begin
   textoBuscar := StringReplace(textoBuscar, '(REPETIDO)', '', []).TrimRight ;
+  textoBuscar := removeQuebrasLinha(textoBuscar);
 
   // Procura texto em ingles. Se achou, recupera traducao
   traducao := '' ;
   achou := false ;
   for I := 1 to StringGrid1.RowCount -1 do
   Begin
-     if (StringGrid1.Cells[1, i] = textoBuscar) then
+     if (removeQuebrasLinha(StringGrid1.Cells[1, i]) = textoBuscar) then
      Begin
         traducao := StringGrid1.Cells[2, i] ;
         achou := true ;
@@ -884,7 +836,7 @@ begin
   // Aplica a primeira traducao em todas as celulas repetidas
   for I := 1 to StringGrid1.RowCount -1 do
   Begin
-     if (StringGrid1.Cells[1, i] = textoBuscar) then
+     if (removeQuebrasLinha(StringGrid1.Cells[1, i]) = removeQuebrasLinha(textoBuscar)) then
      Begin
         StringGrid1.Cells[2, i] := traducao ;
      End;
@@ -926,7 +878,7 @@ Begin
   // Procura texto em ingles. Se achou, aturaliza
   for I := 1 to StringGrid1.RowCount -1 do
   Begin
-     if (StringGrid1.Cells[1, i] = textoIngles) then
+     if (removeQuebrasLinha(StringGrid1.Cells[1, i]) = removeQuebrasLinha(textoIngles)) then
      Begin
         StringGrid1.Cells[2, i] := traducao ;
         break ;
@@ -1331,6 +1283,23 @@ try
 
  End;
 
+ function TfrRevisor.removeQuebrasLinha(texto: string) : string ;
+ var temp: string ;
+ Begin
+   // Troca \n por espaco, remove \r
+   texto := texto.Replace('\n', ' ').Replace('\r','').Replace('\t','') ;
+
+   // Remove duplos espacos
+   temp := texto ;
+   while (temp <> texto) do
+   Begin
+     temp := texto ;
+     texto := texto.Replace('  ', ' ') ;
+   End;
+
+   removeQuebrasLinha := texto ;
+ End;
+
  //-------------------------------------------------------------------------------
 // Preenche a grid com os textos em ingles, traduzido e espanhol
 //-------------------------------------------------------------------------------
@@ -1356,10 +1325,11 @@ Begin
         StringGrid1.Cells[0, Row+1] := StringsLinhas[Row] ;
 
         // Texto em ingles
-        if( listaTextosIngles.IndexOf(StringsIngles[Row]) = -1 ) then
+        //showmessage(removeQuebrasLinha(StringsIngles[Row]));
+        if( listaTextosIngles.IndexOf(removeQuebrasLinha(StringsIngles[Row])) = -1 ) then
         Begin
             StringGrid1.Cells[1, Row+1] := StringsIngles[Row];
-            listaTextosIngles.Add(StringsIngles[Row]) ;
+            listaTextosIngles.Add(removeQuebrasLinha(StringsIngles[Row])) ;
         End else
         Begin
             StringGrid1.Cells[1, Row+1] := '(REPETIDO)' + StringsIngles[Row];
