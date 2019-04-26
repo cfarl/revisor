@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.Grids, Vcl.StdCtrls,
   Vcl.ExtCtrls, System.StrUtils, System.Types, Vcl.ComCtrls, Vcl.Buttons, System.IOUtils, System.Generics.Collections, Vcl.Themes,
   Vcl.Styles, IPPeerClient, REST.Client, Data.Bind.Components,
-  Data.Bind.ObjectScope, Web.HTTPApp, Usobre, Unit1 ;
+  Data.Bind.ObjectScope, Web.HTTPApp  ;
 
 type
   TfrRevisor = class(TForm)
@@ -104,6 +104,7 @@ type
     lbTotalArquivos: TLabel;
     Label26: TLabel;
     Label24: TLabel;
+    btPesquisar: TBitBtn;
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure MemoInglesChange(Sender: TObject);
@@ -148,16 +149,17 @@ type
     procedure BitBtn3Click(Sender: TObject);
     procedure MemoInglesKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure btPesquisarClick(Sender: TObject);
+    procedure salvarTodosArquivos ;
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
     procedure carregarArquivosInglesTraduzido;
     procedure carregarPastasInglesTraduzido;
     procedure preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList) ;
-    procedure carregarArquivosPasta(pasta: string ; StringsLinhas, textoTodosArquivos: TStringList; arquivoIngles: boolean) ;
+    procedure carregarArquivosPasta(pasta: string ; StringsLinhas, textoTodosArquivos: TStringList; arquivoTraduzido: boolean) ;
     procedure salvarArquivo(nomeArquivo: string) ;
     procedure salvarArquivoAtual ;
-    procedure salvarTodosArquivos ;
     function getArquivosCarregados: TStringList ;
     function removeQuebrasLinha(texto: string) : string ;
   public
@@ -167,7 +169,7 @@ type
 var
   frRevisor: TfrRevisor;
   linhaAnterior: integer ;
-  StringsNomeArquivo: TStringList ;
+  StringsNomeArquivoTraduzido: TStringList ;
   encodingArquivos: TEncoding ;
   estilo: string;
   mudouTexto: boolean;
@@ -178,6 +180,8 @@ var
 implementation
 
 {$R *.dfm}
+
+uses Usobre, Unit1, UPesquisar ;
 
 
 //------------------------------------------------------
@@ -217,7 +221,7 @@ Begin
 
         // Encontra a linha onde começa o texto do arquivo
         linhaGrid := 0;
-        while (StringsNomeArquivo[linhaGrid] <> ExtractFileName(nomeArquivo)) do
+        while (StringsNomeArquivoTraduzido[linhaGrid] <> ExtractFileName(nomeArquivo)) do
           linhaGrid := linhaGrid + 1 ;
 
         // Substitui as linhas do arquivo pelas linhas da grid
@@ -243,7 +247,7 @@ Begin
   if (rdCargaArquivos.Checked) then
      salvarArquivo(edTraduzido.Text)
   else if (rdCargaPastas.Checked) then
-     salvarArquivo(edPastaTraduzido.Text + StringsNomeArquivo[StringGrid1.Row-1]) ;
+     salvarArquivo(edPastaTraduzido.Text + StringsNomeArquivoTraduzido[StringGrid1.Row-1]) ;
 End;
 
 //------------------------------------------------------------------------------
@@ -255,10 +259,10 @@ var nomeArquivos: TStringList ;
     i: integer ;
 Begin
   nomeArquivos := TStringList.Create;
-  for i:= 0 to StringsNomeArquivo.Count-1 do
+  for i:= 0 to StringsNomeArquivoTraduzido.Count-1 do
   Begin
-    if(nomeArquivos.IndexOf(StringsNomeArquivo[i]) < 0) then
-      nomeArquivos.Add((StringsNomeArquivo[i])) ;
+    if(nomeArquivos.IndexOf(StringsNomeArquivoTraduzido[i]) < 0) then
+      nomeArquivos.Add((StringsNomeArquivoTraduzido[i])) ;
   End;
   getArquivosCarregados := nomeArquivos ;
 End;
@@ -277,7 +281,7 @@ Begin
   // Salva cada arquivo da lista
   for i:= 0 to nomeArquivos.Count-1 do
   Begin
-    salvarArquivo(nomeArquivos[i]);
+    salvarArquivo(edPastaTraduzido.Text + nomeArquivos[i]);
   End;
 
   nomeArquivos.Free ;
@@ -295,9 +299,9 @@ procedure TfrRevisor.StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       posicao : TPoint ;
 begin
   // Mostra a linha atual da grid
-  if(Arow > 0) and (StringsNomeArquivo.Count >0) then begin
+  if(Arow > 0) and (StringsNomeArquivoTraduzido.Count >0) then begin
       lbLinha.Caption := Integer.ToString(ARow) + ' de ' + Integer.ToString(StringGrid1.RowCount-1) ;
-      lbArquivo.Caption :=  StringsNomeArquivo[ARow-1] ;
+      lbArquivo.Caption :=  StringsNomeArquivoTraduzido[ARow-1] ;
   end;
 
   // Se mudou de linha, atualiza a grid com o conteudo da traducao
@@ -384,7 +388,7 @@ begin
     Begin
         if(MemoTraduzido.SelLength > 0) then
         Begin
-           Form1.edTextoTraduzir.Text := MemoTraduzido.SelText ;
+           Form1.edTextoTraduzir.Text := MemoTraduzido.SelText.Trim ;
            Form1.Show;
            Form1.PageControl1Change(self);
         End;
@@ -641,11 +645,11 @@ begin
 
    // O painel de texto repetido só aparece para texto traduzido diferente do primeiro
    pnRepetido.Visible := MemoIngles.Lines.Text.StartsWith('(REPETIDO)') ;
-   if(pnRepetido.Visible) then
-   Begin
-      if(textoTraduzido = pegarPrimeiraTraducao(MemoIngles.Lines.Text)) then
-        pnRepetido.Visible := false ;
-   End;
+//   if(pnRepetido.Visible) then
+//   Begin
+//      if(textoTraduzido = pegarPrimeiraTraducao(MemoIngles.Lines.Text)) then
+//        pnRepetido.Visible := false ;
+//   End;
 
 
 end;
@@ -794,19 +798,24 @@ begin
   MemoTraduzido.SetFocus;
 end;
 
+procedure TfrRevisor.btPesquisarClick(Sender: TObject);
+begin
+  frPesquisar.show;
+end;
+
 procedure TfrRevisor.btProxArquivoClick(Sender: TObject);
 var linhaAtual: integer ;
     arquivoAtual: string ;
     achou: boolean ;
 begin
    linhaAtual := StringGrid1.Row - 1 ;
-   arquivoAtual := StringsNomeArquivo[linhaAtual] ;
+   arquivoAtual := StringsNomeArquivoTraduzido[linhaAtual] ;
 
    // Procura linha onde comeca o proximo arquivo
    achou := false ;
-   while ((not achou) and (linhaAtual <  StringsNomeArquivo.Count)) do
+   while ((not achou) and (linhaAtual <  StringsNomeArquivoTraduzido.Count)) do
    Begin
-      if (arquivoAtual <> StringsNomeArquivo[linhaAtual]) then
+      if (arquivoAtual <> StringsNomeArquivoTraduzido[linhaAtual]) then
         achou := true
       else
         linhaAtual := linhaAtual + 1;
@@ -815,7 +824,12 @@ begin
    // Se achou, coloca arquivo na linha onde começa
    if achou then begin
      StringGrid1.Row := linhaAtual + 1;
-     StringGrid1.TopRow := StringGrid1.Row ;
+     //StringGrid1.TopRow := StringGrid1.Row ;
+
+     // Mantém a linha selecionada no meio da grid
+     if(StringGrid1.Row > 6) then
+        StringGrid1.TopRow := StringGrid1.Row - 5 ;
+
      StringGrid1.Repaint ;
    end;
 end;
@@ -1102,68 +1116,68 @@ var  StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringLis
      i: integer ;
      numeroColunasGrid :  integer;
 begin
- // Verifica se os arquivos necessarios foram informados
- if (edTraduzido.Text = '') or (edIngles.Text = '') then
- Begin
-   ShowMessage('O arquivo em inglês e o arquivo traduzido precisam ser informados.');
-   exit ;
- End;
+   // Verifica se os arquivos necessarios foram informados
+   if (edTraduzido.Text = '') or (edIngles.Text = '') then
+   Begin
+     ShowMessage('O arquivo em inglês e o arquivo traduzido precisam ser informados.');
+     exit ;
+   End;
 
- // Inicializa variaveis
- numeroColunasGrid := 3 ;
- pnEspanhol.Visible := false ;
- Splitter1.Visible := false ;
- StringsLinhas := TStringList.Create;
- StringsIngles := TStringList.Create;
- StringsTraduzido := TStringList.Create;
- StringsEspanhol := TStringList.Create;
- try
-   StringsNomeArquivo.Free ;
- finally
-   StringsNomeArquivo := TStringList.Create;
- end;
+   // Inicializa variaveis
+   numeroColunasGrid := 3 ;
+   pnEspanhol.Visible := false ;
+   Splitter1.Visible := false ;
+   StringsLinhas := TStringList.Create;
+   StringsIngles := TStringList.Create;
+   StringsTraduzido := TStringList.Create;
+   StringsEspanhol := TStringList.Create;
+   try
+     StringsNomeArquivoTraduzido.Free ;
+   finally
+     StringsNomeArquivoTraduzido := TStringList.Create;
+   end;
 
- // Se foi informado o arquivo em espanhol, seta o ambiente para 4 colunas
- if(edEspanhol.Text <> '') then
- Begin
-    numeroColunasGrid := 4 ;
-    pnEspanhol.Visible := true ;
-    Splitter1.Visible := true ;
- End ;
+   // Se foi informado o arquivo em espanhol, seta o ambiente para 4 colunas
+   if(edEspanhol.Text <> '') then
+   Begin
+      numeroColunasGrid := 4 ;
+      pnEspanhol.Visible := true ;
+      Splitter1.Visible := true ;
+   End ;
 
- // Define numero de colunas na grid
- StringGrid1.ColCount := numeroColunasGrid ;
+   // Define numero de colunas na grid
+   StringGrid1.ColCount := numeroColunasGrid ;
 
- try
-    // Carrega arquivos
-    StringsIngles.LoadFromFile(edIngles.Text, encodingArquivos);
-    StringsTraduzido.LoadFromFile(edTraduzido.Text, encodingArquivos);
-    if (numeroColunasGrid = 4) then StringsEspanhol.LoadFromFile(edEspanhol.Text, encodingArquivos);
+   try
+      // Carrega arquivos
+      StringsIngles.LoadFromFile(edIngles.Text, encodingArquivos);
+      StringsTraduzido.LoadFromFile(edTraduzido.Text, encodingArquivos);
+      if (numeroColunasGrid = 4) then StringsEspanhol.LoadFromFile(edEspanhol.Text, encodingArquivos);
 
-    // Guarda o nome do arquivo para cada linha do arquivo ingles
-    for I := 0 to StringsIngles.Count-1 do begin
-       StringsLinhas.Add(Integer.ToString(i+1));
-       StringsNomeArquivo.Add(ExtractFileName(edIngles.Text)) ;
-    end;
+      // Guarda o nome do arquivo para cada linha do arquivo ingles
+      for I := 0 to StringsIngles.Count-1 do begin
+         StringsLinhas.Add(Integer.ToString(i+1));
+         StringsNomeArquivoTraduzido.Add(ExtractFileName(edTraduzido.Text)) ;
+      end;
 
-    // Carrega as linhas na grid
-    preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
+      // Carrega as linhas na grid
+      preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
 
- finally
-    StringsLinhas.Free ;
-    StringsIngles.Free;
-    StringsTraduzido.Free;
-    StringsEspanhol.Free;
-    StringGrid1.Refresh;
-    linhaAnterior := 0 ;
- end;
+   finally
+      StringsLinhas.Free ;
+      StringsIngles.Free;
+      StringsTraduzido.Free;
+      StringsEspanhol.Free;
+      StringGrid1.Refresh;
+      linhaAnterior := 0 ;
+   end;
 
  End;
 
 //-------------------------------------------------------------------------------
 // Carrega em 'textoTodosArquivos' o texto de todos os arquivos da pasta
 //-------------------------------------------------------------------------------
-procedure TfrRevisor.carregarArquivosPasta(pasta: string ; StringsLinhas, textoTodosArquivos: TStringList; arquivoIngles: boolean) ;
+procedure TfrRevisor.carregarArquivosPasta(pasta: string ; StringsLinhas, textoTodosArquivos: TStringList; arquivoTraduzido: boolean) ;
 var
   textoArquivo: TStringList ;
   i, j: integer ;
@@ -1190,10 +1204,10 @@ Begin
    numArquivosCarregados := numArquivosCarregados + 1;
 
    // Guarda o nome do arquivo para cada linha do arquivo ingles
-   if(arquivoIngles) then begin
+   if(arquivoTraduzido) then begin
        for I := 0 to textoArquivo.Count-1 do begin
           StringsLinhas.Add(Integer.ToString(i+1));
-          StringsNomeArquivo.Add(ExtractFileName(arquivo)) ;
+          StringsNomeArquivoTraduzido.Add(ExtractFileName(arquivo)) ;
        end;
    end;
 
@@ -1214,72 +1228,72 @@ var  StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringLis
      numeroColunasGrid :  integer;
      pasta : string ;
 begin
- // Verifica se os arquivos necessarios foram informados
- if (edPastaTraduzido.Text = '') or (edPastaIngles.Text = '') then
- Begin
-   ShowMessage('As pastas contendo os arquivos em inglês e os arquivos traduzidos precisam ser informadas.');
-   exit ;
- End;
+   // Verifica se os arquivos necessarios foram informados
+   if (edPastaTraduzido.Text = '') or (edPastaIngles.Text = '') then
+   Begin
+     ShowMessage('As pastas contendo os arquivos em inglês e os arquivos traduzidos precisam ser informadas.');
+     exit ;
+   End;
 
- // Inicializa variaveis
- lbArquivo.Caption := '-';
- numeroColunasGrid := 3 ;
- pnEspanhol.Visible := false ;
- Splitter1.Visible := false ;
- StringsLinhas := TStringList.Create;
- StringsIngles := TStringList.Create;
- StringsTraduzido := TStringList.Create;
- StringsEspanhol := TStringList.Create;
-try
-   StringsNomeArquivo.Free ;
- finally
-   StringsNomeArquivo := TStringList.Create;
- end;
+   // Inicializa variaveis
+   lbArquivo.Caption := '-';
+   numeroColunasGrid := 3 ;
+   pnEspanhol.Visible := false ;
+   Splitter1.Visible := false ;
+   StringsLinhas := TStringList.Create;
+   StringsIngles := TStringList.Create;
+   StringsTraduzido := TStringList.Create;
+   StringsEspanhol := TStringList.Create;
+  try
+     StringsNomeArquivoTraduzido.Free ;
+   finally
+     StringsNomeArquivoTraduzido := TStringList.Create;
+   end;
 
- // Se foi informado a pasta em espanhol, seta o ambiente para 4 colunas
- if(edPastaEspanhol.Text <> '') then
- Begin
-    numeroColunasGrid := 4 ;
-    pnEspanhol.Visible := true ;
-    Splitter1.Visible := true ;
- End ;
+   // Se foi informado a pasta em espanhol, seta o ambiente para 4 colunas
+   if(edPastaEspanhol.Text <> '') then
+   Begin
+      numeroColunasGrid := 4 ;
+      pnEspanhol.Visible := true ;
+      Splitter1.Visible := true ;
+   End ;
 
- // Define numero de colunas na grid
- StringGrid1.ColCount := numeroColunasGrid ;
+   // Define numero de colunas na grid
+   StringGrid1.ColCount := numeroColunasGrid ;
 
- try
-    // Carrega arquivos das pastas
-    carregarArquivosPasta(edPastaIngles.Text, StringsLinhas, StringsIngles, true) ;
-    carregarArquivosPasta(edPastaTraduzido.Text, StringsLinhas, StringsTraduzido, false) ;
-    if (numeroColunasGrid = 4) then carregarArquivosPasta(edPastaEspanhol.Text, StringsLinhas, StringsEspanhol, true) ;
+   try
+      // Carrega arquivos das pastas
+      carregarArquivosPasta(edPastaIngles.Text, StringsLinhas, StringsIngles, false) ;
+      carregarArquivosPasta(edPastaTraduzido.Text, StringsLinhas, StringsTraduzido, true) ;
+      if (numeroColunasGrid = 4) then carregarArquivosPasta(edPastaEspanhol.Text, StringsLinhas, StringsEspanhol, false) ;
 
-    // Salva arquivos com os textos e tendo o nome das pastas .txt
-    pasta := edPastaIngles.Text ;
-    edIngles.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
-    StringsIngles.SaveToFile(edIngles.Text, encodingArquivos);
+      // Salva arquivos com os textos e tendo o nome das pastas .txt
+      pasta := edPastaIngles.Text ;
+      edIngles.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
+      StringsIngles.SaveToFile(edIngles.Text, encodingArquivos);
 
-    pasta := edPastaTraduzido.Text ;
-    edTraduzido.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
-    StringsTraduzido.SaveToFile(edTraduzido.Text, encodingArquivos);
+      pasta := edPastaTraduzido.Text ;
+      edTraduzido.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
+      StringsTraduzido.SaveToFile(edTraduzido.Text, encodingArquivos);
 
-    if (numeroColunasGrid = 4) then
-    Begin
-      pasta := edPastaEspanhol.Text ;
-      edEspanhol.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
-      StringsEspanhol.SaveToFile(edEspanhol.Text, encodingArquivos);
-    End;
+      if (numeroColunasGrid = 4) then
+      Begin
+        pasta := edPastaEspanhol.Text ;
+        edEspanhol.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
+        StringsEspanhol.SaveToFile(edEspanhol.Text, encodingArquivos);
+      End;
 
-    // Carrega as linhas na grid
-    preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
+      // Carrega as linhas na grid
+      preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
 
- finally
-    StringsLinhas.Free ;
-    StringsIngles.Free;
-    StringsTraduzido.Free;
-    StringsEspanhol.Free;
-    StringGrid1.Refresh;
-    linhaAnterior := 0 ;
- end;
+   finally
+      StringsLinhas.Free ;
+      StringsIngles.Free;
+      StringsTraduzido.Free;
+      StringsEspanhol.Free;
+      StringGrid1.Refresh;
+      linhaAnterior := 0 ;
+   end;
 
  End;
 
@@ -1379,13 +1393,13 @@ var linhaAtual: integer ;
     achou: boolean ;
 begin
    linhaAtual := StringGrid1.Row - 1 ;
-   arquivoAtual := StringsNomeArquivo[linhaAtual] ;
+   arquivoAtual := StringsNomeArquivoTraduzido[linhaAtual] ;
 
    // Procura linha onde comeca o proximo arquivo
    achou := false ;
    while ((not achou) and (linhaAtual > 0)) do
    Begin
-      if (arquivoAtual <> StringsNomeArquivo[linhaAtual]) then
+      if (arquivoAtual <> StringsNomeArquivoTraduzido[linhaAtual]) then
         achou := true
       else
         linhaAtual := linhaAtual - 1;
@@ -1393,11 +1407,16 @@ begin
 
    // Se achou, coloca arquivo na linha onde começa
    if achou then begin
-     arquivoAtual := StringsNomeArquivo[linhaAtual] ;
-     while((linhaAtual >= 0) and (arquivoAtual = StringsNomeArquivo[linhaAtual])) do
+     arquivoAtual := StringsNomeArquivoTraduzido[linhaAtual] ;
+     while((linhaAtual >= 0) and (arquivoAtual = StringsNomeArquivoTraduzido[linhaAtual])) do
         linhaAtual := linhaAtual - 1;
      StringGrid1.Row := linhaAtual + 2;
-     StringGrid1.TopRow := StringGrid1.Row ;
+     //StringGrid1.TopRow := StringGrid1.Row ;
+
+     // Mantém a linha selecionada no meio da grid
+     if(StringGrid1.Row > 6) then
+         StringGrid1.TopRow := StringGrid1.Row - 5 ;
+
      StringGrid1.Repaint ;
    end;
 end;
@@ -1405,7 +1424,9 @@ end;
 procedure TfrRevisor.btCarregarClick(Sender: TObject);
 var i: integer ;
     StringsIngles, StringsEspanhol, StringsTraduzido: TStringList;
+    linhaAtualGrid: integer ;
 Begin
+   linhaAtualGrid := StringGrid1.Row ;
    mudouTexto := false ;
    pnProxArquivo.Visible := false ;
 
@@ -1439,6 +1460,10 @@ Begin
 
   panel3.AutoSize := true ;
   lbTotalArquivos.Caption := Integer.ToString(getArquivosCarregados.Count);
+
+  // Restaura linha corrente
+  if(linhaAtualGrid < StringGrid1.RowCount) then
+     StringGrid1.Row := linhaAtualGrid ;
 End;
 
 end.

@@ -6,7 +6,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   USobre in 'USobre.pas' {frSobre},
-  Unit1 in 'Unit1.pas' {Form1};
+  Unit1 in 'Unit1.pas' {Form1},
+  UPesquisar in 'UPesquisar.pas' {frPesquisar};
 
 {$R *.res}
 
@@ -16,5 +17,6 @@ begin
   Application.CreateForm(TfrRevisor, frRevisor);
   Application.CreateForm(TfrSobre, frSobre);
   Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfrPesquisar, frPesquisar);
   Application.Run;
 end.
