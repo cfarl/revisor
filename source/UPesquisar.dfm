@@ -16,9 +16,9 @@ object frPesquisar: TfrPesquisar
   TextHeight = 13
   object gridPesquisa: TStringGrid
     Left = 0
-    Top = 153
+    Top = 169
     Width = 966
-    Height = 404
+    Height = 388
     TabStop = False
     Align = alClient
     BevelInner = bvLowered
@@ -35,20 +35,19 @@ object frPesquisar: TfrPesquisar
     TabOrder = 0
     OnClick = gridPesquisaClick
     OnDrawCell = gridPesquisaDrawCell
-    ExplicitTop = 81
-    ExplicitWidth = 635
-    ExplicitHeight = 218
+    ExplicitTop = 161
+    ExplicitHeight = 396
   end
   object pnPesquisa: TPanel
     Left = 0
     Top = 0
     Width = 966
-    Height = 153
+    Height = 169
     Align = alTop
     TabOrder = 1
     DesignSize = (
       966
-      153)
+      169)
     object Label1: TLabel
       Left = 16
       Top = 48
@@ -77,6 +76,25 @@ object frPesquisar: TfrPesquisar
       Height = 13
       Caption = 'Texto Substituir:'
     end
+    object lbInfo: TLabel
+      Left = 291
+      Top = 145
+      Width = 17
+      Height = 13
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label5: TLabel
+      Left = 10
+      Top = 145
+      Width = 87
+      Height = 13
+      Caption = 'Outras pesquisas:'
+    end
     object edFraseTraduzida: TEdit
       Left = 103
       Top = 46
@@ -84,7 +102,6 @@ object frPesquisar: TfrPesquisar
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
-      ExplicitWidth = 410
     end
     object edTextoOriginal: TEdit
       Left = 102
@@ -99,13 +116,15 @@ object frPesquisar: TfrPesquisar
       Top = 44
       Width = 97
       Height = 25
+      Hint = 'Pesquisar frrr'
       Anchors = [akTop, akRight]
       Caption = 'Pesquisar'
       Kind = bkAll
       NumGlyphs = 2
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 2
       OnClick = btPesquisarTraduzidoClick
-      ExplicitLeft = 528
     end
     object edFraseIngles: TEdit
       Left = 85
@@ -114,20 +133,21 @@ object frPesquisar: TfrPesquisar
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
-      ExplicitWidth = 428
     end
     object btPesquisarIngles: TBitBtn
       Left = 859
       Top = 12
       Width = 97
       Height = 25
+      Hint = 'Pesquisar frases em ingl'#234's'
       Anchors = [akTop, akRight]
       Caption = 'Pesquisar'
       Kind = bkAll
       NumGlyphs = 2
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 4
       OnClick = btPesquisarInglesClick
-      ExplicitLeft = 528
     end
     object edTextoSubstituir: TEdit
       Left = 102
@@ -146,8 +166,24 @@ object frPesquisar: TfrPesquisar
       Caption = 'Substituir'
       Kind = bkRetry
       NumGlyphs = 2
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 6
       OnClick = btSubstituirClick
+    end
+    object BitBtn1: TBitBtn
+      Left = 103
+      Top = 138
+      Width = 164
+      Height = 25
+      Hint = 'Pesquisar frases com diferentes n'#250'meros de frases'
+      Caption = 'Linhas com diferentes \n'
+      Kind = bkAll
+      NumGlyphs = 2
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+      OnClick = BitBtn1Click
     end
   end
 end

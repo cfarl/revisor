@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Grids, Vcl.StdCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Grids, Vcl.StdCtrls, System.Types,
   Vcl.Buttons;
 
 type
@@ -22,6 +22,9 @@ type
     Label4: TLabel;
     edTextoSubstituir: TEdit;
     btSubstituir: TBitBtn;
+    lbInfo: TLabel;
+    BitBtn1: TBitBtn;
+    Label5: TLabel;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -29,6 +32,7 @@ type
     procedure gridPesquisaClick(Sender: TObject);
     procedure btPesquisarInglesClick(Sender: TObject);
     procedure btSubstituirClick(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     { Private declarations }
     procedure pesquisar(coluna: integer; texto: string);
@@ -49,17 +53,19 @@ uses URevisor;
 // Pesquisa por um texto na coluna informada
 //--------------------------------------------------------
 procedure TfrPesquisar.pesquisar(coluna: integer; texto: string);
-var i, j : integer ;
+var i, j, numEncontrados : integer ;
     gridRevisor: TStringGrid;
 begin
   // Inicializa grid de pesquisa
   gridRevisor := frRevisor.StringGrid1 ;
   gridPesquisa.RowCount := 0;
   gridPesquisa.ColCount := gridRevisor.ColCount ;
+  numEncontrados := 0;
 
   // Coloca na grid as linhas correspondentes à pesquisa
   for i := 1 to gridRevisor.RowCount do begin
     if(gridRevisor.Cells[coluna,i].ToUpper.Contains(texto.ToUpper)) then begin
+      numEncontrados := numEncontrados + 1;
       gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
       gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
       for j := 1 to gridRevisor.ColCount do begin
@@ -68,9 +74,66 @@ begin
     end;
   end;
 
+  lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
   gridPesquisa.Repaint ;
 end;
 
+function Split(const Texto, Delimitador: string): TStringDynArray;
+var
+  i: integer;
+  Len: integer;
+  PosStart: integer;
+  PosDel: integer;
+  TempText:string;
+begin
+  i := 0;
+  SetLength(Result, 1);
+  Len := Length(Delimitador);
+  PosStart := 1;
+  PosDel := Pos(Delimitador, Texto);
+  TempText:=  Texto;
+  while PosDel > 0 do
+    begin
+      Result[i] := Copy(TempText, PosStart, PosDel - PosStart);
+      PosStart := PosDel + Len;
+      TempText:=Copy(TempText, PosStart, Length(TempText));
+      PosDel := Pos(Delimitador, TempText);
+      PosStart := 1;
+      inc(i);
+      SetLength(Result, i + 1);
+    end;
+  Result[i] := Copy(TempText, PosStart, Length(TempText));
+end;
+
+procedure TfrPesquisar.BitBtn1Click(Sender: TObject);
+var i, j, numEncontrados : integer ;
+    gridRevisor: TStringGrid;
+    textoTraduzido, textoIngles: string;
+begin
+  // Inicializa grid de pesquisa
+  gridRevisor := frRevisor.StringGrid1 ;
+  gridPesquisa.RowCount := 0;
+  gridPesquisa.ColCount := gridRevisor.ColCount ;
+  numEncontrados := 0;
+
+  // Coloca na grid as linhas correspondentes à pesquisa
+  for i := 1 to gridRevisor.RowCount do begin
+    textoTraduzido := gridRevisor.Cells[2,i] ;
+    textoIngles := gridRevisor.Cells[1,i] ;
+
+    if(length(split(textoTraduzido, '\n')) <>  length(split(textoIngles, '\n'))) then begin
+      numEncontrados := numEncontrados + 1;
+      gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
+      gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
+      for j := 1 to gridRevisor.ColCount do begin
+        gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridRevisor.Cells[j, i] ;
+      end;
+    end;
+  end;
+
+  lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
+  gridPesquisa.Repaint ;
+end;
 
 procedure TfrPesquisar.btPesquisarInglesClick(Sender: TObject);
 begin
@@ -85,20 +148,23 @@ end;
 procedure TfrPesquisar.btSubstituirClick(Sender: TObject);
 var txOriginal, txSubstituir : string ;
     gridRevisor: TStringGrid;
-    i: integer ;
+    i, numEncontrados: integer ;
 begin
   // Inicializa substituicao
   txOriginal := edTextoOriginal.Text ;
   txSubstituir := edTextoSubstituir.Text ;
   gridRevisor := frRevisor.StringGrid1 ;
+  numEncontrados := 0;
 
   // Susbstitui o texto na grid
   for i := 1 to gridRevisor.RowCount do begin
     if(gridRevisor.Cells[2,i].Contains(txOriginal)) then begin
       gridRevisor.Cells[2,i] := gridRevisor.Cells[2,i].Replace(txOriginal, txSubstituir) ;
+      numEncontrados := numEncontrados + 1;
     end;
   end;
 
+  lbInfo.Caption := 'Foram feitas ' + Integer.ToString(numEncontrados) + ' substituições.' ;
   gridPesquisa.Repaint ;
   frRevisor.salvarTodosArquivos;
 end;

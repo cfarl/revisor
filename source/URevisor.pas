@@ -329,10 +329,17 @@ begin
   memoEspanhol.Lines.Clear() ;
   memoEspanhol.Lines.Add(textoEspanhol) ;
 
+  // Recupera posicao do cursor
   posicao := MemoTraduzido.CaretPos ;
   MemoTraduzido.Lines.Clear() ;
   MemoTraduzido.Lines.Add(textoTraduzido) ;
-  MemoTraduzido.CaretPos := posicao ;
+
+  // Se o caractere está em uma posicao alem do texto, move ele para a posicao zero
+  if( (posicao.X > textoTraduzido.Length) or ((MemoTraduzido.Lines.Count-1) < posicao.Y)) then begin
+      MemoTraduzido.CaretPos:= Point(0, 0) ;
+  end else begin
+    MemoTraduzido.CaretPos := posicao ;
+  end;
 
   linhaAnterior := ARow ;
 
@@ -409,8 +416,8 @@ end;
 procedure TfrRevisor.MemoTraduzidoKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-   lbLin.Caption := Integer.ToString(memoTraduzido.CaretPos.Y+1) ;
-   lbCol.Caption := Integer.ToString(memoTraduzido.CaretPos.X+1) ;
+  lbLin.Caption := Integer.ToString(memoTraduzido.CaretPos.Y+1) ;
+  lbCol.Caption := Integer.ToString(memoTraduzido.CaretPos.X+1) ;
 end;
 
 //------------------------------------------------------------------------------
@@ -641,7 +648,6 @@ begin
     lbDescNumFrasesTraducao.Font.Color := clBlack ;
     lbNumFrasesTraducao.Font.Color := clBlack ;
   end;
-
 
    // O painel de texto repetido só aparece para texto traduzido diferente do primeiro
    pnRepetido.Visible := MemoIngles.Lines.Text.StartsWith('(REPETIDO)') ;
