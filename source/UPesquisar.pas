@@ -5,26 +5,29 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Grids, Vcl.StdCtrls, System.Types,
-  Vcl.Buttons;
+  Vcl.Buttons, Vcl.ComCtrls;
 
 type
   TfrPesquisar = class(TForm)
-    Label1: TLabel;
-    Label2: TLabel;
-    edFraseTraduzida: TEdit;
-    edTextoOriginal: TEdit;
     gridPesquisa: TStringGrid;
     pnPesquisa: TPanel;
-    btPesquisarTraduzido: TBitBtn;
+    lbInfo: TLabel;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
     Label3: TLabel;
     edFraseIngles: TEdit;
+    Label1: TLabel;
+    edFraseTraduzida: TEdit;
     btPesquisarIngles: TBitBtn;
+    btPesquisarTraduzido: TBitBtn;
+    BitBtn1: TBitBtn;
+    Label2: TLabel;
     Label4: TLabel;
+    edTextoOriginal: TEdit;
     edTextoSubstituir: TEdit;
     btSubstituir: TBitBtn;
-    lbInfo: TLabel;
-    BitBtn1: TBitBtn;
-    Label5: TLabel;
+    BitBtn2: TBitBtn;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -33,6 +36,7 @@ type
     procedure btPesquisarInglesClick(Sender: TObject);
     procedure btSubstituirClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
   private
     { Private declarations }
     procedure pesquisar(coluna: integer; texto: string);
@@ -133,6 +137,11 @@ begin
 
   lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
   gridPesquisa.Repaint ;
+end;
+
+procedure TfrPesquisar.BitBtn2Click(Sender: TObject);
+begin
+pesquisar(2, edTextoOriginal.Text) ;
 end;
 
 procedure TfrPesquisar.btPesquisarInglesClick(Sender: TObject);

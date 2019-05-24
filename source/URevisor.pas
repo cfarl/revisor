@@ -304,7 +304,7 @@ begin
       lbArquivo.Caption :=  StringsNomeArquivoTraduzido[ARow-1] ;
   end;
 
-  // Se mudou de linha, atualiza a grid com o conteudo da traducao
+   // Se mudou de linha, atualiza a grid com o conteudo da traducao
   if( (linhaAnterior <> 0) and (linhaAnterior <> ARow) ) then
   Begin
     // Recupera o texto traduzido
@@ -318,7 +318,7 @@ begin
     StringGrid1.Cells[2,linhaAnterior] := textoTraduzido ;
   End;
 
-  // Atualiza os campos do memo
+   // Atualiza os campos do memo
  textoIngles := StringGrid1.Cells[1,Arow] ;
  textoTraduzido := StringGrid1.Cells[2,Arow] ;
  textoEspanhol := StringGrid1.Cells[3,Arow] ;
@@ -578,7 +578,7 @@ end;
 // Quando o texto do memo ingles muda, destaca \n
 //------------------------------------------------------------------------------
 procedure TfrRevisor.MemoInglesChange(Sender: TObject);
-var textoIngles: string ;
+var textoIngles, textoTraduzido, primeiraTraducao: string ;
      frases: TStringDynArray;
 begin
    Destacar(memoIngles, '\r\n');
@@ -590,6 +590,8 @@ begin
    frases := Split(textoIngles, '\n');
 
   lbNumFrasesIngles.Caption := Integer.ToString(length(frases));
+  pnRepetido.Visible := MemoIngles.Lines.Text.StartsWith('(REPETIDO)') ;
+
 end;
 
 
@@ -602,7 +604,7 @@ begin
     Begin
         if(MemoIngles.SelLength > 0) then
         Begin
-           Form1.edTextoTraduzir.Text := MemoIngles.SelText ;
+           Form1.edTextoTraduzir.Text := MemoIngles.SelText.Trim ;
            Form1.Show;
            Form1.PageControl1Change(self);
         End;
@@ -617,7 +619,7 @@ end;
 //------------------------------------------------------------------------------
 procedure TfrRevisor.MemoTraduzidoChange(Sender: TObject);
 var  frases: TStringDynArray;
-     textoTraduzido, frase : string ;
+     textoTraduzido, frase, primeiraTraducao : string ;
      maxCaracteresFrase, i : integer ;
 begin
    Destacar(memoTraduzido, '\r\n');
@@ -649,13 +651,19 @@ begin
     lbNumFrasesTraducao.Font.Color := clBlack ;
   end;
 
-   // O painel de texto repetido só aparece para texto traduzido diferente do primeiro
-   pnRepetido.Visible := MemoIngles.Lines.Text.StartsWith('(REPETIDO)') ;
-//   if(pnRepetido.Visible) then
-//   Begin
-//      if(textoTraduzido = pegarPrimeiraTraducao(MemoIngles.Lines.Text)) then
-//        pnRepetido.Visible := false ;
-//   End;
+
+   // Fundo verde
+   MemoTraduzido.Color := $00D2FFD2 ;
+
+  // Se o repetido está diferente do primeiro, mostra funco em vermelho
+  if(pnRepetido.Visible and (textoTraduzido.Length > 0)) then
+   Begin
+      textoTraduzido := removeQuebrasLinha(textoTraduzido) ;
+      primeiraTraducao := pegarPrimeiraTraducao(MemoIngles.Text) ;
+      primeiraTraducao := removeQuebrasLinha(primeiraTraducao);
+      if(textoTraduzido <> primeiraTraducao) then
+         MemoTraduzido.Color := $00D2D2FF ;
+   End;
 
 
 end;

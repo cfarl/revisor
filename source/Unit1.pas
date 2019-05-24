@@ -218,17 +218,21 @@ begin
                      if Pos('class="options">', Line) > 0 then // Igonora aqueles botões de opções e frescurada...
                      begin
                         repeat
+                           if( i >= source.count ) then break ;
                            Line := Source.Strings[I];
                            Inc(I);
                         until Pos('class="mobile-voice icon stopped played">', Line) > 0;
                         Inc(I);
-                        Line := Source.Strings[I];
-                        HTML.Add('<br>'); // Adiciona um espaço entre cada exemplo de frase traduzida
+                        if(i < source.count ) then begin
+                          Line := Source.Strings[I];
+                          HTML.Add('<br>'); // Adiciona um espaço entre cada exemplo de frase traduzida
+                        end ;
                         // Inc(I);
                      end;
                      // Retira a sensura por não estar logado no site, retira o link da expressão traduzida e adiciona a cor de fundo
                      HTML.Add(Line.Replace('class="example blocked">', 'class="example">').Replace('<em>', '<span style="background-color: #FFFF00">').Replace('</em>',
                         '</span>').Replace('<a class="link_highlighted" href=', '<a'));
+                     if( i >= source.count ) then break ;
                      Line := Source.Strings[I];
                      Inc(I);
                   end;

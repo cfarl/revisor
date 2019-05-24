@@ -286,7 +286,7 @@ object frRevisor: TfrRevisor
         Width = 840
         Height = 262
         Align = alClient
-        Color = 13828050
+        Color = 13816575
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
