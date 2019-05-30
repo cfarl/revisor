@@ -162,6 +162,7 @@ type
     procedure salvarArquivoAtual ;
     function getArquivosCarregados: TStringList ;
     function removeQuebrasLinha(texto: string) : string ;
+    procedure mantemLinhaSelecionadaMeioGrid ;
   public
     { Public declarations }
   end;
@@ -182,6 +183,17 @@ implementation
 {$R *.dfm}
 
 uses Usobre, Unit1, UPesquisar ;
+
+//------------------------------------------------------
+// Mantém a linha selecionada no meio da grid
+//------------------------------------------------------
+procedure TfrRevisor.mantemLinhaSelecionadaMeioGrid ;
+var numeroLinhasAcimaAbaixoLinhaMeio: integer ;
+Begin
+   numeroLinhasAcimaAbaixoLinhaMeio := StringGrid1.VisibleRowCount div 2 ;
+   if((StringGrid1.Row > numeroLinhasAcimaAbaixoLinhaMeio) and (StringGrid1.Row+numeroLinhasAcimaAbaixoLinhaMeio < StringGrid1.RowCount)) then
+      StringGrid1.TopRow := StringGrid1.Row - numeroLinhasAcimaAbaixoLinhaMeio ;
+End;
 
 
 //------------------------------------------------------
@@ -366,8 +378,7 @@ begin
           StringGrid1.Row :=  StringGrid1.Row + 1;
 
         // Mantém a linha selecionada no meio da grid
-        if(StringGrid1.Row > 6) then
-          StringGrid1.TopRow := StringGrid1.Row - 5 ;
+        mantemLinhaSelecionadaMeioGrid;
 
         // Cancela a tecla pressionada e redesenha a grid
         Key := ord(#0);
@@ -382,8 +393,7 @@ begin
           StringGrid1.Row :=  StringGrid1.Row -1;
 
         // Mantém a linha selecionada no meio da grid
-        if(StringGrid1.Row > 6) then
-          StringGrid1.TopRow := StringGrid1.Row - 5 ;
+        mantemLinhaSelecionadaMeioGrid ;
 
         // Cancela a tecla pressionada e redesenha a grid
         Key := ord(#0);
@@ -838,11 +848,9 @@ begin
    // Se achou, coloca arquivo na linha onde começa
    if achou then begin
      StringGrid1.Row := linhaAtual + 1;
-     //StringGrid1.TopRow := StringGrid1.Row ;
 
      // Mantém a linha selecionada no meio da grid
-     if(StringGrid1.Row > 6) then
-        StringGrid1.TopRow := StringGrid1.Row - 5 ;
+     mantemLinhaSelecionadaMeioGrid;
 
      StringGrid1.Repaint ;
    end;
@@ -1425,11 +1433,9 @@ begin
      while((linhaAtual >= 0) and (arquivoAtual = StringsNomeArquivoTraduzido[linhaAtual])) do
         linhaAtual := linhaAtual - 1;
      StringGrid1.Row := linhaAtual + 2;
-     //StringGrid1.TopRow := StringGrid1.Row ;
 
      // Mantém a linha selecionada no meio da grid
-     if(StringGrid1.Row > 6) then
-         StringGrid1.TopRow := StringGrid1.Row - 5 ;
+     mantemLinhaSelecionadaMeioGrid  ;
 
      StringGrid1.Repaint ;
    end;
