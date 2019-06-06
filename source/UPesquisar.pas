@@ -28,6 +28,14 @@ type
     edTextoSubstituir: TEdit;
     btSubstituir: TBitBtn;
     BitBtn2: TBitBtn;
+    TabSheet3: TTabSheet;
+    Label5: TLabel;
+    edTamanhoFrase: TEdit;
+    Label6: TLabel;
+    edLinhaInicial: TEdit;
+    Label7: TLabel;
+    edLinhaFinal: TEdit;
+    btPesquisarLinhasTamanhoMaiorTamanhoFrase: TBitBtn;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -37,9 +45,11 @@ type
     procedure btSubstituirClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
+    procedure btPesquisarLinhasTamanhoMaiorTamanhoFraseClick(Sender: TObject);
   private
     { Private declarations }
     procedure pesquisar(coluna: integer; texto: string);
+    //procedure inicializaComponentesParaPesquisa ;
   public
     { Public declarations }
   end;
@@ -149,6 +159,47 @@ begin
   pesquisar(1, edFraseIngles.Text) ;
 end;
 
+procedure TfrPesquisar.btPesquisarLinhasTamanhoMaiorTamanhoFraseClick(Sender: TObject);
+var i, j, numEncontrados : integer ;
+    gridRevisor: TStringGrid;
+    textoTraduzido: string;
+    linhaInicio, linhaFim: integer ;
+    tamanhoFrase, tamanhoMaximoFrase: integer ;
+begin
+  // Inicializa grid de pesquisa
+  gridRevisor := frRevisor.StringGrid1 ;
+  gridPesquisa.RowCount := 0;
+  gridPesquisa.ColCount := gridRevisor.ColCount ;
+  numEncontrados := 0;
+
+  // Recupera o tamanho maximo da frase
+  if (length(edTamanhoFrase.Text) = 0) then exit ;
+  tamanhoMaximoFrase := Integer.Parse(edTamanhoFrase.Text) ;
+
+  // Recupera linha de inicio e fim
+  linhaInicio := 1 ;
+  linhaFim := gridRevisor.RowCount ;
+  if (length(edLinhaInicial.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicial.Text) ;
+  if (length(edLinhaFinal.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinal.Text) ;
+
+  // Coloca na grid as linhas correspondentes à pesquisa
+  for i := linhaInicio to linhaFim do begin
+    tamanhoFrase := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[2,i]) ;
+
+    if(tamanhoFrase > tamanhoMaximoFrase) then begin
+      numEncontrados := numEncontrados + 1;
+      gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
+      gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
+      for j := 1 to gridRevisor.ColCount do begin
+        gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridRevisor.Cells[j, i] ;
+      end;
+    end;
+  end;
+
+  lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
+  gridPesquisa.Repaint ;
+end;
+
 procedure TfrPesquisar.btPesquisarTraduzidoClick(Sender: TObject);
 begin
   pesquisar(2, edFraseTraduzida.Text) ;
@@ -198,6 +249,7 @@ begin
   Begin
      linhaGridRevisor:= Integer.Parse(gridPesquisa.Cells[0, linhaSelecionada]) ;
      frRevisor.StringGrid1.Row := linhaGridRevisor ;
+     frRevisor.mantemLinhaSelecionadaMeioGrid;
   End;
 end;
 

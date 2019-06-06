@@ -162,8 +162,10 @@ type
     procedure salvarArquivoAtual ;
     function getArquivosCarregados: TStringList ;
     function removeQuebrasLinha(texto: string) : string ;
-    procedure mantemLinhaSelecionadaMeioGrid ;
+    function Split(const Texto, Delimitador: string): TStringDynArray;
   public
+    procedure mantemLinhaSelecionadaMeioGrid ;
+    function getTamanhoMaiorFrase(textoMemo: String) : integer ;
     { Public declarations }
   end;
 
@@ -183,6 +185,57 @@ implementation
 {$R *.dfm}
 
 uses Usobre, Unit1, UPesquisar ;
+
+function TfrRevisor.Split(const Texto, Delimitador: string): TStringDynArray;
+var
+  i: integer;
+  Len: integer;
+  PosStart: integer;
+  PosDel: integer;
+  TempText:string;
+begin
+  i := 0;
+  SetLength(Result, 1);
+  Len := Length(Delimitador);
+  PosStart := 1;
+  PosDel := Pos(Delimitador, Texto);
+  TempText:=  Texto;
+  while PosDel > 0 do
+    begin
+      Result[i] := Copy(TempText, PosStart, PosDel - PosStart);
+      PosStart := PosDel + Len;
+      TempText:=Copy(TempText, PosStart, Length(TempText));
+      PosDel := Pos(Delimitador, TempText);
+      PosStart := 1;
+      inc(i);
+      SetLength(Result, i + 1);
+    end;
+  Result[i] := Copy(TempText, PosStart, Length(TempText));
+end;
+
+//---------------------------------------------------------------------------------------
+// Dado o texto com várias frases, separadas por /n, retorna o tamanho da maior frase
+//---------------------------------------------------------------------------------------
+function TfrRevisor.getTamanhoMaiorFrase(textoMemo: String) : integer ;
+var  frases: TStringDynArray;
+     frase : string ;
+     maxCaracteresFrase, i : integer ;
+begin
+   // Quebra o texto informado em frases
+   textoMemo := textoMemo.TrimRight ;
+   textoMemo := textoMemo.Replace('\r', '') ;
+   frases := Split(textoMemo, '\n');
+
+   // Conta o tamanho da maior frase
+   maxCaracteresFrase := 0 ;
+   for i := 0 to length(frases)-1 do begin
+     frase := frases[i] ;
+     if frase.Length > maxCaracteresFrase then
+        maxCaracteresFrase := frase.Length ;
+   end;
+
+   getTamanhoMaiorFrase:= maxCaracteresFrase;
+End;
 
 //------------------------------------------------------
 // Mantém a linha selecionada no meio da grid
@@ -557,32 +610,6 @@ begin
    editor.SelLength := SelLengthBak;
 end;
 
-function Split(const Texto, Delimitador: string): TStringDynArray;
-var
-  i: integer;
-  Len: integer;
-  PosStart: integer;
-  PosDel: integer;
-  TempText:string;
-begin
-  i := 0;
-  SetLength(Result, 1);
-  Len := Length(Delimitador);
-  PosStart := 1;
-  PosDel := Pos(Delimitador, Texto);
-  TempText:=  Texto;
-  while PosDel > 0 do
-    begin
-      Result[i] := Copy(TempText, PosStart, PosDel - PosStart);
-      PosStart := PosDel + Len;
-      TempText:=Copy(TempText, PosStart, Length(TempText));
-      PosDel := Pos(Delimitador, TempText);
-      PosStart := 1;
-      inc(i);
-      SetLength(Result, i + 1);
-    end;
-  Result[i] := Copy(TempText, PosStart, Length(TempText));
-end;
 
 //------------------------------------------------------------------------------
 // Quando o texto do memo ingles muda, destaca \n
@@ -638,16 +665,17 @@ begin
    // Quebra o texto traduzido em frases
    textoTraduzido := MemoTraduzido.Text ;
    textoTraduzido := textoTraduzido.TrimRight ;
-   frases := Split(textoTraduzido, '\n');
+   //frases := Split(textoTraduzido, '\n');
 
    // Conta o tamanho da maior frase
-   maxCaracteresFrase := 0 ;
-   for i := 0 to length(frases)-1 do begin
-     frase := frases[i] ;
-     frase := frase.Replace('\r', '');
-     if frase.Length > maxCaracteresFrase then
-        maxCaracteresFrase := frase.Length ;
-   end;
+   maxCaracteresFrase := getTamanhoMaiorFrase(MemoTraduzido.Text);
+//   maxCaracteresFrase := 0 ;
+//   for i := 0 to length(frases)-1 do begin
+//     frase := frases[i] ;
+//     frase := frase.Replace('\r', '');
+//     if frase.Length > maxCaracteresFrase then
+//        maxCaracteresFrase := frase.Length ;
+//   end;
 
   // Atualiza o numero de frases e o maximo de caracteres por frase da traducao
   lbNumFrasesTraducao.Caption := Integer.ToString(length(frases));

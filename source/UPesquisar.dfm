@@ -35,8 +35,8 @@ object frPesquisar: TfrPesquisar
     TabOrder = 0
     OnClick = gridPesquisaClick
     OnDrawCell = gridPesquisaDrawCell
-    ExplicitTop = 169
-    ExplicitHeight = 388
+    ExplicitLeft = 8
+    ExplicitTop = 183
   end
   object pnPesquisa: TPanel
     Left = 0
@@ -48,8 +48,8 @@ object frPesquisar: TfrPesquisar
     object lbInfo: TLabel
       Left = 12
       Top = 164
-      Width = 98
-      Height = 19
+      Width = 3
+      Height = 13
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clRed
       Font.Height = -11
@@ -67,10 +67,6 @@ object frPesquisar: TfrPesquisar
       TabOrder = 0
       object TabSheet1: TTabSheet
         Caption = 'Pesquisar'
-        ExplicitLeft = 0
-        ExplicitTop = 32
-        ExplicitWidth = 932
-        ExplicitHeight = 165
         DesignSize = (
           956
           132)
@@ -95,7 +91,6 @@ object frPesquisar: TfrPesquisar
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
-          ExplicitWidth = 840
         end
         object edFraseTraduzida: TEdit
           Left = 95
@@ -104,7 +99,6 @@ object frPesquisar: TfrPesquisar
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
-          ExplicitWidth = 824
         end
         object btPesquisarIngles: TBitBtn
           Left = 39
@@ -120,7 +114,6 @@ object frPesquisar: TfrPesquisar
           ShowHint = True
           TabOrder = 2
           OnClick = btPesquisarInglesClick
-          ExplicitLeft = 15
         end
         object btPesquisarTraduzido: TBitBtn
           Left = 218
@@ -136,7 +129,6 @@ object frPesquisar: TfrPesquisar
           ShowHint = True
           TabOrder = 3
           OnClick = btPesquisarTraduzidoClick
-          ExplicitLeft = 194
         end
         object BitBtn1: TBitBtn
           Left = 394
@@ -156,9 +148,6 @@ object frPesquisar: TfrPesquisar
       object TabSheet2: TTabSheet
         Caption = 'Substituir'
         ImageIndex = 1
-        ExplicitLeft = 44
-        ExplicitTop = 40
-        ExplicitHeight = 143
         DesignSize = (
           956
           132)
@@ -183,7 +172,6 @@ object frPesquisar: TfrPesquisar
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
-          ExplicitWidth = 817
         end
         object edTextoSubstituir: TEdit
           Left = 94
@@ -192,7 +180,6 @@ object frPesquisar: TfrPesquisar
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
-          ExplicitWidth = 819
         end
         object btSubstituir: TBitBtn
           Left = 194
@@ -222,6 +209,74 @@ object frPesquisar: TfrPesquisar
           ShowHint = True
           TabOrder = 3
           OnClick = BitBtn2Click
+        end
+      end
+      object TabSheet3: TTabSheet
+        Caption = 'Pesquisar Por Tamanho Frase'
+        ImageIndex = 2
+        ExplicitLeft = 8
+        ExplicitTop = 25
+        DesignSize = (
+          956
+          132)
+        object Label5: TLabel
+          Left = 10
+          Top = 20
+          Width = 78
+          Height = 13
+          Caption = 'Tamanho Frase:'
+        end
+        object Label6: TLabel
+          Left = 179
+          Top = 20
+          Width = 59
+          Height = 13
+          Caption = 'Linha Inicial:'
+        end
+        object Label7: TLabel
+          Left = 333
+          Top = 20
+          Width = 54
+          Height = 13
+          Caption = 'Linha Final:'
+        end
+        object edTamanhoFrase: TEdit
+          Left = 94
+          Top = 17
+          Width = 79
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 0
+        end
+        object edLinhaInicial: TEdit
+          Left = 242
+          Top = 17
+          Width = 79
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 1
+        end
+        object edLinhaFinal: TEdit
+          Left = 393
+          Top = 17
+          Width = 79
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 2
+        end
+        object btPesquisarLinhasTamanhoMaiorTamanhoFrase: TBitBtn
+          Left = 10
+          Top = 64
+          Width = 367
+          Height = 25
+          Hint = 'Pesquisar frases com diferentes n'#250'meros de frases'
+          Caption = 'Pesquisar linhas com frases maiores que o tamanho da frase'
+          Kind = bkAll
+          NumGlyphs = 2
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 3
+          OnClick = btPesquisarLinhasTamanhoMaiorTamanhoFraseClick
         end
       end
     end

@@ -2,7 +2,7 @@ Ferramenta de Apoio para Tradução e Revisão de Textos
 
 <a href="https://ibb.co/St8XwGG"><img src="https://i.ibb.co/Mc4DkQQ/tool.jpg" alt="tool" border="0"></a>
 
-Última versão: 1.2019.05.30 <a href="https://github.com/cfarl/revisor/blob/master/distribuicao/ProjetoRevisor_2019_05_30.zip">Download</a>
+Última versão: 1.2019.06.06 <a href="https://github.com/cfarl/revisor/blob/master/distribuicao/ProjetoRevisor_2019_06_06.zip">Download</a>
 
 Funcionalidades básicas: 
 
