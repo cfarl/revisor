@@ -655,7 +655,7 @@ end;
 // Quando o texto do memo traduzido muda, destaca \n
 //------------------------------------------------------------------------------
 procedure TfrRevisor.MemoTraduzidoChange(Sender: TObject);
-var  frases: TStringDynArray;
+var  //frases: TStringDynArray;
      textoTraduzido, frase, primeiraTraducao : string ;
      maxCaracteresFrase, i : integer ;
 begin
@@ -678,7 +678,7 @@ begin
 //   end;
 
   // Atualiza o numero de frases e o maximo de caracteres por frase da traducao
-  lbNumFrasesTraducao.Caption := Integer.ToString(length(frases));
+  lbNumFrasesTraducao.Caption := Integer.ToString(length(Split(textoTraduzido, '\n')));
   lbMaxFrase.Caption := Integer.ToString(maxCaracteresFrase);
   if(lbNumFrasesTraducao.Caption <> lbNumFrasesIngles.Caption) then
   Begin
