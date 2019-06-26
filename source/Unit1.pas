@@ -43,9 +43,11 @@ type
     RESTClient1: TRESTClient;
     RESTRequest1: TRESTRequest;
     RESTResponse1: TRESTResponse;
+    Button1: TButton;
       procedure RESTRequest1AfterExecute(Sender: TCustomRESTRequest);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
       private
          { Private declarations }
       public
@@ -59,6 +61,11 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  PageControl1Change(Sender);
+end;
 
 procedure TForm1.FormCreate(Sender: TObject);
  var SL: TStringList;

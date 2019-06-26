@@ -36,6 +36,17 @@ type
     Label7: TLabel;
     edLinhaFinal: TEdit;
     btPesquisarLinhasTamanhoMaiorTamanhoFrase: TBitBtn;
+    TabSheet4: TTabSheet;
+    OpenDialog1: TOpenDialog;
+    Panel1: TPanel;
+    Splitter1: TSplitter;
+    Label8: TLabel;
+    edArquivoGlossario: TEdit;
+    Button1: TButton;
+    gridGlossario: TStringGrid;
+    pnBotoesConsultaGlossario: TPanel;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -46,6 +57,9 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure btPesquisarLinhasTamanhoMaiorTamanhoFraseClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     { Private declarations }
     procedure pesquisar(coluna: integer; texto: string);
@@ -92,32 +106,6 @@ begin
   gridPesquisa.Repaint ;
 end;
 
-function Split(const Texto, Delimitador: string): TStringDynArray;
-var
-  i: integer;
-  Len: integer;
-  PosStart: integer;
-  PosDel: integer;
-  TempText:string;
-begin
-  i := 0;
-  SetLength(Result, 1);
-  Len := Length(Delimitador);
-  PosStart := 1;
-  PosDel := Pos(Delimitador, Texto);
-  TempText:=  Texto;
-  while PosDel > 0 do
-    begin
-      Result[i] := Copy(TempText, PosStart, PosDel - PosStart);
-      PosStart := PosDel + Len;
-      TempText:=Copy(TempText, PosStart, Length(TempText));
-      PosDel := Pos(Delimitador, TempText);
-      PosStart := 1;
-      inc(i);
-      SetLength(Result, i + 1);
-    end;
-  Result[i] := Copy(TempText, PosStart, Length(TempText));
-end;
 
 procedure TfrPesquisar.BitBtn1Click(Sender: TObject);
 var i, j, numEncontrados : integer ;
@@ -135,7 +123,7 @@ begin
     textoTraduzido := gridRevisor.Cells[2,i] ;
     textoIngles := gridRevisor.Cells[1,i] ;
 
-    if(length(split(textoTraduzido, '\n')) <>  length(split(textoIngles, '\n'))) then begin
+    if(length(frRevisor.split(textoTraduzido, '\n')) <>  length(frRevisor.split(textoIngles, '\n'))) then begin
       numEncontrados := numEncontrados + 1;
       gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
       gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
@@ -152,6 +140,65 @@ end;
 procedure TfrPesquisar.BitBtn2Click(Sender: TObject);
 begin
 pesquisar(2, edTextoOriginal.Text) ;
+end;
+
+procedure TfrPesquisar.BitBtn3Click(Sender: TObject);
+begin
+  if(gridGlossario.Row > 0) then
+     pesquisar(1, gridGlossario.Cells[0, gridGlossario.Row]) ;
+end;
+
+procedure TfrPesquisar.BitBtn4Click(Sender: TObject);
+var i, ig, pos, j, numEncontrados : integer ;
+    gridRevisor: TStringGrid;
+    inglesGlossario, inglesRevisor: string ;
+    traduzidoGlossario, traduzidoRevisor: string ;
+    deveIncluir : boolean ;
+begin
+  // Inicializa grid de pesquisa
+  gridRevisor := frRevisor.StringGrid1 ;
+  gridPesquisa.RowCount := 0;
+  gridPesquisa.ColCount := gridRevisor.ColCount ;
+  numEncontrados := 0;
+
+  // Coloca na grid as linhas que não estão de acordo com o glossario
+  for i := 1 to gridRevisor.RowCount do begin
+    inglesRevisor := gridRevisor.Cells[1, i].ToLower ;
+    traduzidoRevisor := gridRevisor.Cells[2, i].ToLower ;
+
+    for ig := 1 to gridGlossario.RowCount do begin
+      // Recupera as palavras do glosssario
+      inglesGlossario := gridGlossario.Cells[0, ig-1].ToLower.Trim ;
+      traduzidoGlossario := gridGlossario.Cells[1, ig-1].ToLower.Trim ;
+
+      // Se a linha de texto contem o texto em ingles, mas nao contem o texto traduzido, adiciona
+      if(inglesRevisor.Contains(inglesGlossario) and (not traduzidoRevisor.Contains(traduzidoGlossario))) then begin
+        deveIncluir := true ;
+
+        // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
+        pos := inglesRevisor.IndexOf(inglesGlossario) ;
+        if (pos > 1) and (inglesRevisor[pos] <> ' ') then deveIncluir := false ;
+        if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (inglesRevisor[pos + length(inglesGlossario)] <> ' ') then deveIncluir := false ;
+
+        if(deveIncluir) then begin
+          numEncontrados := numEncontrados + 1;
+          gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
+          gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
+          for j := 1 to gridRevisor.ColCount do begin
+            gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridRevisor.Cells[j, i] ;
+            if(j = 1) then
+               gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridPesquisa.Cells[j, gridPesquisa.RowCount-1]
+                  + ' (' + inglesGlossario + '->' + traduzidoGlossario + ')' ;
+          end;
+          // Passa para a proxima linha do texto
+          break;
+        end;
+      end;
+    end;
+  end;
+
+  lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
+  gridPesquisa.Repaint ;
 end;
 
 procedure TfrPesquisar.btPesquisarInglesClick(Sender: TObject);
@@ -229,6 +276,36 @@ begin
   frRevisor.salvarTodosArquivos;
 end;
 
+procedure TfrPesquisar.Button1Click(Sender: TObject);
+var Values: TStringList ;
+    i: integer ;
+    termoGlossario: TStringDynArray;
+    valores: string ;
+begin
+  if OpenDialog1.Execute then
+  Begin
+     edArquivoGlossario.Text := OpenDialog1.FileName ;
+
+     // Inicializa grid de glossario
+    Values := TStringList.Create;
+    Values.LoadFromFile(OpenDialog1.FileName);
+    gridGlossario.RowCount := 0;
+
+     // Carrega glossario na grid
+     for i := 0 to Values.Count - 1 do begin
+        valores := Values[i] ;
+        //if(valores <> '') then begin
+          termoGlossario := frRevisor.Split(valores, '=');
+          gridGlossario.RowCount:= i;
+          gridGlossario.Cells[0, i] := termoGlossario[0] ;
+          gridGlossario.Cells[1, i] := termoGlossario[1] ;
+        //end;
+     end;
+
+     gridGlossario.Repaint;
+  End;
+end;
+
 procedure TfrPesquisar.FormResize(Sender: TObject);
 var numColunas : integer ;
 begin
@@ -237,6 +314,7 @@ begin
 
   // Ajusta a largura da primeira coluna
   gridPesquisa.DefaultColWidth := (frPesquisar.Width-10) div (numColunas-1);
+  gridGlossario.DefaultColWidth := (frPesquisar.Width-pnBotoesConsultaGlossario.Width-10) div 2;
   gridPesquisa.ColWidths[0] := 50 ;
 end;
 

@@ -31,7 +31,7 @@ object Form1: TForm1
     Top = 29
     Width = 739
     Height = 490
-    ActivePage = TabSheet1
+    ActivePage = TabSheet4
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 1
     OnChange = PageControl1Change
@@ -50,10 +50,6 @@ object Form1: TForm1
     object TabSheet2: TTabSheet
       Caption = 'Reverso'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object WebBrowser1: TWebBrowser
         Left = 0
         Top = 0
@@ -76,10 +72,6 @@ object Form1: TForm1
     object TabSheet3: TTabSheet
       Caption = 'UrbanDictionary'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object WebBrowser2: TWebBrowser
         Left = 0
         Top = 0
@@ -102,10 +94,6 @@ object Form1: TForm1
     object TabSheet4: TTabSheet
       Caption = 'Google Imagens'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object WebBrowser3: TWebBrowser
         Left = 0
         Top = 0
@@ -128,10 +116,6 @@ object Form1: TForm1
     object TabSheet5: TTabSheet
       Caption = 'Bing'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Memo2: TMemo
         Left = 0
         Top = 0
@@ -142,6 +126,15 @@ object Form1: TForm1
         TabOrder = 0
       end
     end
+  end
+  object Button1: TButton
+    Left = 425
+    Top = 2
+    Width = 75
+    Height = 25
+    Caption = 'Pesquisar'
+    TabOrder = 2
+    OnClick = Button1Click
   end
   object RESTClient1: TRESTClient
     Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'

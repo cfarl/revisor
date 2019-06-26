@@ -1959,7 +1959,7 @@ object frSobre: TfrSobre
     Top = 152
     Width = 75
     Height = 16
-    Caption = '1.2019.06.07'
+    Caption = '1.2019.06.25'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13

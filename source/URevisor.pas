@@ -27,7 +27,6 @@ type
     Splitter3: TSplitter;
     Panel2: TPanel;
     Label8: TLabel;
-    lbLinha: TLabel;
     Panel3: TPanel;
     Label9: TLabel;
     edIngles: TEdit;
@@ -80,7 +79,7 @@ type
     Label19: TLabel;
     edPastaEspanhol: TEdit;
     btEscolherPastaEspanhol: TButton;
-    Label20: TLabel;
+    lbCarregados: TLabel;
     lbArquivo: TLabel;
     btJuntarPrimeiraTraducao: TBitBtn;
     lbDescNumFrasesTraducao: TLabel;
@@ -105,6 +104,11 @@ type
     Label26: TLabel;
     Label24: TLabel;
     btPesquisar: TBitBtn;
+    btSetarLinha: TButton;
+    lbTotalLinhas: TLabel;
+    Label20: TLabel;
+    Panel1: TPanel;
+    edLinha: TEdit;
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure MemoInglesChange(Sender: TObject);
@@ -151,6 +155,7 @@ type
       Shift: TShiftState);
     procedure btPesquisarClick(Sender: TObject);
     procedure salvarTodosArquivos ;
+    procedure btSetarLinhaClick(Sender: TObject);
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
@@ -162,8 +167,8 @@ type
     procedure salvarArquivoAtual ;
     function getArquivosCarregados: TStringList ;
     function removeQuebrasLinha(texto: string) : string ;
-    function Split(const Texto, Delimitador: string): TStringDynArray;
   public
+    function Split(const Texto, Delimitador: string): TStringDynArray;
     procedure mantemLinhaSelecionadaMeioGrid ;
     function getTamanhoMaiorFrase(textoMemo: String) : integer ;
     { Public declarations }
@@ -365,7 +370,8 @@ procedure TfrRevisor.StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
 begin
   // Mostra a linha atual da grid
   if(Arow > 0) and (StringsNomeArquivoTraduzido.Count >0) then begin
-      lbLinha.Caption := Integer.ToString(ARow) + ' de ' + Integer.ToString(StringGrid1.RowCount-1) ;
+      lbTotalLinhas.Caption := Integer.ToString(StringGrid1.RowCount-1) ;
+      edLinha.Text := Integer.ToString(ARow) ;
       lbArquivo.Caption :=  StringsNomeArquivoTraduzido[ARow-1] ;
   end;
 
@@ -1036,6 +1042,26 @@ procedure TfrRevisor.btSairClick(Sender: TObject);
 begin
    btFecharClick(Sender);
    frRevisor.Close;
+end;
+
+procedure TfrRevisor.btSetarLinhaClick(Sender: TObject);
+var linha: integer ;
+begin
+  linha := Integer.Parse(edLinha.Text) ;
+  if(linha < 0) then Begin
+    edLinha.Text := '0' ;
+    StringGrid1.Row :=  1;
+  End
+
+  else if(linha >= StringGrid1.RowCount) then Begin
+    edLinha.Text := Integer.ToString(StringGrid1.RowCount-1) ;
+    StringGrid1.Row := StringGrid1.RowCount-1 ;
+  End
+
+  else Begin
+    StringGrid1.Row := linha ;
+  End;
+
 end;
 
 //------------------------------------------------------

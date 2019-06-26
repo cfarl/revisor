@@ -14,11 +14,21 @@ object frPesquisar: TfrPesquisar
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 0
+    Top = 188
+    Width = 966
+    Height = 3
+    Cursor = crVSplit
+    Align = alTop
+    ExplicitTop = 185
+    ExplicitWidth = 372
+  end
   object gridPesquisa: TStringGrid
     Left = 0
-    Top = 185
+    Top = 191
     Width = 966
-    Height = 372
+    Height = 366
     TabStop = False
     Align = alClient
     BevelInner = bvLowered
@@ -35,14 +45,14 @@ object frPesquisar: TfrPesquisar
     TabOrder = 0
     OnClick = gridPesquisaClick
     OnDrawCell = gridPesquisaDrawCell
-    ExplicitLeft = 8
-    ExplicitTop = 183
+    ExplicitTop = 185
+    ExplicitHeight = 372
   end
   object pnPesquisa: TPanel
     Left = 0
     Top = 0
     Width = 966
-    Height = 185
+    Height = 188
     Align = alTop
     TabOrder = 1
     object lbInfo: TLabel
@@ -61,15 +71,16 @@ object frPesquisar: TfrPesquisar
       Left = 1
       Top = 1
       Width = 964
-      Height = 160
+      Height = 186
       ActivePage = TabSheet1
-      Align = alTop
+      Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet
         Caption = 'Pesquisar'
+        ExplicitHeight = 132
         DesignSize = (
           956
-          132)
+          158)
         object Label3: TLabel
           Left = 10
           Top = 20
@@ -148,9 +159,10 @@ object frPesquisar: TfrPesquisar
       object TabSheet2: TTabSheet
         Caption = 'Substituir'
         ImageIndex = 1
+        ExplicitHeight = 132
         DesignSize = (
           956
-          132)
+          158)
         object Label2: TLabel
           Left = 8
           Top = 24
@@ -214,11 +226,10 @@ object frPesquisar: TfrPesquisar
       object TabSheet3: TTabSheet
         Caption = 'Pesquisar Por Tamanho Frase'
         ImageIndex = 2
-        ExplicitLeft = 8
-        ExplicitTop = 25
+        ExplicitHeight = 132
         DesignSize = (
           956
-          132)
+          158)
         object Label5: TLabel
           Left = 10
           Top = 20
@@ -279,6 +290,117 @@ object frPesquisar: TfrPesquisar
           OnClick = btPesquisarLinhasTamanhoMaiorTamanhoFraseClick
         end
       end
+      object TabSheet4: TTabSheet
+        Caption = 'Pesquisar por Gloss'#225'rio'
+        ImageIndex = 3
+        ExplicitLeft = 8
+        ExplicitTop = 25
+        ExplicitHeight = 132
+        object Panel1: TPanel
+          Left = 0
+          Top = 0
+          Width = 956
+          Height = 49
+          Align = alTop
+          TabOrder = 0
+          DesignSize = (
+            956
+            49)
+          object Label8: TLabel
+            Left = 2
+            Top = 12
+            Width = 47
+            Height = 13
+            Caption = 'Gloss'#225'rio:'
+          end
+          object edArquivoGlossario: TEdit
+            Left = 55
+            Top = 9
+            Width = 786
+            Height = 21
+            Anchors = [akLeft, akTop, akRight]
+            TabOrder = 0
+          end
+          object Button1: TButton
+            Left = 847
+            Top = 7
+            Width = 98
+            Height = 25
+            Caption = 'Carregar'
+            TabOrder = 1
+            OnClick = Button1Click
+          end
+        end
+        object gridGlossario: TStringGrid
+          Left = 0
+          Top = 49
+          Width = 760
+          Height = 109
+          TabStop = False
+          Align = alClient
+          BevelInner = bvLowered
+          ColCount = 2
+          DefaultColWidth = 20
+          DefaultRowHeight = 10
+          DefaultDrawing = False
+          FixedCols = 0
+          RowCount = 2
+          FixedRows = 0
+          Options = [goDrawFocusSelected, goRowSelect]
+          ParentColor = True
+          ScrollBars = ssVertical
+          TabOrder = 1
+          OnDrawCell = gridPesquisaDrawCell
+          ExplicitTop = 80
+          ExplicitWidth = 956
+          ExplicitHeight = 43
+        end
+        object pnBotoesConsultaGlossario: TPanel
+          Left = 760
+          Top = 49
+          Width = 196
+          Height = 109
+          Align = alRight
+          TabOrder = 2
+          DesignSize = (
+            196
+            109)
+          object BitBtn3: TBitBtn
+            Left = 6
+            Top = 6
+            Width = 179
+            Height = 25
+            Hint = 'Pesquisar frases em ingl'#234's'
+            Anchors = [akTop, akRight]
+            Caption = 'Pesquisar Selecionado'
+            Kind = bkAll
+            NumGlyphs = 2
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 0
+            OnClick = BitBtn3Click
+          end
+          object BitBtn4: TBitBtn
+            Left = 11
+            Top = 37
+            Width = 173
+            Height = 25
+            Hint = 'Pesquisar frases em ingl'#234's'
+            Anchors = [akTop, akRight]
+            Caption = 'Pesquisar Viola'#231#227'o Gloss'#225'rio'
+            Kind = bkAll
+            NumGlyphs = 2
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 1
+            OnClick = BitBtn4Click
+          end
+        end
+      end
     end
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 768
+    Top = 40
   end
 end
