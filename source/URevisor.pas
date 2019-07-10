@@ -62,7 +62,7 @@ type
     Splitter2: TSplitter;
     pnTraduzido: TPanel;
     Label6: TLabel;
-    lbMaxFrase: TLabel;
+    lbMaxFraseTraduzida: TLabel;
     pnAbrirArquivosInglesTraduzidoEspanhol: TPanel;
     pnBotoesCarregar: TPanel;
     pnAbrirPastasInglesTraduzidoEspanhol: TPanel;
@@ -109,6 +109,12 @@ type
     Label20: TLabel;
     Panel1: TPanel;
     edLinha: TEdit;
+    Label27: TLabel;
+    lbMaxFraseIngles: TLabel;
+    Label28: TLabel;
+    lbNumFrasesEspanhol: TLabel;
+    Label30: TLabel;
+    lbMaxFraseEspanhol: TLabel;
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure MemoInglesChange(Sender: TObject);
@@ -623,6 +629,7 @@ end;
 procedure TfrRevisor.MemoInglesChange(Sender: TObject);
 var textoIngles, textoTraduzido, primeiraTraducao: string ;
      frases: TStringDynArray;
+     maxCaracteresFrase: integer;
 begin
    Destacar(memoIngles, '\r\n');
    Destacar(memoIngles, '\n');
@@ -632,9 +639,12 @@ begin
    textoIngles := textoIngles.TrimRight ;
    frases := Split(textoIngles, '\n');
 
-  lbNumFrasesIngles.Caption := Integer.ToString(length(frases));
-  pnRepetido.Visible := MemoIngles.Lines.Text.StartsWith('(REPETIDO)') ;
+   // Conta o tamanho da maior frase
+   maxCaracteresFrase := getTamanhoMaiorFrase(MemoIngles.Text);
 
+  lbNumFrasesIngles.Caption := Integer.ToString(length(frases));
+  lbMaxFraseIngles.Caption := Integer.ToString(maxCaracteresFrase);
+  pnRepetido.Visible := MemoIngles.Lines.Text.StartsWith('(REPETIDO)') ;
 end;
 
 
@@ -685,7 +695,7 @@ begin
 
   // Atualiza o numero de frases e o maximo de caracteres por frase da traducao
   lbNumFrasesTraducao.Caption := Integer.ToString(length(Split(textoTraduzido, '\n')));
-  lbMaxFrase.Caption := Integer.ToString(maxCaracteresFrase);
+  lbMaxFraseTraduzida.Caption := Integer.ToString(maxCaracteresFrase);
   if(lbNumFrasesTraducao.Caption <> lbNumFrasesIngles.Caption) then
   Begin
     lbDescNumFrasesTraducao.Font.Color := clRed ;
@@ -716,9 +726,23 @@ end;
 // Quando o texto do memo espanhol muda, destaca \n
 //------------------------------------------------------------------------------
 procedure TfrRevisor.MemoEspanholChange(Sender: TObject);
+var textoEspanhol, textoTraduzido, primeiraTraducao: string ;
+     frases: TStringDynArray;
+     maxCaracteresFrase: integer;
 begin
    Destacar(memoEspanhol, '\r\n');
    Destacar(memoEspanhol, '\n');
+
+   // Quebra o texto em ingles em frases
+   textoEspanhol := MemoEspanhol.Text ;
+   textoEspanhol := textoEspanhol.TrimRight ;
+   frases := Split(textoEspanhol, '\n');
+
+   // Conta o tamanho da maior frase
+   maxCaracteresFrase := getTamanhoMaiorFrase(MemoEspanhol.Text);
+
+  lbNumFrasesEspanhol.Caption := Integer.ToString(length(frases));
+  lbMaxFraseEspanhol.Caption := Integer.ToString(maxCaracteresFrase);
 end;
 
 //------------------------------------------------------------------------------

@@ -45,8 +45,6 @@ object frPesquisar: TfrPesquisar
     TabOrder = 0
     OnClick = gridPesquisaClick
     OnDrawCell = gridPesquisaDrawCell
-    ExplicitTop = 185
-    ExplicitHeight = 372
   end
   object pnPesquisa: TPanel
     Left = 0
@@ -72,12 +70,11 @@ object frPesquisar: TfrPesquisar
       Top = 1
       Width = 964
       Height = 186
-      ActivePage = TabSheet1
+      ActivePage = TabSheet3
       Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet
         Caption = 'Pesquisar'
-        ExplicitHeight = 132
         DesignSize = (
           956
           158)
@@ -159,7 +156,6 @@ object frPesquisar: TfrPesquisar
       object TabSheet2: TTabSheet
         Caption = 'Substituir'
         ImageIndex = 1
-        ExplicitHeight = 132
         DesignSize = (
           956
           158)
@@ -226,7 +222,6 @@ object frPesquisar: TfrPesquisar
       object TabSheet3: TTabSheet
         Caption = 'Pesquisar Por Tamanho Frase'
         ImageIndex = 2
-        ExplicitHeight = 132
         DesignSize = (
           956
           158)
@@ -293,9 +288,6 @@ object frPesquisar: TfrPesquisar
       object TabSheet4: TTabSheet
         Caption = 'Pesquisar por Gloss'#225'rio'
         ImageIndex = 3
-        ExplicitLeft = 8
-        ExplicitTop = 25
-        ExplicitHeight = 132
         object Panel1: TPanel
           Left = 0
           Top = 0
@@ -351,9 +343,6 @@ object frPesquisar: TfrPesquisar
           ScrollBars = ssVertical
           TabOrder = 1
           OnDrawCell = gridPesquisaDrawCell
-          ExplicitTop = 80
-          ExplicitWidth = 956
-          ExplicitHeight = 43
         end
         object pnBotoesConsultaGlossario: TPanel
           Left = 760
