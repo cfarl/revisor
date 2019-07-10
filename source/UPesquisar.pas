@@ -35,7 +35,7 @@ type
     edLinhaInicial: TEdit;
     Label7: TLabel;
     edLinhaFinal: TEdit;
-    btPesquisarLinhasTamanhoMaiorTamanhoFrase: TBitBtn;
+    btPesquisarLinhasInglesTamanhoMaiorTamanhoFrase: TBitBtn;
     TabSheet4: TTabSheet;
     OpenDialog1: TOpenDialog;
     Panel1: TPanel;
@@ -47,6 +47,12 @@ type
     pnBotoesConsultaGlossario: TPanel;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
+    Label9: TLabel;
+    Label10: TLabel;
+    lbTamanhosIngles: TLabel;
+    lbTamanhosTraduzido: TLabel;
+    btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFrase: TBitBtn;
+    ckIgnorarLinhasComentario: TCheckBox;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -56,13 +62,17 @@ type
     procedure btSubstituirClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
-    procedure btPesquisarLinhasTamanhoMaiorTamanhoFraseClick(Sender: TObject);
+    procedure btPesquisarLinhasInglesTamanhoMaiorTamanhoFraseClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure TabSheet3Show(Sender: TObject);
+    procedure btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFraseClick(
+      Sender: TObject);
   private
     { Private declarations }
     procedure pesquisar(coluna: integer; texto: string);
+    procedure btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(colunaGrid: integer);
     //procedure inicializaComponentesParaPesquisa ;
   public
     { Public declarations }
@@ -106,6 +116,59 @@ begin
   gridPesquisa.Repaint ;
 end;
 
+function SortDesc(List: TStringList; Index1, Index2: Integer): Integer;
+begin
+  // Negate the result so a descending sort is done.
+  Result := Integer.Parse(List[Index2]) - Integer.Parse(List[Index1]);
+end;
+
+procedure TfrPesquisar.TabSheet3Show(Sender: TObject);
+var i, tamanhoIngles, tamanhoTraduzido: integer ;
+    listaIngles, listaTraduzido: TStringList ;
+    gridRevisor: TStringGrid;
+begin
+ // Inicializa componentes
+ gridRevisor := frRevisor.StringGrid1 ;
+ lbTamanhosIngles.Caption := '' ;
+ lbTamanhosTraduzido.Caption := '' ;
+ listaIngles := TStringList.Create;
+ listaIngles.Duplicates := dupIgnore ;
+ //listaIngles.CustomSort(SortDesc);
+ //listaIngles.Sorted := true ;
+
+ listaTraduzido := TStringList.Create;
+ listaTraduzido.Duplicates := dupIgnore ;
+ //listaTraduzido.CustomSort(SortDesc);
+ //listaTraduzido.Sorted := true ;
+
+ // Constroi lista com os tamanhos maximos das frases em ingles e traduzido
+ for i := 1 to gridRevisor.RowCount do begin
+    if(ckIgnorarLinhasComentario.Checked and
+      (gridRevisor.Cells[1,i].StartsWith('--') or gridRevisor.Cells[1,i].StartsWith('(REPETIDO)--'))) then continue ;
+
+    tamanhoIngles := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[1,i]);
+    if(listaIngles.IndexOf(Integer.ToString(tamanhoIngles)) < 0) then
+      listaIngles.Add(Integer.ToString(tamanhoIngles)) ;
+ end;
+
+  for i := 1 to gridRevisor.RowCount do begin
+    if(ckIgnorarLinhasComentario.Checked and
+      (gridRevisor.Cells[2,i].StartsWith('--') or gridRevisor.Cells[2,i].StartsWith('(REPETIDO) --'))) then continue ;
+
+    tamanhoTraduzido := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[2,i]);
+    if(listaTraduzido.IndexOf(Integer.ToString(tamanhoTraduzido)) < 0) then
+      listaTraduzido.Add(Integer.ToString(tamanhoTraduzido)) ;
+ end;
+
+ // Atualiza labels
+// listaIngles.Sort;
+// listaTraduzido.Sort;
+ listaIngles.CustomSort(SortDesc);
+ listaTraduzido.CustomSort(SortDesc);
+ lbTamanhosIngles.Caption := listaIngles.CommaText ;
+ lbTamanhosTraduzido.Caption := listaTraduzido.CommaText ;
+
+end;
 
 procedure TfrPesquisar.BitBtn1Click(Sender: TObject);
 var i, j, numEncontrados : integer ;
@@ -206,11 +269,15 @@ begin
   pesquisar(1, edFraseIngles.Text) ;
 end;
 
-procedure TfrPesquisar.btPesquisarLinhasTamanhoMaiorTamanhoFraseClick(Sender: TObject);
+//--------------------------------------------------------------------------------
+// Recupera linhas com tamanho maior que o informado na caixa de entrada
+////--------------------------------------------------------------------------------
+procedure TfrPesquisar.btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(colunaGrid: integer);
 var i, j, numEncontrados : integer ;
     gridRevisor: TStringGrid;
     textoTraduzido: string;
     linhaInicio, linhaFim: integer ;
+    textoColuna: string ;
     tamanhoFrase, tamanhoMaximoFrase: integer ;
 begin
   // Inicializa grid de pesquisa
@@ -231,8 +298,15 @@ begin
 
   // Coloca na grid as linhas correspondentes à pesquisa
   for i := linhaInicio to linhaFim do begin
-    tamanhoFrase := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[2,i]) ;
+    // Recupera o texto da coluna
+    textoColuna := gridRevisor.Cells[colunaGrid,i] ;
+    if(ckIgnorarLinhasComentario.Checked and textoColuna.StartsWith('--')) then continue ;
+    if(ckIgnorarLinhasComentario.Checked and textoColuna.StartsWith('(REPETIDO)--')) then continue ;
 
+    // Recupera o tamanho da maior frase
+    tamanhoFrase := frRevisor.getTamanhoMaiorFrase(textoColuna) ;
+
+    // Verifica se o criterio de pesquisa se aplica aqui
     if(tamanhoFrase > tamanhoMaximoFrase) then begin
       numEncontrados := numEncontrados + 1;
       gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
@@ -245,6 +319,18 @@ begin
 
   lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
   gridPesquisa.Repaint ;
+end;
+
+
+procedure TfrPesquisar.btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFraseClick(
+  Sender: TObject);
+begin
+  btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(2) ;
+end;
+
+procedure TfrPesquisar.btPesquisarLinhasInglesTamanhoMaiorTamanhoFraseClick(Sender: TObject);
+begin
+  btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(1) ;
 end;
 
 procedure TfrPesquisar.btPesquisarTraduzidoClick(Sender: TObject);

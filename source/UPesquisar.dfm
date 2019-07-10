@@ -70,7 +70,7 @@ object frPesquisar: TfrPesquisar
       Top = 1
       Width = 964
       Height = 186
-      ActivePage = TabSheet3
+      ActivePage = TabSheet1
       Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet
@@ -222,6 +222,9 @@ object frPesquisar: TfrPesquisar
       object TabSheet3: TTabSheet
         Caption = 'Pesquisar Por Tamanho Frase'
         ImageIndex = 2
+        OnShow = TabSheet3Show
+        ExplicitLeft = 8
+        ExplicitTop = 23
         DesignSize = (
           956
           158)
@@ -245,6 +248,36 @@ object frPesquisar: TfrPesquisar
           Width = 54
           Height = 13
           Caption = 'Linha Final:'
+        end
+        object Label9: TLabel
+          Left = 10
+          Top = 104
+          Width = 83
+          Height = 13
+          Caption = 'Tamanhos ingl'#234's:'
+        end
+        object Label10: TLabel
+          Left = 10
+          Top = 125
+          Width = 99
+          Height = 13
+          Caption = 'Tamanhos tradu'#231#227'o:'
+        end
+        object lbTamanhosIngles: TLabel
+          AlignWithMargins = True
+          Left = 99
+          Top = 106
+          Width = 854
+          Height = 13
+          Caption = '-'
+        end
+        object lbTamanhosTraduzido: TLabel
+          AlignWithMargins = True
+          Left = 115
+          Top = 125
+          Width = 838
+          Height = 13
+          Caption = '-'
         end
         object edTamanhoFrase: TEdit
           Left = 94
@@ -270,19 +303,45 @@ object frPesquisar: TfrPesquisar
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
         end
-        object btPesquisarLinhasTamanhoMaiorTamanhoFrase: TBitBtn
+        object btPesquisarLinhasInglesTamanhoMaiorTamanhoFrase: TBitBtn
           Left = 10
           Top = 64
-          Width = 367
+          Width = 377
           Height = 25
           Hint = 'Pesquisar frases com diferentes n'#250'meros de frases'
-          Caption = 'Pesquisar linhas com frases maiores que o tamanho da frase'
+          Caption = 'Pesquisar linhas ingl'#234's com frases maiores que tamanho da frase'
           Kind = bkAll
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
           TabOrder = 3
-          OnClick = btPesquisarLinhasTamanhoMaiorTamanhoFraseClick
+          OnClick = btPesquisarLinhasInglesTamanhoMaiorTamanhoFraseClick
+        end
+        object btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFrase: TBitBtn
+          Left = 393
+          Top = 64
+          Width = 377
+          Height = 25
+          Hint = 'Pesquisar frases com diferentes n'#250'meros de frases'
+          Caption = 
+            'Pesquisar linhas traduzidas com frases maiores que tamanho da fr' +
+            'ase'
+          Kind = bkAll
+          NumGlyphs = 2
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 4
+          OnClick = btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFraseClick
+        end
+        object ckIgnorarLinhasComentario: TCheckBox
+          Left = 488
+          Top = 19
+          Width = 241
+          Height = 17
+          Caption = 'Ignorar linhas iniciadas com --'
+          Checked = True
+          State = cbChecked
+          TabOrder = 5
         end
       end
       object TabSheet4: TTabSheet
