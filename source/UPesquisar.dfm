@@ -16,7 +16,7 @@ object frPesquisar: TfrPesquisar
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 188
+    Top = 209
     Width = 966
     Height = 3
     Cursor = crVSplit
@@ -26,9 +26,9 @@ object frPesquisar: TfrPesquisar
   end
   object gridPesquisa: TStringGrid
     Left = 0
-    Top = 191
+    Top = 212
     Width = 966
-    Height = 366
+    Height = 345
     TabStop = False
     Align = alClient
     BevelInner = bvLowered
@@ -45,39 +45,31 @@ object frPesquisar: TfrPesquisar
     TabOrder = 0
     OnClick = gridPesquisaClick
     OnDrawCell = gridPesquisaDrawCell
+    ExplicitTop = 191
+    ExplicitHeight = 366
   end
   object pnPesquisa: TPanel
     Left = 0
     Top = 0
     Width = 966
-    Height = 188
+    Height = 209
     Align = alTop
     TabOrder = 1
-    object lbInfo: TLabel
-      Left = 12
-      Top = 164
-      Width = 3
-      Height = 13
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clRed
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
     object PageControl1: TPageControl
       Left = 1
       Top = 1
       Width = 964
-      Height = 186
+      Height = 178
       ActivePage = TabSheet1
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 164
       object TabSheet1: TTabSheet
         Caption = 'Pesquisar'
+        ExplicitHeight = 158
         DesignSize = (
           956
-          158)
+          150)
         object Label3: TLabel
           Left = 10
           Top = 20
@@ -109,7 +101,7 @@ object frPesquisar: TfrPesquisar
           TabOrder = 1
         end
         object btPesquisarIngles: TBitBtn
-          Left = 39
+          Left = 10
           Top = 96
           Width = 173
           Height = 25
@@ -124,7 +116,7 @@ object frPesquisar: TfrPesquisar
           OnClick = btPesquisarInglesClick
         end
         object btPesquisarTraduzido: TBitBtn
-          Left = 218
+          Left = 202
           Top = 96
           Width = 170
           Height = 25
@@ -156,9 +148,10 @@ object frPesquisar: TfrPesquisar
       object TabSheet2: TTabSheet
         Caption = 'Substituir'
         ImageIndex = 1
+        ExplicitHeight = 158
         DesignSize = (
           956
-          158)
+          150)
         object Label2: TLabel
           Left = 8
           Top = 24
@@ -223,11 +216,10 @@ object frPesquisar: TfrPesquisar
         Caption = 'Pesquisar Por Tamanho Frase'
         ImageIndex = 2
         OnShow = TabSheet3Show
-        ExplicitLeft = 8
-        ExplicitTop = 23
+        ExplicitHeight = 158
         DesignSize = (
           956
-          158)
+          150)
         object Label5: TLabel
           Left = 10
           Top = 20
@@ -267,7 +259,7 @@ object frPesquisar: TfrPesquisar
           AlignWithMargins = True
           Left = 99
           Top = 106
-          Width = 854
+          Width = 4
           Height = 13
           Caption = '-'
         end
@@ -275,7 +267,7 @@ object frPesquisar: TfrPesquisar
           AlignWithMargins = True
           Left = 115
           Top = 125
-          Width = 838
+          Width = 4
           Height = 13
           Caption = '-'
         end
@@ -347,6 +339,7 @@ object frPesquisar: TfrPesquisar
       object TabSheet4: TTabSheet
         Caption = 'Pesquisar por Gloss'#225'rio'
         ImageIndex = 3
+        ExplicitHeight = 158
         object Panel1: TPanel
           Left = 0
           Top = 0
@@ -386,7 +379,7 @@ object frPesquisar: TfrPesquisar
           Left = 0
           Top = 49
           Width = 760
-          Height = 109
+          Height = 101
           TabStop = False
           Align = alClient
           BevelInner = bvLowered
@@ -402,17 +395,19 @@ object frPesquisar: TfrPesquisar
           ScrollBars = ssVertical
           TabOrder = 1
           OnDrawCell = gridPesquisaDrawCell
+          ExplicitHeight = 109
         end
         object pnBotoesConsultaGlossario: TPanel
           Left = 760
           Top = 49
           Width = 196
-          Height = 109
+          Height = 101
           Align = alRight
           TabOrder = 2
+          ExplicitHeight = 109
           DesignSize = (
             196
-            109)
+            101)
           object BitBtn3: TBitBtn
             Left = 6
             Top = 6
@@ -444,6 +439,27 @@ object frPesquisar: TfrPesquisar
             OnClick = BitBtn4Click
           end
         end
+      end
+    end
+    object Panel2: TPanel
+      Left = 1
+      Top = 179
+      Width = 964
+      Height = 29
+      Align = alBottom
+      TabOrder = 1
+      ExplicitTop = 171
+      object lbInfo: TLabel
+        Left = 12
+        Top = 7
+        Width = 21
+        Height = 13
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
       end
     end
   end

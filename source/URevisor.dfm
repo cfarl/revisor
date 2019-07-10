@@ -92,6 +92,7 @@ object frRevisor: TfrRevisor
         Zoom = 100
         OnChange = MemoInglesChange
         OnKeyDown = MemoInglesKeyDown
+        OnSelectionChange = MemoInglesSelectionChange
       end
       object Panel4: TPanel
         Left = 1
@@ -139,6 +140,20 @@ object frRevisor: TfrRevisor
         object lbMaxFraseIngles: TLabel
           Left = 63
           Top = 34
+          Width = 6
+          Height = 13
+          Caption = '0'
+        end
+        object Label29: TLabel
+          Left = 1
+          Top = 51
+          Width = 18
+          Height = 13
+          Caption = 'Sel:'
+        end
+        object lbSelIngles: TLabel
+          Left = 22
+          Top = 51
           Width = 6
           Height = 13
           Caption = '0'
@@ -203,6 +218,20 @@ object frRevisor: TfrRevisor
           Height = 13
           Caption = '0'
         end
+        object Label31: TLabel
+          Left = 0
+          Top = 53
+          Width = 18
+          Height = 13
+          Caption = 'Sel:'
+        end
+        object lbSelEspanhol: TLabel
+          Left = 21
+          Top = 53
+          Width = 6
+          Height = 13
+          Caption = '0'
+        end
       end
       object MemoEspanhol: TRichEdit
         Left = 89
@@ -222,6 +251,9 @@ object frRevisor: TfrRevisor
         TabOrder = 1
         Zoom = 100
         OnChange = MemoEspanholChange
+        OnSelectionChange = MemoEspanholSelectionChange
+        ExplicitLeft = 88
+        ExplicitTop = -2
       end
     end
     object pnTraduzido: TPanel

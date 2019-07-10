@@ -115,6 +115,10 @@ type
     lbNumFrasesEspanhol: TLabel;
     Label30: TLabel;
     lbMaxFraseEspanhol: TLabel;
+    Label29: TLabel;
+    lbSelIngles: TLabel;
+    Label31: TLabel;
+    lbSelEspanhol: TLabel;
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure MemoInglesChange(Sender: TObject);
@@ -162,6 +166,8 @@ type
     procedure btPesquisarClick(Sender: TObject);
     procedure salvarTodosArquivos ;
     procedure btSetarLinhaClick(Sender: TObject);
+    procedure MemoInglesSelectionChange(Sender: TObject);
+    procedure MemoEspanholSelectionChange(Sender: TObject);
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
@@ -667,6 +673,11 @@ begin
     End;
 end;
 
+procedure TfrRevisor.MemoInglesSelectionChange(Sender: TObject);
+begin
+   lbSelIngles.Caption := Integer.ToString(MemoIngles.SelLength) ;
+end;
+
 //------------------------------------------------------------------------------
 // Quando o texto do memo traduzido muda, destaca \n
 //------------------------------------------------------------------------------
@@ -743,6 +754,11 @@ begin
 
   lbNumFrasesEspanhol.Caption := Integer.ToString(length(frases));
   lbMaxFraseEspanhol.Caption := Integer.ToString(maxCaracteresFrase);
+end;
+
+procedure TfrRevisor.MemoEspanholSelectionChange(Sender: TObject);
+begin
+   lbSelEspanhol.Caption := Integer.ToString(MemoEspanhol.SelLength) ;
 end;
 
 //------------------------------------------------------------------------------

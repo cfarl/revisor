@@ -11,7 +11,6 @@ type
   TfrPesquisar = class(TForm)
     gridPesquisa: TStringGrid;
     pnPesquisa: TPanel;
-    lbInfo: TLabel;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
@@ -53,6 +52,8 @@ type
     lbTamanhosTraduzido: TLabel;
     btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFrase: TBitBtn;
     ckIgnorarLinhasComentario: TCheckBox;
+    Panel2: TPanel;
+    lbInfo: TLabel;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
