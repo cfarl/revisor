@@ -168,6 +168,7 @@ type
     procedure btSetarLinhaClick(Sender: TObject);
     procedure MemoInglesSelectionChange(Sender: TObject);
     procedure MemoEspanholSelectionChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
@@ -682,8 +683,7 @@ end;
 // Quando o texto do memo traduzido muda, destaca \n
 //------------------------------------------------------------------------------
 procedure TfrRevisor.MemoTraduzidoChange(Sender: TObject);
-var  //frases: TStringDynArray;
-     textoTraduzido, frase, primeiraTraducao : string ;
+var  textoTraduzido, frase, primeiraTraducao : string ;
      maxCaracteresFrase, i : integer ;
 begin
    Destacar(memoTraduzido, '\r\n');
@@ -692,17 +692,9 @@ begin
    // Quebra o texto traduzido em frases
    textoTraduzido := MemoTraduzido.Text ;
    textoTraduzido := textoTraduzido.TrimRight ;
-   //frases := Split(textoTraduzido, '\n');
 
    // Conta o tamanho da maior frase
    maxCaracteresFrase := getTamanhoMaiorFrase(MemoTraduzido.Text);
-//   maxCaracteresFrase := 0 ;
-//   for i := 0 to length(frases)-1 do begin
-//     frase := frases[i] ;
-//     frase := frase.Replace('\r', '');
-//     if frase.Length > maxCaracteresFrase then
-//        maxCaracteresFrase := frase.Length ;
-//   end;
 
   // Atualiza o numero de frases e o maximo de caracteres por frase da traducao
   lbNumFrasesTraducao.Caption := Integer.ToString(length(Split(textoTraduzido, '\n')));
@@ -790,6 +782,51 @@ begin
   // Ajusta a altura do painel, visto que somente uma opção de carga estará ativa
   Panel3.Height := 180 ;
 
+end;
+
+procedure TfrRevisor.FormShow(Sender: TObject);
+var arquivoEstado : TStringList ;
+    arquivoIngles, arquivoTraduzido, arquivoEspanhol: string ;
+    pastaIngles, pastaTraduzido, pastaEspanhol: string ;
+    cargaArquivo, formatoAnsi, disposicaoVertical: boolean;
+    linhaSelecionada: integer ;
+begin
+   // Carrega o estado do revisor
+   arquivoEstado := TStringList.Create;
+   arquivoEstado.LoadFromFile('estado_revisor.txt');
+
+   // Carrega valores do arquivo
+   if(arquivoEstado.IndexOfName('arquivoIngles') >= 0) then arquivoIngles := arquivoEstado.Values['arquivoIngles'] ;
+   if(arquivoEstado.IndexOfName('arquivoTraduzido') >= 0) then arquivoTraduzido := arquivoEstado.Values['arquivoTraduzido'] ;
+   if(arquivoEstado.IndexOfName('arquivoEspanhol') >= 0) then arquivoEspanhol := arquivoEstado.Values['arquivoEspanhol'] ;
+   if(arquivoEstado.IndexOfName('pastaIngles') >= 0) then pastaIngles := arquivoEstado.Values['pastaIngles'] ;
+   if(arquivoEstado.IndexOfName('pastaTraduzido') >= 0) then pastaTraduzido := arquivoEstado.Values['pastaTraduzido'] ;
+   if(arquivoEstado.IndexOfName('pastaEspanhol') >= 0) then pastaEspanhol := arquivoEstado.Values['pastaEspanhol'] ;
+   if(arquivoEstado.IndexOfName('cargaArquivo') >= 0) then cargaArquivo := Boolean.Parse(arquivoEstado.Values['cargaArquivo']) ;
+   if(arquivoEstado.IndexOfName('formatoAnsi') >= 0) then formatoAnsi := Boolean.Parse(arquivoEstado.Values['formatoAnsi']) ;
+   if(arquivoEstado.IndexOfName('disposicaoVertical') >= 0) then disposicaoVertical := Boolean.Parse(arquivoEstado.Values['disposicaoVertical']) ;
+   if(arquivoEstado.IndexOfName('linhaSelecionada') >= 0) then linhaSelecionada := Integer.Parse(arquivoEstado.Values['linhaSelecionada']) ;
+
+   // Carrega componentes
+   edIngles.Text := arquivoIngles ;
+   edTraduzido.Text := arquivoTraduzido ;
+   edEspanhol.Text := arquivoEspanhol ;
+
+   edPastaIngles.Text := pastaIngles ;
+   edPastaTraduzido.Text := pastaTraduzido ;
+   edPastaEspanhol.Text := pastaEspanhol ;
+
+   if(cargaArquivo) then rdCargaArquivos.Checked := true else rdCargaPastas.Checked := true ;
+   if(formatoAnsi) then rdAnsi.Checked := true else rdUTF8.Checked := true ;
+   if(disposicaoVertical) then rdVertical.Checked := true else rdHorizontal.Checked := true ;
+
+   if((edTraduzido.Text <> '') or  (edPastaTraduzido.Text <> '')) then
+   Begin
+      btCarregarClick(Sender) ;
+      edLinha.Text := Integer.ToString(linhaSelecionada) ;
+      btSetarLinhaClick(Sender) ;
+      mantemLinhaSelecionadaMeioGrid;
+   End;
 end;
 
 //------------------------------------------------------------------------------
@@ -1079,7 +1116,24 @@ end;
 // Fecha a janela e sai do programa
 //------------------------------------------------------------------------------
 procedure TfrRevisor.btSairClick(Sender: TObject);
+var arquivoEstado: tstringlist ;
 begin
+   // Salva o estado do revisor
+   arquivoEstado := TStringList.Create;
+   arquivoEstado.AddPair('arquivoIngles', edIngles.Text) ;
+   arquivoEstado.AddPair('arquivoTraduzido', edTraduzido.Text) ;
+   arquivoEstado.AddPair('arquivoEspanhol', edEspanhol.Text) ;
+   arquivoEstado.AddPair('pastaIngles', edPastaIngles.Text) ;
+   arquivoEstado.AddPair('pastaTraduzido', edPastaTraduzido.Text) ;
+   arquivoEstado.AddPair('pastaEspanhol', edPastaEspanhol.Text) ;
+   arquivoEstado.AddPair('pastaEspanhol', edPastaEspanhol.Text) ;
+   arquivoEstado.AddPair('cargaArquivo', Boolean.ToString(rdCargaArquivos.Checked, TUseBoolStrs.true)) ;
+   arquivoEstado.AddPair('formatoAnsi', Boolean.ToString(rdAnsi.Checked, TUseBoolStrs.true)) ;
+   arquivoEstado.AddPair('disposicaoVertical', Boolean.ToString(rdVertical.Checked, TUseBoolStrs.true)) ;
+   arquivoEstado.AddPair('linhaSelecionada', edLinha.Text) ;
+   arquivoEstado.SaveToFile('estado_revisor.txt');
+
+   // Fecha o revisor
    btFecharClick(Sender);
    frRevisor.Close;
 end;

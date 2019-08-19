@@ -45,8 +45,6 @@ object frPesquisar: TfrPesquisar
     TabOrder = 0
     OnClick = gridPesquisaClick
     OnDrawCell = gridPesquisaDrawCell
-    ExplicitTop = 191
-    ExplicitHeight = 366
   end
   object pnPesquisa: TPanel
     Left = 0
@@ -60,13 +58,11 @@ object frPesquisar: TfrPesquisar
       Top = 1
       Width = 964
       Height = 178
-      ActivePage = TabSheet1
+      ActivePage = TabSheet4
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 164
       object TabSheet1: TTabSheet
         Caption = 'Pesquisar'
-        ExplicitHeight = 158
         DesignSize = (
           956
           150)
@@ -148,7 +144,6 @@ object frPesquisar: TfrPesquisar
       object TabSheet2: TTabSheet
         Caption = 'Substituir'
         ImageIndex = 1
-        ExplicitHeight = 158
         DesignSize = (
           956
           150)
@@ -216,7 +211,6 @@ object frPesquisar: TfrPesquisar
         Caption = 'Pesquisar Por Tamanho Frase'
         ImageIndex = 2
         OnShow = TabSheet3Show
-        ExplicitHeight = 158
         DesignSize = (
           956
           150)
@@ -339,7 +333,6 @@ object frPesquisar: TfrPesquisar
       object TabSheet4: TTabSheet
         Caption = 'Pesquisar por Gloss'#225'rio'
         ImageIndex = 3
-        ExplicitHeight = 158
         object Panel1: TPanel
           Left = 0
           Top = 0
@@ -394,8 +387,6 @@ object frPesquisar: TfrPesquisar
           ParentColor = True
           ScrollBars = ssVertical
           TabOrder = 1
-          OnDrawCell = gridPesquisaDrawCell
-          ExplicitHeight = 109
         end
         object pnBotoesConsultaGlossario: TPanel
           Left = 760
@@ -404,7 +395,6 @@ object frPesquisar: TfrPesquisar
           Height = 101
           Align = alRight
           TabOrder = 2
-          ExplicitHeight = 109
           DesignSize = (
             196
             101)
@@ -448,11 +438,10 @@ object frPesquisar: TfrPesquisar
       Height = 29
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 171
       object lbInfo: TLabel
         Left = 12
         Top = 7
-        Width = 21
+        Width = 3
         Height = 13
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clRed

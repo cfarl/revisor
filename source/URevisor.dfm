@@ -15,6 +15,7 @@ object frRevisor: TfrRevisor
   WindowState = wsMaximized
   OnCreate = FormCreate
   OnResize = FormResize
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter3: TSplitter
@@ -252,8 +253,6 @@ object frRevisor: TfrRevisor
         Zoom = 100
         OnChange = MemoEspanholChange
         OnSelectionChange = MemoEspanholSelectionChange
-        ExplicitLeft = 88
-        ExplicitTop = -2
       end
     end
     object pnTraduzido: TPanel

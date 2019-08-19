@@ -213,11 +213,13 @@ begin
 end;
 
 procedure TfrPesquisar.BitBtn4Click(Sender: TObject);
-var i, ig, pos, j, numEncontrados : integer ;
+var i, ig, pos, j, k, trad, numEncontrados : integer ;
     gridRevisor: TStringGrid;
     inglesGlossario, inglesRevisor: string ;
     traduzidoGlossario, traduzidoRevisor: string ;
+    traducoesTermo: TStringDynArray ;
     deveIncluir : boolean ;
+    achou: boolean ;
 begin
   // Inicializa grid de pesquisa
   gridRevisor := frRevisor.StringGrid1 ;
@@ -233,31 +235,73 @@ begin
     for ig := 1 to gridGlossario.RowCount do begin
       // Recupera as palavras do glosssario
       inglesGlossario := gridGlossario.Cells[0, ig-1].ToLower.Trim ;
+
+      // Se a linha do glossario contem #, ignora
+      if(inglesGlossario.StartsWith('#')) then continue ;
+
+      // Se a frase do revisor nao contem o termo do glossario, passa para a proxima frase do glossario
+      if(not inglesRevisor.Contains(inglesGlossario)) then continue ;
+
+      // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
+      pos := inglesRevisor.IndexOf(inglesGlossario) ;
+      if (pos > 1) and (inglesRevisor[pos] <> ' ') then continue ;
+      if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (inglesRevisor[pos + length(inglesGlossario)+1] <> ' ') then continue ;
+
       traduzidoGlossario := gridGlossario.Cells[1, ig-1].ToLower.Trim ;
+      traducoesTermo := frRevisor.Split(traduzidoGlossario, ';');
 
-      // Se a linha de texto contem o texto em ingles, mas nao contem o texto traduzido, adiciona
-      if(inglesRevisor.Contains(inglesGlossario) and (not traduzidoRevisor.Contains(traduzidoGlossario))) then begin
-        deveIncluir := true ;
+      // Verifica se achou alguma traducao do termo
+      achou := false ;
+      for k := 0 to length(traducoesTermo)-1 do Begin
+          if(inglesRevisor.Contains(inglesGlossario) and (traduzidoRevisor.Contains(traducoesTermo[k]))) then begin
+             achou := true ;
+             break ;
+          end;
+      End;
 
-        // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
-        pos := inglesRevisor.IndexOf(inglesGlossario) ;
-        if (pos > 1) and (inglesRevisor[pos] <> ' ') then deveIncluir := false ;
-        if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (inglesRevisor[pos + length(inglesGlossario)] <> ' ') then deveIncluir := false ;
-
-        if(deveIncluir) then begin
+      if(not achou) then begin
           numEncontrados := numEncontrados + 1;
           gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
           gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
           for j := 1 to gridRevisor.ColCount do begin
-            gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridRevisor.Cells[j, i] ;
-            if(j = 1) then
-               gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridPesquisa.Cells[j, gridPesquisa.RowCount-1]
-                  + ' (' + inglesGlossario + '->' + traduzidoGlossario + ')' ;
+             gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridRevisor.Cells[j, i] ;
+             if(j = 1) then
+                gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridPesquisa.Cells[j, gridPesquisa.RowCount-1]
+                   + ' (' + inglesGlossario + '->' + traduzidoGlossario + ')' ;
           end;
           // Passa para a proxima linha do texto
-          break;
-        end;
+          continue;
       end;
+
+      {
+      for trad := 0 to length(traducoesTermo) do Begin
+          traduzidoGlossario := traducoesTermo[trad] ;
+          // Se a linha de texto contem o texto em ingles, mas nao contem o texto traduzido, adiciona
+          deveIncluir := false ;
+          if(inglesRevisor.Contains(inglesGlossario) and (not traduzidoRevisor.Contains(traduzidoGlossario))) then begin
+            deveIncluir := true ;
+
+            // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
+            pos := inglesRevisor.IndexOf(inglesGlossario) ;
+            if (pos > 1) and (inglesRevisor[pos] <> ' ') then deveIncluir := false ;
+            if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (inglesRevisor[pos + length(inglesGlossario)+1] <> ' ') then deveIncluir := false ;
+          end;
+
+          if(deveIncluir) then begin
+             numEncontrados := numEncontrados + 1;
+             gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
+             gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
+             for j := 1 to gridRevisor.ColCount do begin
+                gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridRevisor.Cells[j, i] ;
+                if(j = 1) then
+                   gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridPesquisa.Cells[j, gridPesquisa.RowCount-1]
+                      + ' (' + inglesGlossario + '->' + traduzidoGlossario + ')' ;
+             end;
+             // Passa para a proxima linha do texto
+             break;
+          end;
+       End;
+       }
     end;
   end;
 
@@ -381,7 +425,8 @@ begin
      // Carrega glossario na grid
      for i := 0 to Values.Count - 1 do begin
         valores := Values[i] ;
-        //if(valores <> '') then begin
+        // Ignora linhas começando com #
+        //if(not valores.StartsWith('#')) then begin
           termoGlossario := frRevisor.Split(valores, '=');
           gridGlossario.RowCount:= i;
           gridGlossario.Cells[0, i] := termoGlossario[0] ;
