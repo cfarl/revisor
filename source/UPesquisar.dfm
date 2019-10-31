@@ -58,7 +58,7 @@ object frPesquisar: TfrPesquisar
       Top = 1
       Width = 964
       Height = 178
-      ActivePage = TabSheet4
+      ActivePage = TabSheet1
       Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet
@@ -161,6 +161,20 @@ object frPesquisar: TfrPesquisar
           Height = 13
           Caption = 'Novo Texto:'
         end
+        object Label12: TLabel
+          Left = 469
+          Top = 101
+          Width = 54
+          Height = 13
+          Caption = 'Linha Final:'
+        end
+        object Label13: TLabel
+          Left = 315
+          Top = 101
+          Width = 59
+          Height = 13
+          Caption = 'Linha Inicial:'
+        end
         object edTextoOriginal: TEdit
           Left = 96
           Top = 21
@@ -205,6 +219,22 @@ object frPesquisar: TfrPesquisar
           ShowHint = True
           TabOrder = 3
           OnClick = BitBtn2Click
+        end
+        object edLinhaFinalSubstituir: TEdit
+          Left = 529
+          Top = 98
+          Width = 79
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 4
+        end
+        object edLinhaInicialSubstituir: TEdit
+          Left = 378
+          Top = 98
+          Width = 79
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 5
         end
       end
       object TabSheet3: TTabSheet
@@ -280,6 +310,7 @@ object frPesquisar: TfrPesquisar
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
+          OnExit = edLinhaInicialExit
         end
         object edLinhaFinal: TEdit
           Left = 393
@@ -288,6 +319,7 @@ object frPesquisar: TfrPesquisar
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
+          OnExit = edLinhaFinalExit
         end
         object btPesquisarLinhasInglesTamanhoMaiorTamanhoFrase: TBitBtn
           Left = 10
@@ -350,43 +382,44 @@ object frPesquisar: TfrPesquisar
             Height = 13
             Caption = 'Gloss'#225'rio:'
           end
+          object Label11: TLabel
+            Left = 8
+            Top = 33
+            Width = 567
+            Height = 13
+            Caption = 
+              'Um arquivo de gloss'#225'rio cont'#233'm pares ingles=traduzido, onde trad' +
+              'uzido pode conter v'#225'rias tradu'#231#245'es separadas por ;'
+          end
           object edArquivoGlossario: TEdit
             Left = 55
             Top = 9
-            Width = 786
+            Width = 705
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 0
           end
           object Button1: TButton
-            Left = 847
+            Left = 766
             Top = 7
             Width = 98
             Height = 25
+            Hint = 'Um arquivo de gloss'#225'rio cont'#233'm pa'
             Caption = 'Carregar'
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 1
             OnClick = Button1Click
           end
-        end
-        object gridGlossario: TStringGrid
-          Left = 0
-          Top = 49
-          Width = 760
-          Height = 101
-          TabStop = False
-          Align = alClient
-          BevelInner = bvLowered
-          ColCount = 2
-          DefaultColWidth = 20
-          DefaultRowHeight = 10
-          DefaultDrawing = False
-          FixedCols = 0
-          RowCount = 2
-          FixedRows = 0
-          Options = [goDrawFocusSelected, goRowSelect]
-          ParentColor = True
-          ScrollBars = ssVertical
-          TabOrder = 1
+          object btLimparEdGlossrio: TButton
+            Left = 870
+            Top = 7
+            Width = 75
+            Height = 25
+            Caption = 'Limpar'
+            TabOrder = 2
+            OnClick = btLimparEdGlossrioClick
+          end
         end
         object pnBotoesConsultaGlossario: TPanel
           Left = 760
@@ -394,16 +427,16 @@ object frPesquisar: TfrPesquisar
           Width = 196
           Height = 101
           Align = alRight
-          TabOrder = 2
+          TabOrder = 1
           DesignSize = (
             196
             101)
-          object BitBtn3: TBitBtn
+          object btPesquisarSelecionado: TBitBtn
             Left = 6
             Top = 6
             Width = 179
             Height = 25
-            Hint = 'Pesquisar frases em ingl'#234's'
+            Hint = 'Pesquisar frases que cont'#233'm o termo do gloss'#225'rio'
             Anchors = [akTop, akRight]
             Caption = 'Pesquisar Selecionado'
             Kind = bkAll
@@ -411,14 +444,14 @@ object frPesquisar: TfrPesquisar
             ParentShowHint = False
             ShowHint = True
             TabOrder = 0
-            OnClick = BitBtn3Click
+            OnClick = btPesquisarSelecionadoClick
           end
-          object BitBtn4: TBitBtn
-            Left = 11
-            Top = 37
-            Width = 173
+          object btPesquisarViolacaoGlossario: TBitBtn
+            Left = 6
+            Top = 67
+            Width = 179
             Height = 25
-            Hint = 'Pesquisar frases em ingl'#234's'
+            Hint = 'Pesquisar frases que cont'#233'm uma viola'#231#227'o do gloss'#225'rio'
             Anchors = [akTop, akRight]
             Caption = 'Pesquisar Viola'#231#227'o Gloss'#225'rio'
             Kind = bkAll
@@ -426,8 +459,39 @@ object frPesquisar: TfrPesquisar
             ParentShowHint = False
             ShowHint = True
             TabOrder = 1
-            OnClick = BitBtn4Click
+            OnClick = btPesquisarViolacaoGlossarioClick
           end
+          object btPesquisarViolacaoSelecionado: TBitBtn
+            Left = 6
+            Top = 35
+            Width = 179
+            Height = 25
+            Hint = 'Pesquisar frases em ingl'#234's'
+            Anchors = [akTop, akRight]
+            Caption = 'Pesquisar Viola'#231#227'o Selecionado'
+            Kind = bkAll
+            NumGlyphs = 2
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 2
+            OnClick = btPesquisarViolacaoSelecionadoClick
+          end
+        end
+        object gridGlossario: TStringGrid
+          AlignWithMargins = True
+          Left = 3
+          Top = 52
+          Width = 754
+          Height = 95
+          Align = alClient
+          ColCount = 2
+          DefaultRowHeight = 15
+          FixedCols = 0
+          RowCount = 1
+          FixedRows = 0
+          Options = [goRowSelect]
+          ScrollBars = ssVertical
+          TabOrder = 2
         end
       end
     end

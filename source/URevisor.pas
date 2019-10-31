@@ -242,6 +242,7 @@ begin
    // Quebra o texto informado em frases
    textoMemo := textoMemo.TrimRight ;
    textoMemo := textoMemo.Replace('\r', '') ;
+   textoMemo := textoMemo.Replace('(REPETIDO)', '') ;
    frases := Split(textoMemo, '\n');
 
    // Conta o tamanho da maior frase
@@ -478,6 +479,7 @@ begin
         if(MemoTraduzido.SelLength > 0) then
         Begin
            Form1.edTextoTraduzir.Text := MemoTraduzido.SelText.Trim ;
+           Form1.WindowState := wsNormal ;
            Form1.Show;
            Form1.PageControl1Change(self);
         End;
@@ -665,6 +667,7 @@ begin
         if(MemoIngles.SelLength > 0) then
         Begin
            Form1.edTextoTraduzir.Text := MemoIngles.SelText.Trim ;
+           Form1.WindowState := wsNormal ;
            Form1.Show;
            Form1.PageControl1Change(self);
         End;
@@ -935,6 +938,8 @@ end;
 
 procedure TfrRevisor.btPesquisarClick(Sender: TObject);
 begin
+  frPesquisar.WindowState := wsNormal ;
+  frPesquisar.visible := true ;
   frPesquisar.show;
 end;
 
@@ -1489,7 +1494,7 @@ begin
 //-------------------------------------------------------------------------------
 procedure TfrRevisor.preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList) ;
 var listaTextosIngles: tstringlist ;
-    row, col, i: integer ;
+    row, col: integer ;
 Begin
     // Inicializa lista com textos em ingles, para marcar os textos repetidos
     listaTextosIngles := TStringList.Create;
@@ -1591,7 +1596,7 @@ end;
 
 procedure TfrRevisor.btCarregarClick(Sender: TObject);
 var i: integer ;
-    StringsIngles, StringsEspanhol, StringsTraduzido: TStringList;
+    //StringsIngles, StringsEspanhol, StringsTraduzido: TStringList;
     linhaAtualGrid: integer ;
 Begin
    linhaAtualGrid := StringGrid1.Row ;

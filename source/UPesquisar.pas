@@ -42,10 +42,9 @@ type
     Label8: TLabel;
     edArquivoGlossario: TEdit;
     Button1: TButton;
-    gridGlossario: TStringGrid;
     pnBotoesConsultaGlossario: TPanel;
-    BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
+    btPesquisarSelecionado: TBitBtn;
+    btPesquisarViolacaoGlossario: TBitBtn;
     Label9: TLabel;
     Label10: TLabel;
     lbTamanhosIngles: TLabel;
@@ -54,6 +53,14 @@ type
     ckIgnorarLinhasComentario: TCheckBox;
     Panel2: TPanel;
     lbInfo: TLabel;
+    btLimparEdGlossrio: TButton;
+    gridGlossario: TStringGrid;
+    btPesquisarViolacaoSelecionado: TBitBtn;
+    Label11: TLabel;
+    edLinhaFinalSubstituir: TEdit;
+    Label12: TLabel;
+    edLinhaInicialSubstituir: TEdit;
+    Label13: TLabel;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -65,14 +72,18 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure btPesquisarLinhasInglesTamanhoMaiorTamanhoFraseClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure BitBtn3Click(Sender: TObject);
-    procedure BitBtn4Click(Sender: TObject);
+    procedure btPesquisarSelecionadoClick(Sender: TObject);
+    procedure btPesquisarViolacaoGlossarioClick(Sender: TObject);
     procedure TabSheet3Show(Sender: TObject);
     procedure btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFraseClick(
       Sender: TObject);
+    procedure btLimparEdGlossrioClick(Sender: TObject);
+    procedure btPesquisarViolacaoSelecionadoClick(Sender: TObject);
+    procedure edLinhaInicialExit(Sender: TObject);
+    procedure edLinhaFinalExit(Sender: TObject);
   private
     { Private declarations }
-    procedure pesquisar(coluna: integer; texto: string);
+    procedure pesquisar(coluna: integer; texto: string; linhaInicial: integer; linhaFinal: integer);
     procedure btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(colunaGrid: integer);
     //procedure inicializaComponentesParaPesquisa ;
   public
@@ -91,9 +102,11 @@ uses URevisor;
 //--------------------------------------------------------
 // Pesquisa por um texto na coluna informada
 //--------------------------------------------------------
-procedure TfrPesquisar.pesquisar(coluna: integer; texto: string);
+procedure TfrPesquisar.pesquisar(coluna: integer; texto: string; linhaInicial: integer; linhaFinal: integer);
 var i, j, numEncontrados : integer ;
     gridRevisor: TStringGrid;
+    textoLinha: string ;
+    pos: integer ;
 begin
   // Inicializa grid de pesquisa
   gridRevisor := frRevisor.StringGrid1 ;
@@ -102,8 +115,17 @@ begin
   numEncontrados := 0;
 
   // Coloca na grid as linhas correspondentes à pesquisa
-  for i := 1 to gridRevisor.RowCount do begin
-    if(gridRevisor.Cells[coluna,i].ToUpper.Contains(texto.ToUpper)) then begin
+  //for i := 1 to gridRevisor.RowCount do begin  1, frRevisor.StringGrid1.RowCount
+  texto := texto.ToUpper ;
+  for i := linhaInicial to linhaFinal do begin
+    textoLinha := gridRevisor.Cells[coluna,i].ToUpper.Replace('\N', ' ').Replace('\R', '') ;
+    if(textoLinha.Contains(texto)) then begin
+
+      // Se não encontrou uma palavra inteira, ignora
+      pos := textoLinha.IndexOf(texto) ;
+      if (pos >= 1) and (textoLinha[pos] <> ' ') then continue ;
+      if ((pos + length(texto)) < length(textoLinha)) and (textoLinha[pos + length(texto)+1] <> ' ') then continue ;
+
       numEncontrados := numEncontrados + 1;
       gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
       gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
@@ -127,6 +149,7 @@ procedure TfrPesquisar.TabSheet3Show(Sender: TObject);
 var i, tamanhoIngles, tamanhoTraduzido: integer ;
     listaIngles, listaTraduzido: TStringList ;
     gridRevisor: TStringGrid;
+    linhaInicio, linhaFim: integer;
 begin
  // Inicializa componentes
  gridRevisor := frRevisor.StringGrid1 ;
@@ -142,19 +165,25 @@ begin
  //listaTraduzido.CustomSort(SortDesc);
  //listaTraduzido.Sorted := true ;
 
+   // Recupera linha de inicio e fim
+  linhaInicio := 1 ;
+  linhaFim := frRevisor.StringGrid1.RowCount ;
+  if (length(edLinhaInicial.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicial.Text) ;
+  if (length(edLinhaFinal.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinal.Text) ;
+
  // Constroi lista com os tamanhos maximos das frases em ingles e traduzido
- for i := 1 to gridRevisor.RowCount do begin
-    if(ckIgnorarLinhasComentario.Checked and
-      (gridRevisor.Cells[1,i].StartsWith('--') or gridRevisor.Cells[1,i].StartsWith('(REPETIDO)--'))) then continue ;
+ for i := linhaInicio to linhaFim do begin
+    if(ckIgnorarLinhasComentario.Checked and (gridRevisor.Cells[1,i].StartsWith('--'))) //or gridRevisor.Cells[1,i].StartsWith('(REPETIDO)--')))
+      then continue ;
 
     tamanhoIngles := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[1,i]);
     if(listaIngles.IndexOf(Integer.ToString(tamanhoIngles)) < 0) then
       listaIngles.Add(Integer.ToString(tamanhoIngles)) ;
  end;
 
-  for i := 1 to gridRevisor.RowCount do begin
-    if(ckIgnorarLinhasComentario.Checked and
-      (gridRevisor.Cells[2,i].StartsWith('--') or gridRevisor.Cells[2,i].StartsWith('(REPETIDO) --'))) then continue ;
+  for i := linhaInicio to linhaFim do begin
+    if(ckIgnorarLinhasComentario.Checked and (gridRevisor.Cells[2,i].StartsWith('--'))) //or gridRevisor.Cells[2,i].StartsWith('(REPETIDO) --')))
+      then continue ;
 
     tamanhoTraduzido := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[2,i]);
     if(listaTraduzido.IndexOf(Integer.ToString(tamanhoTraduzido)) < 0) then
@@ -202,17 +231,23 @@ begin
 end;
 
 procedure TfrPesquisar.BitBtn2Click(Sender: TObject);
+var linhaInicio, linhaFim: integer ;
 begin
-pesquisar(2, edTextoOriginal.Text) ;
+// Recupera linha de inicio e fim
+linhaInicio := 1 ;
+linhaFim := frRevisor.StringGrid1.RowCount ;
+if (length(edLinhaInicialSubstituir.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicialSubstituir.Text) ;
+if (length(edLinhaFinalSubstituir.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinalSubstituir.Text) ;
+// Faz a pesquisa
+pesquisar(2, edTextoOriginal.Text, linhaInicio, linhaFim) ;
 end;
 
-procedure TfrPesquisar.BitBtn3Click(Sender: TObject);
+procedure TfrPesquisar.btPesquisarSelecionadoClick(Sender: TObject);
 begin
-  if(gridGlossario.Row > 0) then
-     pesquisar(1, gridGlossario.Cells[0, gridGlossario.Row]) ;
+  pesquisar(1, gridGlossario.Cells[0, gridGlossario.Row].Trim, 1, frRevisor.StringGrid1.RowCount) ;
 end;
 
-procedure TfrPesquisar.BitBtn4Click(Sender: TObject);
+procedure TfrPesquisar.btPesquisarViolacaoGlossarioClick(Sender: TObject);
 var i, ig, pos, j, k, trad, numEncontrados : integer ;
     gridRevisor: TStringGrid;
     inglesGlossario, inglesRevisor: string ;
@@ -229,8 +264,8 @@ begin
 
   // Coloca na grid as linhas que não estão de acordo com o glossario
   for i := 1 to gridRevisor.RowCount do begin
-    inglesRevisor := gridRevisor.Cells[1, i].ToLower ;
-    traduzidoRevisor := gridRevisor.Cells[2, i].ToLower ;
+    inglesRevisor := gridRevisor.Cells[1, i].ToLower.Replace('\n', ' ').Replace('\r', '') ; ;
+    traduzidoRevisor := gridRevisor.Cells[2, i].ToLower.Replace('\n', ' ').Replace('\r', '') ; ;
 
     for ig := 1 to gridGlossario.RowCount do begin
       // Recupera as palavras do glosssario
@@ -244,7 +279,7 @@ begin
 
       // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
       pos := inglesRevisor.IndexOf(inglesGlossario) ;
-      if (pos > 1) and (inglesRevisor[pos] <> ' ') then continue ;
+      if (pos >= 1) and (inglesRevisor[pos] <> ' ') then continue ;
       if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (inglesRevisor[pos + length(inglesGlossario)+1] <> ' ') then continue ;
 
       traduzidoGlossario := gridGlossario.Cells[1, ig-1].ToLower.Trim ;
@@ -309,9 +344,75 @@ begin
   gridPesquisa.Repaint ;
 end;
 
+procedure TfrPesquisar.btPesquisarViolacaoSelecionadoClick(Sender: TObject);
+var i, ig, pos, j, k, trad, numEncontrados : integer ;
+    gridRevisor: TStringGrid;
+    inglesGlossario, inglesRevisor: string ;
+    traduzidoGlossario, traduzidoRevisor: string ;
+    traducoesTermo: TStringDynArray ;
+    deveIncluir : boolean ;
+    achou: boolean ;
+begin
+  // Inicializa grid de pesquisa
+  gridRevisor := frRevisor.StringGrid1 ;
+  gridPesquisa.RowCount := 0;
+  gridPesquisa.ColCount := gridRevisor.ColCount ;
+  numEncontrados := 0;
+
+  // Coloca na grid as linhas que não estão de acordo com o glossario
+  for i := 1 to gridRevisor.RowCount do begin
+    inglesRevisor := gridRevisor.Cells[1, i].ToLower.Replace('\n', ' ').Replace('\r', '') ;
+    traduzidoRevisor := gridRevisor.Cells[2, i].ToLower.Replace('\n', ' ').Replace('\r', '') ;
+
+    ig := gridGlossario.Row ;
+    // Recupera as palavras do glosssario
+    inglesGlossario := gridGlossario.Cells[0, ig].ToLower.Trim ;
+
+    // Se a linha do glossario contem #, ignora
+    if(inglesGlossario.StartsWith('#')) then continue ;
+
+    // Se a frase do revisor nao contem o termo do glossario, passa para a proxima frase do glossario
+    if(not inglesRevisor.Contains(inglesGlossario)) then continue ;
+
+    // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
+    pos := inglesRevisor.IndexOf(inglesGlossario) ;
+    if (pos >= 1) and (inglesRevisor[pos] <> ' ') then continue ;
+    if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (inglesRevisor[pos + length(inglesGlossario)+1] <> ' ') then continue ;
+
+    traduzidoGlossario := gridGlossario.Cells[1, ig].ToLower.Trim ;
+    traducoesTermo := frRevisor.Split(traduzidoGlossario, ';');
+
+    // Verifica se achou alguma traducao do termo
+    achou := false ;
+    for k := 0 to length(traducoesTermo)-1 do Begin
+          if(inglesRevisor.Contains(inglesGlossario) and (traduzidoRevisor.Contains(traducoesTermo[k]))) then begin
+             achou := true ;
+             break ;
+          end;
+    End;
+
+    if(not achou) then begin
+        numEncontrados := numEncontrados + 1;
+        gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
+        gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
+        for j := 1 to gridRevisor.ColCount do begin
+           gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridRevisor.Cells[j, i] ;
+           if(j = 1) then
+              gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridPesquisa.Cells[j, gridPesquisa.RowCount-1]
+                 + ' (' + inglesGlossario + '->' + traduzidoGlossario + ')' ;
+        end;
+        // Passa para a proxima linha do texto
+        continue;
+    end;
+  end;
+
+  lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
+  gridPesquisa.Repaint ;
+end;
+
 procedure TfrPesquisar.btPesquisarInglesClick(Sender: TObject);
 begin
-  pesquisar(1, edFraseIngles.Text) ;
+  pesquisar(1, edFraseIngles.Text, 1, frRevisor.StringGrid1.RowCount) ;
 end;
 
 //--------------------------------------------------------------------------------
@@ -380,13 +481,14 @@ end;
 
 procedure TfrPesquisar.btPesquisarTraduzidoClick(Sender: TObject);
 begin
-  pesquisar(2, edFraseTraduzida.Text) ;
+  pesquisar(2, edFraseTraduzida.Text, 1, frRevisor.StringGrid1.RowCount) ;
 end;
 
 procedure TfrPesquisar.btSubstituirClick(Sender: TObject);
-var txOriginal, txSubstituir : string ;
+var txOriginal, txSubstituir, txtMemoTraduzido : string ;
     gridRevisor: TStringGrid;
     i, numEncontrados: integer ;
+    linhaInicio, linhaFim: integer ;
 begin
   // Inicializa substituicao
   txOriginal := edTextoOriginal.Text ;
@@ -394,12 +496,24 @@ begin
   gridRevisor := frRevisor.StringGrid1 ;
   numEncontrados := 0;
 
+  // Recupera linha de inicio e fim
+  linhaInicio := 1 ;
+  linhaFim := frRevisor.StringGrid1.RowCount ;
+  if (length(edLinhaInicialSubstituir.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicialSubstituir.Text) ;
+  if (length(edLinhaFinalSubstituir.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinalSubstituir.Text) ;
+
   // Susbstitui o texto na grid
-  for i := 1 to gridRevisor.RowCount do begin
+  for i := linhaInicio to linhaFim do begin
     if(gridRevisor.Cells[2,i].Contains(txOriginal)) then begin
       gridRevisor.Cells[2,i] := gridRevisor.Cells[2,i].Replace(txOriginal, txSubstituir) ;
       numEncontrados := numEncontrados + 1;
     end;
+  end;
+
+  // Substitui o texto no memo atual
+  txtMemoTraduzido := frRevisor.MemoTraduzido.Text ;
+  if(txtMemoTraduzido.Contains(txOriginal)) then begin
+     frRevisor.MemoTraduzido.Text := txtMemoTraduzido.Replace(txOriginal, txSubstituir) ;
   end;
 
   lbInfo.Caption := 'Foram feitas ' + Integer.ToString(numEncontrados) + ' substituições.' ;
@@ -409,33 +523,54 @@ end;
 
 procedure TfrPesquisar.Button1Click(Sender: TObject);
 var Values: TStringList ;
-    i: integer ;
+    i, numLinhas: integer ;
     termoGlossario: TStringDynArray;
     valores: string ;
 begin
-  if OpenDialog1.Execute then
-  Begin
+  if (edArquivoGlossario.Text = '') and (OpenDialog1.Execute) then
      edArquivoGlossario.Text := OpenDialog1.FileName ;
 
+   if edArquivoGlossario.Text <> '' then begin
      // Inicializa grid de glossario
     Values := TStringList.Create;
-    Values.LoadFromFile(OpenDialog1.FileName);
+    Values.LoadFromFile(edArquivoGlossario.Text);
     gridGlossario.RowCount := 0;
 
      // Carrega glossario na grid
+     numLinhas := 0 ;
      for i := 0 to Values.Count - 1 do begin
         valores := Values[i] ;
-        // Ignora linhas começando com #
-        //if(not valores.StartsWith('#')) then begin
-          termoGlossario := frRevisor.Split(valores, '=');
-          gridGlossario.RowCount:= i;
-          gridGlossario.Cells[0, i] := termoGlossario[0] ;
-          gridGlossario.Cells[1, i] := termoGlossario[1] ;
-        //end;
-     end;
+        if(valores.Trim.Length = 0) then continue ;
 
-     gridGlossario.Repaint;
+        // Ignora linhas começando com #
+        numLinhas := numLinhas + 1 ;
+        if(valores.StartsWith('#')) then begin
+           gridGlossario.Cells[0, i] := valores ;
+        end else begin
+           termoGlossario := frRevisor.Split(valores, '=');
+           gridGlossario.Cells[0, i] := termoGlossario[0] ;
+           gridGlossario.Cells[1, i] := termoGlossario[1] ;
+        end;
+     end;
   End;
+
+  gridGlossario.RowCount := numLinhas ;
+  gridGlossario.Repaint;
+end;
+
+procedure TfrPesquisar.edLinhaFinalExit(Sender: TObject);
+begin
+TabSheet3Show(Sender) ;
+end;
+
+procedure TfrPesquisar.edLinhaInicialExit(Sender: TObject);
+begin
+  TabSheet3Show(Sender) ;
+end;
+
+procedure TfrPesquisar.btLimparEdGlossrioClick(Sender: TObject);
+begin
+edArquivoGlossario.Text := '' ;
 end;
 
 procedure TfrPesquisar.FormResize(Sender: TObject);

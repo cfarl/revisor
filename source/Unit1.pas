@@ -92,6 +92,7 @@ begin
 end;
 
 procedure TForm1.PageControl1Change(Sender: TObject);
+var textoPesquisar: string ;
 begin
  if(PageControl1.ActivePage = TabSheet1) then Begin
    RESTClient1.BaseURL := 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=pt-BR&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=gt&q=' +
@@ -102,7 +103,10 @@ begin
  End;
 
   if(PageControl1.ActivePage = TabSheet2) then Begin
-   RESTClient1.BaseURL := 'https://context.reverso.net/traducao/ingles-portugues/' + HTTPEncode(edTextoTraduzir.Text);
+   textoPesquisar := edTextoTraduzir.Text ;
+   textoPesquisar := textoPesquisar.Replace(' ', '_') ;
+   RESTClient1.BaseURL := 'https://context.reverso.net/traducao/ingles-portugues/' + HTTPEncode(textoPesquisar);
+   //RESTClient1.BaseURL := 'https://context.reverso.net/traducao/ingles-portugues/' + edTextoTraduzir.Text ;
    Serviço := Reverso;
    RESTRequest1.Params.Clear;
    RESTRequest1.ClearBody;
