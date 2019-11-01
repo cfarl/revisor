@@ -795,20 +795,22 @@ var arquivoEstado : TStringList ;
     linhaSelecionada: integer ;
 begin
    // Carrega o estado do revisor
-   arquivoEstado := TStringList.Create;
-   arquivoEstado.LoadFromFile('estado_revisor.txt');
+   if(FileExists('estado_revisor.txt')) then Begin
+     arquivoEstado := TStringList.Create;
+     arquivoEstado.LoadFromFile('estado_revisor.txt');
 
-   // Carrega valores do arquivo
-   if(arquivoEstado.IndexOfName('arquivoIngles') >= 0) then arquivoIngles := arquivoEstado.Values['arquivoIngles'] ;
-   if(arquivoEstado.IndexOfName('arquivoTraduzido') >= 0) then arquivoTraduzido := arquivoEstado.Values['arquivoTraduzido'] ;
-   if(arquivoEstado.IndexOfName('arquivoEspanhol') >= 0) then arquivoEspanhol := arquivoEstado.Values['arquivoEspanhol'] ;
-   if(arquivoEstado.IndexOfName('pastaIngles') >= 0) then pastaIngles := arquivoEstado.Values['pastaIngles'] ;
-   if(arquivoEstado.IndexOfName('pastaTraduzido') >= 0) then pastaTraduzido := arquivoEstado.Values['pastaTraduzido'] ;
-   if(arquivoEstado.IndexOfName('pastaEspanhol') >= 0) then pastaEspanhol := arquivoEstado.Values['pastaEspanhol'] ;
-   if(arquivoEstado.IndexOfName('cargaArquivo') >= 0) then cargaArquivo := Boolean.Parse(arquivoEstado.Values['cargaArquivo']) ;
-   if(arquivoEstado.IndexOfName('formatoAnsi') >= 0) then formatoAnsi := Boolean.Parse(arquivoEstado.Values['formatoAnsi']) ;
-   if(arquivoEstado.IndexOfName('disposicaoVertical') >= 0) then disposicaoVertical := Boolean.Parse(arquivoEstado.Values['disposicaoVertical']) ;
-   if(arquivoEstado.IndexOfName('linhaSelecionada') >= 0) then linhaSelecionada := Integer.Parse(arquivoEstado.Values['linhaSelecionada']) ;
+     // Carrega valores do arquivo
+     if(arquivoEstado.IndexOfName('arquivoIngles') >= 0) then arquivoIngles := arquivoEstado.Values['arquivoIngles'] ;
+     if(arquivoEstado.IndexOfName('arquivoTraduzido') >= 0) then arquivoTraduzido := arquivoEstado.Values['arquivoTraduzido'] ;
+     if(arquivoEstado.IndexOfName('arquivoEspanhol') >= 0) then arquivoEspanhol := arquivoEstado.Values['arquivoEspanhol'] ;
+     if(arquivoEstado.IndexOfName('pastaIngles') >= 0) then pastaIngles := arquivoEstado.Values['pastaIngles'] ;
+     if(arquivoEstado.IndexOfName('pastaTraduzido') >= 0) then pastaTraduzido := arquivoEstado.Values['pastaTraduzido'] ;
+     if(arquivoEstado.IndexOfName('pastaEspanhol') >= 0) then pastaEspanhol := arquivoEstado.Values['pastaEspanhol'] ;
+     if(arquivoEstado.IndexOfName('cargaArquivo') >= 0) then cargaArquivo := Boolean.Parse(arquivoEstado.Values['cargaArquivo']) ;
+     if(arquivoEstado.IndexOfName('formatoAnsi') >= 0) then formatoAnsi := Boolean.Parse(arquivoEstado.Values['formatoAnsi']) ;
+     if(arquivoEstado.IndexOfName('disposicaoVertical') >= 0) then disposicaoVertical := Boolean.Parse(arquivoEstado.Values['disposicaoVertical']) ;
+     if(arquivoEstado.IndexOfName('linhaSelecionada') >= 0) then linhaSelecionada := Integer.Parse(arquivoEstado.Values['linhaSelecionada']) ;
+   End;
 
    // Carrega componentes
    edIngles.Text := arquivoIngles ;

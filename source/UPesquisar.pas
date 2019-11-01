@@ -447,7 +447,7 @@ begin
     // Recupera o texto da coluna
     textoColuna := gridRevisor.Cells[colunaGrid,i] ;
     if(ckIgnorarLinhasComentario.Checked and textoColuna.StartsWith('--')) then continue ;
-    if(ckIgnorarLinhasComentario.Checked and textoColuna.StartsWith('(REPETIDO)--')) then continue ;
+    //if(ckIgnorarLinhasComentario.Checked and textoColuna.StartsWith('(REPETIDO)--')) then continue ;
 
     // Recupera o tamanho da maior frase
     tamanhoFrase := frRevisor.getTamanhoMaiorFrase(textoColuna) ;
@@ -458,7 +458,8 @@ begin
       gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
       gridPesquisa.Cells[0, gridPesquisa.RowCount-1] := Integer.ToString(i) ;
       for j := 1 to gridRevisor.ColCount do begin
-        gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := gridRevisor.Cells[j, i] ;
+        textoColuna := gridRevisor.Cells[j, i] + '(' + inttostr(frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[j, i])) +')' ;
+        gridPesquisa.Cells[j, gridPesquisa.RowCount-1] := textoColuna ;
       end;
     end;
   end;
