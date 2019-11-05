@@ -954,18 +954,15 @@ begin
    arquivoAtual := StringsNomeArquivoTraduzido[linhaAtual] ;
 
    // Procura linha onde comeca o proximo arquivo
-   achou := false ;
    while ((not achou) and (linhaAtual <  StringsNomeArquivoTraduzido.Count)) do
    Begin
-      if (arquivoAtual <> StringsNomeArquivoTraduzido[linhaAtual]) then
-        achou := true
-      else
-        linhaAtual := linhaAtual + 1;
+      achou := (arquivoAtual <> StringsNomeArquivoTraduzido[linhaAtual]);
+      inc(linhaAtual);
    End;
 
    // Se achou, coloca arquivo na linha onde começa
    if achou then begin
-     StringGrid1.Row := linhaAtual + 1;
+     StringGrid1.Row := linhaAtual;
 
      // Mantém a linha selecionada no meio da grid
      mantemLinhaSelecionadaMeioGrid;
@@ -1069,12 +1066,13 @@ procedure TfrRevisor.btFecharClick(Sender: TObject);
 var c, r: Integer;
 begin
     // Inicializa componentes
-    edIngles.Text := '' ;
-    edTraduzido.Text := '' ;
-    edEspanhol.Text := '' ;
-    edPastaIngles.Text := '' ;
-    edPastaTraduzido.Text := '' ;
-    edPastaEspanhol.Text := '' ;
+    edIngles.Clear;
+    edTraduzido.Clear;
+    edEspanhol.Clear;
+    edPastaIngles.Clear;
+    edPastaTraduzido.Clear;
+    edPastaEspanhol.Clear;
+
 
     // Limpa a grid
     for c := 0 to Pred(StringGrid1.ColCount) do
@@ -1083,9 +1081,9 @@ begin
     StringGrid1.RowCount := 2;
 
    // limpa memos
-   MemoIngles.Text := '' ;
-   MemoTraduzido.Text := '' ;
-   MemoEspanhol.Text := '' ;
+   MemoIngles.Clear;
+   MemoTraduzido.Clear;
+   MemoEspanhol.Clear;
 
 end;
 
@@ -1247,27 +1245,23 @@ end;
 
 
 function GetCellHeight(AGrid: TStringGrid; ACol, ARow: Integer): Integer;
-var
-  r: Integer;
-  i: Integer;
-  L: TStringList;
-  h: Integer;
-  bmp: TBitmap;
 begin
-  bmp := TBitmap.Create;
-  bmp.Canvas.Font.Assign(AGrid.Font);
-
-  L := TStringList.Create;
-  try
-    L.Text := AGrid.Cells[ACol, ARow];
-    if L.Count > 0 then
-      Result := bmp.Canvas.TextHeight('Tg') * L.Count
-    else
-      Result := AGrid.DefaultRowHeight;
-  finally
-    L.Free;
-    bmp.Free;
-  end;
+    with TStringList.Create do
+    try
+      Text := AGrid.Cells[ACol, ARow];
+      if Count > 0 then
+      with TBitmap.Create do
+      try
+          Canvas.Font.Assign(AGrid.Font);
+          Result := Canvas.TextHeight('Tg') * Count;
+      finally
+          Free;
+      end
+      else
+        Result := AGrid.DefaultRowHeight;
+    finally
+      Free;
+    end;
 end;
 
 procedure AutoRowHeight(grid: TStringGrid; ARow: Integer);
@@ -1475,20 +1469,14 @@ begin
  End;
 
  function TfrRevisor.removeQuebrasLinha(texto: string) : string ;
- var temp: string ;
  Begin
    // Troca \n por espaco, remove \r
-   texto := texto.Replace('\n', ' ').Replace('\r','').Replace('\t','') ;
-
-   // Remove duplos espacos
-   temp := texto ;
-   while (temp <> texto) do
-   Begin
-     temp := texto ;
-     texto := texto.Replace('  ', ' ') ;
-   End;
-
-   removeQuebrasLinha := texto ;
+   removeQuebrasLinha := texto
+            .Replace('\n', ' ')
+            .Replace('\r','')
+            .Replace('\t','')
+            .Replace('  ', ' ', [rfReplaceAll])
+            ;
  End;
 
  //-------------------------------------------------------------------------------
