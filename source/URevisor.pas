@@ -1093,7 +1093,6 @@ end;
 procedure TfrRevisor.btJuntarPrimeiraTraducaoClick(Sender: TObject);
 var textoBuscar, traducao, atual: string ;
     achou: boolean ;
-    I: Integer;
 begin
   // Recupera texto em ingles da celula selecionada
   textoBuscar := MemoIngles.Text ;
@@ -1180,7 +1179,6 @@ var
   S: String;
   drawrect: TRect;
   bgFill: TColor;
-  i: Integer;
   traducao, textoIngles : string ;
 begin
   grid := Sender as TStringGrid;
@@ -1249,7 +1247,6 @@ end;
 function GetCellHeight(AGrid: TStringGrid; ACol, ARow: Integer): Integer;
 var
   r: Integer;
-  i: Integer;
   L: TStringList;
   h: Integer;
   bmp: TBitmap;

@@ -161,20 +161,6 @@ object frPesquisar: TfrPesquisar
           Height = 13
           Caption = 'Novo Texto:'
         end
-        object Label12: TLabel
-          Left = 469
-          Top = 101
-          Width = 54
-          Height = 13
-          Caption = 'Linha Final:'
-        end
-        object Label13: TLabel
-          Left = 315
-          Top = 101
-          Width = 59
-          Height = 13
-          Caption = 'Linha Inicial:'
-        end
         object edTextoOriginal: TEdit
           Left = 96
           Top = 21
@@ -220,22 +206,6 @@ object frPesquisar: TfrPesquisar
           TabOrder = 3
           OnClick = BitBtn2Click
         end
-        object edLinhaFinalSubstituir: TEdit
-          Left = 529
-          Top = 98
-          Width = 79
-          Height = 21
-          Anchors = [akLeft, akTop, akRight]
-          TabOrder = 4
-        end
-        object edLinhaInicialSubstituir: TEdit
-          Left = 378
-          Top = 98
-          Width = 79
-          Height = 21
-          Anchors = [akLeft, akTop, akRight]
-          TabOrder = 5
-        end
       end
       object TabSheet3: TTabSheet
         Caption = 'Pesquisar Por Tamanho Frase'
@@ -250,20 +220,6 @@ object frPesquisar: TfrPesquisar
           Width = 78
           Height = 13
           Caption = 'Tamanho Frase:'
-        end
-        object Label6: TLabel
-          Left = 179
-          Top = 20
-          Width = 59
-          Height = 13
-          Caption = 'Linha Inicial:'
-        end
-        object Label7: TLabel
-          Left = 333
-          Top = 20
-          Width = 54
-          Height = 13
-          Caption = 'Linha Final:'
         end
         object Label9: TLabel
           Left = 10
@@ -303,24 +259,6 @@ object frPesquisar: TfrPesquisar
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
-        object edLinhaInicial: TEdit
-          Left = 242
-          Top = 17
-          Width = 79
-          Height = 21
-          Anchors = [akLeft, akTop, akRight]
-          TabOrder = 1
-          OnExit = edLinhaInicialExit
-        end
-        object edLinhaFinal: TEdit
-          Left = 393
-          Top = 17
-          Width = 79
-          Height = 21
-          Anchors = [akLeft, akTop, akRight]
-          TabOrder = 2
-          OnExit = edLinhaFinalExit
-        end
         object btPesquisarLinhasInglesTamanhoMaiorTamanhoFrase: TBitBtn
           Left = 10
           Top = 64
@@ -332,7 +270,7 @@ object frPesquisar: TfrPesquisar
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 3
+          TabOrder = 1
           OnClick = btPesquisarLinhasInglesTamanhoMaiorTamanhoFraseClick
         end
         object btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFrase: TBitBtn
@@ -348,18 +286,18 @@ object frPesquisar: TfrPesquisar
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 4
+          TabOrder = 2
           OnClick = btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFraseClick
         end
         object ckIgnorarLinhasComentario: TCheckBox
-          Left = 488
+          Left = 192
           Top = 19
           Width = 241
           Height = 17
           Caption = 'Ignorar linhas iniciadas com --'
           Checked = True
           State = cbChecked
-          TabOrder = 5
+          TabOrder = 3
         end
       end
       object TabSheet4: TTabSheet
@@ -502,6 +440,9 @@ object frPesquisar: TfrPesquisar
       Height = 29
       Align = alBottom
       TabOrder = 1
+      DesignSize = (
+        964
+        29)
       object lbInfo: TLabel
         Left = 12
         Top = 7
@@ -513,6 +454,38 @@ object frPesquisar: TfrPesquisar
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
+      end
+      object Label6: TLabel
+        Left = 654
+        Top = 11
+        Width = 59
+        Height = 13
+        Caption = 'Linha Inicial:'
+      end
+      object Label7: TLabel
+        Left = 808
+        Top = 11
+        Width = 54
+        Height = 13
+        Caption = 'Linha Final:'
+      end
+      object edLinhaInicial: TEdit
+        Left = 717
+        Top = 3
+        Width = 79
+        Height = 21
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 0
+        OnExit = edLinhaInicialExit
+      end
+      object edLinhaFinal: TEdit
+        Left = 868
+        Top = 3
+        Width = 79
+        Height = 21
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 1
+        OnExit = edLinhaFinalExit
       end
     end
   end
