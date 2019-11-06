@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Grids, Vcl.StdCtrls, System.Types,
-  Vcl.Buttons, Vcl.ComCtrls, Character;
+  Vcl.Buttons, Vcl.ComCtrls;
 
 type
   TfrPesquisar = class(TForm)
@@ -119,8 +119,13 @@ begin
 
       // Se não encontrou uma palavra inteira, ignora
       pos := textoLinha.IndexOf(texto) ;
+<<<<<<< HEAD
       if (pos >= 1) and (Character.IsLetterOrDigit(textoLinha[pos])) then continue ;
       if ((pos + length(texto)) < length(textoLinha)) and (Character.IsLetterOrDigit(textoLinha[pos + length(texto)+1])) then continue ;
+=======
+      if (pos >= 1) and (textoLinha[pos] <> ' ') then continue ;
+      if ((pos + length(texto)) < length(textoLinha)) and (textoLinha[pos + length(texto)+1] <> ' ') then continue ;
+>>>>>>> parent of 2ed962f... Ajustes na consulta por palavras.
 
       numEncontrados := numEncontrados + 1;
       gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
@@ -275,8 +280,13 @@ begin
 
       // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
       pos := inglesRevisor.IndexOf(inglesGlossario) ;
+<<<<<<< HEAD
       if (pos >= 1) and (Character.IsLetterOrDigit(inglesRevisor[pos])) then continue ;
       if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (Character.IsLetterOrDigit(inglesRevisor[pos + length(inglesGlossario)+1])) then continue ;
+=======
+      if (pos >= 1) and (inglesRevisor[pos] <> ' ') then continue ;
+      if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (inglesRevisor[pos + length(inglesGlossario)+1] <> ' ') then continue ;
+>>>>>>> parent of 2ed962f... Ajustes na consulta por palavras.
 
       traduzidoGlossario := gridGlossario.Cells[1, ig-1].ToLower.Trim ;
       traducoesTermo := frRevisor.Split(traduzidoGlossario, ';');
@@ -372,8 +382,13 @@ begin
 
     // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
     pos := inglesRevisor.IndexOf(inglesGlossario) ;
+<<<<<<< HEAD
     if (pos >= 1) and (Character.IsLetterOrDigit(inglesRevisor[pos])) then continue ;
     if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (Character.IsLetterOrDigit(inglesRevisor[pos + length(inglesGlossario)+1])) then continue ;
+=======
+    if (pos >= 1) and (inglesRevisor[pos] <> ' ') then continue ;
+    if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (inglesRevisor[pos + length(inglesGlossario)+1] <> ' ') then continue ;
+>>>>>>> parent of 2ed962f... Ajustes na consulta por palavras.
 
     traduzidoGlossario := gridGlossario.Cells[1, ig].ToLower.Trim ;
     traducoesTermo := frRevisor.Split(traduzidoGlossario, ';');

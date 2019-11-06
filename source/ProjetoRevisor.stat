@@ -1,4 +1,5 @@
 [Stats]
+<<<<<<< HEAD
 EditorSecs=23104
 DesignerSecs=5453
 InspectorSecs=2633
@@ -8,3 +9,14 @@ StartTime=16/04/2019 17:19:58
 RealKeys=0
 EffectiveKeys=0
 DebugSecs=73785
+=======
+EditorSecs=22576
+DesignerSecs=5445
+InspectorSecs=2626
+CompileSecs=596111
+OtherSecs=1686
+StartTime=16/04/2019 17:19:58
+RealKeys=0
+EffectiveKeys=0
+DebugSecs=58923
+>>>>>>> parent of 2ed962f... Ajustes na consulta por palavras.
