@@ -30,10 +30,6 @@ type
     TabSheet3: TTabSheet;
     Label5: TLabel;
     edTamanhoFrase: TEdit;
-    Label6: TLabel;
-    edLinhaInicial: TEdit;
-    Label7: TLabel;
-    edLinhaFinal: TEdit;
     btPesquisarLinhasInglesTamanhoMaiorTamanhoFrase: TBitBtn;
     TabSheet4: TTabSheet;
     OpenDialog1: TOpenDialog;
@@ -57,10 +53,10 @@ type
     gridGlossario: TStringGrid;
     btPesquisarViolacaoSelecionado: TBitBtn;
     Label11: TLabel;
-    edLinhaFinalSubstituir: TEdit;
-    Label12: TLabel;
-    edLinhaInicialSubstituir: TEdit;
-    Label13: TLabel;
+    Label6: TLabel;
+    edLinhaInicial: TEdit;
+    Label7: TLabel;
+    edLinhaFinal: TEdit;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -123,7 +119,7 @@ begin
 
       // Se não encontrou uma palavra inteira, ignora
       pos := textoLinha.IndexOf(texto) ;
-      if (pos >= 1) and (textoLinha[pos] <> ' ') then continue ;
+      if (pos >= 1) and (Character.IsLetterOrDigit(textoLinha[pos])) then continue ;
       if ((pos + length(texto)) < length(textoLinha)) and (Character.IsLetterOrDigit(textoLinha[pos + length(texto)+1])) then continue ;
 
       numEncontrados := numEncontrados + 1;
@@ -236,8 +232,8 @@ begin
 // Recupera linha de inicio e fim
 linhaInicio := 1 ;
 linhaFim := frRevisor.StringGrid1.RowCount ;
-if (length(edLinhaInicialSubstituir.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicialSubstituir.Text) ;
-if (length(edLinhaFinalSubstituir.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinalSubstituir.Text) ;
+if (length(edLinhaInicial.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicial.Text) ;
+if (length(edLinhaFinal.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinal.Text) ;
 // Faz a pesquisa
 pesquisar(2, edTextoOriginal.Text, linhaInicio, linhaFim) ;
 end;
@@ -279,7 +275,7 @@ begin
 
       // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
       pos := inglesRevisor.IndexOf(inglesGlossario) ;
-      if (pos >= 1) and (inglesRevisor[pos] <> ' ') then continue ;
+      if (pos >= 1) and (Character.IsLetterOrDigit(inglesRevisor[pos])) then continue ;
       if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (Character.IsLetterOrDigit(inglesRevisor[pos + length(inglesGlossario)+1])) then continue ;
 
       traduzidoGlossario := gridGlossario.Cells[1, ig-1].ToLower.Trim ;
@@ -376,7 +372,7 @@ begin
 
     // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
     pos := inglesRevisor.IndexOf(inglesGlossario) ;
-    if (pos >= 1) and (inglesRevisor[pos] <> ' ') then continue ;
+    if (pos >= 1) and (Character.IsLetterOrDigit(inglesRevisor[pos])) then continue ;
     if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (Character.IsLetterOrDigit(inglesRevisor[pos + length(inglesGlossario)+1])) then continue ;
 
     traduzidoGlossario := gridGlossario.Cells[1, ig].ToLower.Trim ;
@@ -500,8 +496,8 @@ begin
   // Recupera linha de inicio e fim
   linhaInicio := 1 ;
   linhaFim := frRevisor.StringGrid1.RowCount ;
-  if (length(edLinhaInicialSubstituir.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicialSubstituir.Text) ;
-  if (length(edLinhaFinalSubstituir.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinalSubstituir.Text) ;
+  if (length(edLinhaInicial.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicial.Text) ;
+  if (length(edLinhaFinal.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinal.Text) ;
 
   // Susbstitui o texto na grid
   for i := linhaInicio to linhaFim do begin

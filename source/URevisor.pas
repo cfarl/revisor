@@ -1150,7 +1150,6 @@ end;
 procedure TfrRevisor.btJuntarPrimeiraTraducaoClick(Sender: TObject);
 var textoBuscar, traducao, atual: string ;
     achou: boolean ;
-    I: Integer;
 begin
   // Recupera texto em ingles da celula selecionada
   textoBuscar := MemoIngles.Text ;
@@ -1256,7 +1255,6 @@ var
   S: String;
   drawrect: TRect;
   bgFill: TColor;
-  i: Integer;
   traducao, textoIngles : string ;
 begin
   grid := Sender as TStringGrid;
