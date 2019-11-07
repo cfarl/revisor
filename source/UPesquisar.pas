@@ -81,6 +81,8 @@ type
     { Private declarations }
     procedure pesquisar(coluna: integer; texto: string; linhaInicial: integer; linhaFinal: integer);
     procedure btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(colunaGrid: integer);
+    function temTextoAntes(texto: string; pos: integer): boolean;
+    function temTextoDepois(palavra: string; texto: string; pos: integer): boolean;
     //procedure inicializaComponentesParaPesquisa ;
   public
     { Public declarations }
@@ -94,6 +96,31 @@ implementation
 {$R *.dfm}
 
 uses URevisor;
+
+//-----------------------------------------------------------------------------
+// Retorna true se o caractere antes da posicao no texto for letra, _ ou -
+//-----------------------------------------------------------------------------
+function TfrPesquisar.temTextoAntes(texto: string; pos: integer): boolean;
+Begin
+  if (pos >= 1) and ((Character.IsLetterOrDigit(texto[pos])) or (texto[pos] = '_') or (texto[pos] = '-') ) then
+     temTextoAntes := true
+  else
+     temTextoAntes := false ;
+End;
+
+//-----------------------------------------------------------------------------
+// Retorna true se o caractere antes da posicao no texto for letra, _ ou -
+//-----------------------------------------------------------------------------
+function TfrPesquisar.temTextoDepois(palavra: string; texto: string; pos: integer): boolean;
+var posFim: integer ;
+Begin
+  posFim := pos + length(palavra)+1 ;
+ if ((pos + length(palavra)) < length(texto))
+        and ((Character.IsLetterOrDigit(texto[posFim])) or (texto[posFim] = '_') or (texto[posFim] = '-')) then
+     temTextoDepois := true
+  else
+     temTextoDepois := false ;
+End;
 
 //--------------------------------------------------------
 // Pesquisa por um texto na coluna informada
@@ -119,8 +146,8 @@ begin
 
       // Se não encontrou uma palavra inteira, ignora
       pos := textoLinha.IndexOf(texto) ;
-      if (pos >= 1) and (Character.IsLetterOrDigit(textoLinha[pos])) then continue ;
-      if ((pos + length(texto)) < length(textoLinha)) and (Character.IsLetterOrDigit(textoLinha[pos + length(texto)+1])) then continue ;
+      if temTextoAntes(textoLinha, pos) then continue ;
+      if temTextoDepois(texto, textoLinha, pos) then continue ;
 
       numEncontrados := numEncontrados + 1;
       gridPesquisa.RowCount:= gridPesquisa.RowCount + 1;
@@ -275,8 +302,8 @@ begin
 
       // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
       pos := inglesRevisor.IndexOf(inglesGlossario) ;
-      if (pos >= 1) and (Character.IsLetterOrDigit(inglesRevisor[pos])) then continue ;
-      if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (Character.IsLetterOrDigit(inglesRevisor[pos + length(inglesGlossario)+1])) then continue ;
+      if(temTextoAntes(inglesRevisor, pos)) then continue ;
+      if temTextoDepois(inglesGlossario, inglesRevisor, pos) then continue ;
 
       traduzidoGlossario := gridGlossario.Cells[1, ig-1].ToLower.Trim ;
       traducoesTermo := frRevisor.Split(traduzidoGlossario, ';');
@@ -372,8 +399,8 @@ begin
 
     // Verifica se existe antes da palavra buscada um caractere. Se existir e for diferente de espaco, ignora o texto
     pos := inglesRevisor.IndexOf(inglesGlossario) ;
-    if (pos >= 1) and (Character.IsLetterOrDigit(inglesRevisor[pos])) then continue ;
-    if ((pos + length(inglesGlossario)) < length(inglesRevisor)) and (Character.IsLetterOrDigit(inglesRevisor[pos + length(inglesGlossario)+1])) then continue ;
+    if(temTextoAntes(inglesRevisor, pos)) then continue ;
+    if temTextoDepois(inglesGlossario, inglesRevisor, pos) then continue ;
 
     traduzidoGlossario := gridGlossario.Cells[1, ig].ToLower.Trim ;
     traducoesTermo := frRevisor.Split(traduzidoGlossario, ';');

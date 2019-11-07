@@ -672,7 +672,7 @@ object frRevisor: TfrRevisor
         Align = alBottom
         TabOrder = 0
         object btCarregar: TButton
-          Left = 571
+          Left = 576
           Top = 16
           Width = 75
           Height = 25

@@ -144,6 +144,10 @@ object frPesquisar: TfrPesquisar
       object TabSheet2: TTabSheet
         Caption = 'Substituir'
         ImageIndex = 1
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         DesignSize = (
           956
           150)
@@ -211,6 +215,10 @@ object frPesquisar: TfrPesquisar
         Caption = 'Pesquisar Por Tamanho Frase'
         ImageIndex = 2
         OnShow = TabSheet3Show
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         DesignSize = (
           956
           150)
@@ -303,6 +311,10 @@ object frPesquisar: TfrPesquisar
       object TabSheet4: TTabSheet
         Caption = 'Pesquisar por Gloss'#225'rio'
         ImageIndex = 3
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Panel1: TPanel
           Left = 0
           Top = 0
