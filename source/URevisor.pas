@@ -10,6 +10,22 @@ uses
   Data.Bind.ObjectScope, Web.HTTPApp  ;
 
 type
+  ThreadRevisor = class(TThread)
+  private
+       LStringGrid, tmpStringGrid : TStringGrid;
+       LStringsLinhas,
+       LStringsIngles,
+       LStringsEspanhol,
+       LStringsTraduzido : TStringList;
+  procedure Sincroniza; virtual;
+  protected
+    procedure Execute; override;
+  public
+    constructor FillStringGrid(StringGrid : TStringGrid; StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList; const CreateSuspended : boolean = False);
+
+end;
+
+type
   TfrRevisor = class(TForm)
     OpenDialog1: TOpenDialog;
     StringGrid1: TStringGrid;
@@ -119,12 +135,6 @@ type
     lbSelIngles: TLabel;
     Label31: TLabel;
     lbSelEspanhol: TLabel;
-    ButtonedEditIngles: TButtonedEdit;
-    BtnCarregaTextoIngles: TButton;
-    ButtonedEditTraduzido: TButtonedEdit;
-    BtnCarregaTextoTraduzido: TButton;
-    ButtonedEditEspanhol: TButtonedEdit;
-    BtnCarregaTextoEspanhol: TButton;
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure MemoInglesChange(Sender: TObject);
@@ -155,6 +165,7 @@ type
     procedure btUsarPrimeiraTraducaoTodosClick(Sender: TObject);
     procedure btUsarComoPrimeiraTraducaoClick(Sender: TObject);
     procedure rdCargaArquivosClick(Sender: TObject);
+    procedure rdCargaPastasClick(Sender: TObject);
     procedure btEscolherPastaInglesClick(Sender: TObject);
     procedure btEscolherPastaTraduzidoClick(Sender: TObject);
     procedure btEscolherPastaEspanholClick(Sender: TObject);
@@ -174,8 +185,6 @@ type
     procedure MemoInglesSelectionChange(Sender: TObject);
     procedure MemoEspanholSelectionChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure ButtonedEditClick(Sender: TObject);
-    procedure BtnCarregaTextoClick(Sender: TObject);
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
@@ -186,8 +195,6 @@ type
     procedure salvarArquivo(nomeArquivo: string) ;
     procedure salvarArquivoAtual ;
     function getArquivosCarregados: TStringList ;
-    function removeQuebrasLinha(texto: string) : string ;
-    procedure chamaThread(Sender: TObject);
   public
     function Split(const Texto, Delimitador: string): TStringDynArray;
     procedure mantemLinhaSelecionadaMeioGrid ;
@@ -202,6 +209,7 @@ var
   encodingArquivos: TEncoding ;
   estilo: string;
   mudouTexto: boolean;
+  function removeQuebrasLinha(texto: string) : string ;
   //nomeArquivo: string ;
 
   //nomeArquivoIngles, nomeArquivoTraduzido, nomeArquivoEspanhol: string ;
@@ -562,7 +570,14 @@ end;
 //------------------------------------------------------------------------------
 procedure TfrRevisor.rdCargaArquivosClick(Sender: TObject);
 begin
-     btFecharClick(Self);
+  pnAbrirArquivosInglesTraduzidoEspanhol.Visible := true ;
+  pnAbrirPastasInglesTraduzidoEspanhol.Visible := false ;
+end;
+
+procedure TfrRevisor.rdCargaPastasClick(Sender: TObject);
+begin
+  pnAbrirArquivosInglesTraduzidoEspanhol.Visible := false ;
+  pnAbrirPastasInglesTraduzidoEspanhol.Visible := true ;
 end;
 
 procedure TfrRevisor.rdHorizontalClick(Sender: TObject);
@@ -955,15 +970,18 @@ begin
    arquivoAtual := StringsNomeArquivoTraduzido[linhaAtual] ;
 
    // Procura linha onde comeca o proximo arquivo
+   achou := false ;
    while ((not achou) and (linhaAtual <  StringsNomeArquivoTraduzido.Count)) do
    Begin
-      achou := (arquivoAtual <> StringsNomeArquivoTraduzido[linhaAtual]);
-      inc(linhaAtual);
+      if (arquivoAtual <> StringsNomeArquivoTraduzido[linhaAtual]) then
+        achou := true
+      else
+        linhaAtual := linhaAtual + 1;
    End;
 
    // Se achou, coloca arquivo na linha onde começa
    if achou then begin
-     StringGrid1.Row := linhaAtual;
+     StringGrid1.Row := linhaAtual + 1;
 
      // Mantém a linha selecionada no meio da grid
      mantemLinhaSelecionadaMeioGrid;
@@ -1012,37 +1030,6 @@ begin
   MemoTraduzido.SetFocus;
 end;
 
-
-procedure TfrRevisor.ButtonedEditClick(Sender: TObject);
-begin
-
-  with TThread.CreateAnonymousThread(
-  procedure
-  begin
-
-    TThread.Synchronize(
-        TThread.CurrentThread,
-        procedure
-        begin
-          if OpenDialog1.Execute() then
-          if rdCargaArquivos.Checked then
-             TButtonedEdit(Sender).Text := OpenDialog1.FileName
-          else
-             TButtonedEdit(Sender).Text := ExtractFilePath(OpenDialog1.FileName);
-
-        end
-    );
-
-      TThread.CurrentThread.Terminate;
-  end
-  ) do
-  begin
-    FreeOnTerminate := True;
-    Start();
-  end;
-
-end;
-
 //------------------------------------------------------------------------------
 // Usa a traducao repetida como primeira traducao
 //------------------------------------------------------------------------------
@@ -1085,64 +1072,36 @@ End;
 //------------------------------------------------------------------------------
 procedure TfrRevisor.btEscolherArquivoEspanholClick(Sender: TObject);
 begin
-  with TThread.CreateAnonymousThread(
-  procedure
-  begin
-
-    TThread.Synchronize(
-        TThread.CurrentThread,
-        procedure
-        begin
-          if OpenDialog1.Execute() then
-           edEspanhol.Text := OpenDialog1.FileName ;
-        end
-    );
-
-  end
-  ) do
-  begin
-    FreeOnTerminate := True;
-    Start();
-  end;
-
+  if OpenDialog1.Execute() then
+  Begin
+     edEspanhol.Text := OpenDialog1.FileName ;
+  End;
 end;
 
 //------------------------------------------------------------------------------
 // Fecha os arquivos selecionados, limpando a grid
 //------------------------------------------------------------------------------
 procedure TfrRevisor.btFecharClick(Sender: TObject);
+var c, r: Integer;
 begin
-   with TThread.CreateAnonymousThread(
-   procedure
-   var col: Integer;
-   begin
-      edIngles.Clear;
-      edTraduzido.Clear;
-      edEspanhol.Clear;
-      edPastaIngles.Clear;
-      edPastaTraduzido.Clear;
-      edPastaEspanhol.Clear;
+    // Inicializa componentes
+    edIngles.Text := '' ;
+    edTraduzido.Text := '' ;
+    edEspanhol.Text := '' ;
+    edPastaIngles.Text := '' ;
+    edPastaTraduzido.Text := '' ;
+    edPastaEspanhol.Text := '' ;
 
-      ButtonedEditIngles.Clear;
-      ButtonedEditTraduzido.Clear;
-      ButtonedEditEspanhol.Clear;
+    // Limpa a grid
+    for c := 0 to Pred(StringGrid1.ColCount) do
+      for r := 0 to Pred(StringGrid1.RowCount) do
+        StringGrid1.Cells[c, r] := '';
+    StringGrid1.RowCount := 2;
 
-      // Limpa a grid
-      for col := Pred(StringGrid1.ColCount) downto 0 do
-      TStrings(StringGrid1.Cols[col]).Clear;
-      StringGrid1.RowCount := 2;
-
-     // limpa memos
-      MemoIngles.Clear;
-      MemoTraduzido.Clear;
-      MemoEspanhol.Clear;
-      TThread.CurrentThread.Terminate;
-   end
-   ) do
-   begin
-      FreeOnTerminate := True;
-      Start();
-   end;
+   // limpa memos
+   MemoIngles.Text := '' ;
+   MemoTraduzido.Text := '' ;
+   MemoEspanhol.Text := '' ;
 
 end;
 
@@ -1160,13 +1119,11 @@ begin
   Begin
     // Atualiza memo traduzido
     atual := MemoTraduzido.Text ;
-    with MemoTraduzido.Lines do
-    begin
-        Clear() ;
-        Add(traducao) ;
-        Add('-------------------') ;
-        Add(atual) ;
-    end;
+    MemoTraduzido.Lines.Clear() ;
+    MemoTraduzido.Lines.Add(traducao) ;
+    MemoTraduzido.Lines.Add('-------------------') ;
+    MemoTraduzido.Lines.Add(atual) ;
+
     // Atualiza a celula na grid
     StringGrid1.Cells[2, StringGrid1.Row] := traducao ;
   End;
@@ -1175,22 +1132,6 @@ begin
   // Atualiza a grid
   stringgrid1.Repaint ;
   MemoTraduzido.SetFocus;
-end;
-
-
-procedure TfrRevisor.BtnCarregaTextoClick(Sender: TObject);
-begin
-    case AnsiIndexStr(TButton(Sender).Name,
-          [
-          'BtnCarregaTextoIngles',
-          'BtnCarregaTextoTraduzido',
-          'BtnCarregaTextoEspanhol'
-          ]) of
-
-          0 : ButtonedEditClick(ButtonedEditIngles);
-          1 : ButtonedEditClick(ButtonedEditTraduzido);
-          2 : ButtonedEditClick(ButtonedEditEspanhol);
-    end;
 end;
 
 //------------------------------------------------------------------------------
@@ -1217,7 +1158,6 @@ begin
    // Fecha o revisor
    btFecharClick(Sender);
    frRevisor.Close;
-
 end;
 
 procedure TfrRevisor.btSetarLinhaClick(Sender: TObject);
@@ -1321,23 +1261,26 @@ end;
 
 
 function GetCellHeight(AGrid: TStringGrid; ACol, ARow: Integer): Integer;
+var
+  r: Integer;
+  L: TStringList;
+  h: Integer;
+  bmp: TBitmap;
 begin
-    with TStringList.Create do
-    try
-      Text := AGrid.Cells[ACol, ARow];
-      if Count > 0 then
-      with TBitmap.Create do
-      try
-          Canvas.Font.Assign(AGrid.Font);
-          Result := Canvas.TextHeight('Tg') * Count;
-      finally
-          Free;
-      end
-      else
-        Result := AGrid.DefaultRowHeight;
-    finally
-      Free;
-    end;
+  bmp := TBitmap.Create;
+  bmp.Canvas.Font.Assign(AGrid.Font);
+
+  L := TStringList.Create;
+  try
+    L.Text := AGrid.Cells[ACol, ARow];
+    if L.Count > 0 then
+      Result := bmp.Canvas.TextHeight('Tg') * L.Count
+    else
+      Result := AGrid.DefaultRowHeight;
+  finally
+    L.Free;
+    bmp.Free;
+  end;
 end;
 
 procedure AutoRowHeight(grid: TStringGrid; ARow: Integer);
@@ -1361,18 +1304,17 @@ end;
 procedure TfrRevisor.carregarArquivosInglesTraduzido;
 var  StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList ;
      i: integer ;
-     pasta : string ;
+     numeroColunasGrid :  integer;
 begin
    // Verifica se os arquivos necessarios foram informados
-   if (ButtonedEditTraduzido.Text = '') or (ButtonedEditIngles.Text = '') then
+   if (edTraduzido.Text = '') or (edIngles.Text = '') then
    Begin
      ShowMessage('O arquivo em inglês e o arquivo traduzido precisam ser informados.');
      exit ;
    End;
 
    // Inicializa variaveis
-
-   i := 3;
+   numeroColunasGrid := 3 ;
    pnEspanhol.Visible := false ;
    Splitter1.Visible := false ;
    StringsLinhas := TStringList.Create;
@@ -1386,71 +1328,40 @@ begin
    end;
 
    // Se foi informado o arquivo em espanhol, seta o ambiente para 4 colunas
-   if(ButtonedEditEspanhol.Text <> '') then
+   if(edEspanhol.Text <> '') then
    Begin
-      i := 4;
+      numeroColunasGrid := 4 ;
       pnEspanhol.Visible := true ;
       Splitter1.Visible := true ;
    End ;
 
-   StringGrid1.ColCount := i;
+   // Define numero de colunas na grid
+   StringGrid1.ColCount := numeroColunasGrid ;
 
    try
+      // Carrega arquivos
+      StringsIngles.LoadFromFile(edIngles.Text, encodingArquivos);
+      StringsTraduzido.LoadFromFile(edTraduzido.Text, encodingArquivos);
+      if (numeroColunasGrid = 4) then StringsEspanhol.LoadFromFile(edEspanhol.Text, encodingArquivos);
 
-      if rdCargaArquivos.Checked then
-      begin
-          // Carrega arquivos
-          if FileExists(ButtonedEditIngles.Text) then
-             StringsIngles.LoadFromFile(ButtonedEditIngles.Text, encodingArquivos);
-
-          if FileExists(ButtonedEditTraduzido.Text) then
-             StringsTraduzido.LoadFromFile(ButtonedEditTraduzido.Text, encodingArquivos);
-
-          if (StringGrid1.ColCount = 4) then
-          if FileExists(ButtonedEditEspanhol.Text) then
-             StringsEspanhol.LoadFromFile(ButtonedEditEspanhol.Text, encodingArquivos);
-
-          // Guarda o nome do arquivo para cada linha do arquivo ingles
-          for I := 0 to StringsIngles.Count-1 do begin
-             StringsLinhas.Add(Integer.ToString(i+1));
-             StringsNomeArquivoTraduzido.Add(ExtractFileName(ButtonedEditTraduzido.Text)) ;
-          end;
-
+      // Guarda o nome do arquivo para cada linha do arquivo ingles
+      for I := 0 to StringsIngles.Count-1 do begin
+         StringsLinhas.Add(Integer.ToString(i+1));
+         StringsNomeArquivoTraduzido.Add(ExtractFileName(edTraduzido.Text)) ;
       end;
 
-      if rdCargaPastas.Checked then
-      begin
-          // Carrega arquivos das pastas
-          carregarArquivosPasta(ButtonedEditIngles.Text, StringsLinhas, StringsIngles, false) ;
-          carregarArquivosPasta(ButtonedEditTraduzido.Text, StringsLinhas, StringsTraduzido, true) ;
-          if (StringGrid1.ColCount = 4) then
-          carregarArquivosPasta(ButtonedEditEspanhol.Text, StringsLinhas, StringsEspanhol, false) ;
-
-          // Salva arquivos com os textos e tendo o nome das pastas .txt
-          pasta := ButtonedEditIngles.Text ;
-          ButtonedEditIngles.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
-          StringsIngles.SaveToFile(ButtonedEditIngles.Text, encodingArquivos);
-
-          pasta := ButtonedEditTraduzido.Text ;
-          ButtonedEditTraduzido.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
-          StringsTraduzido.SaveToFile(ButtonedEditTraduzido.Text, encodingArquivos);
-
-          if (StringGrid1.ColCount = 4) then
-          Begin
-            pasta := ButtonedEditEspanhol.Text ;
-            ButtonedEditEspanhol.Text :=  pasta.Substring(0, pasta.Length-1) + '.txt' ;
-            StringsEspanhol.SaveToFile(ButtonedEditEspanhol.Text, encodingArquivos);
-          End;
-      end;
+      // Carrega as linhas na grid
+//      preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
+      ThreadRevisor.FillStringGrid(StringGrid1,StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
 
    finally
-      // Carrega as linhas na grid
-      preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
+{
       StringsLinhas.Free ;
       StringsIngles.Free;
       StringsTraduzido.Free;
       StringsEspanhol.Free;
       StringGrid1.Refresh;
+}
       linhaAnterior := 0 ;
    end;
 
@@ -1579,15 +1490,21 @@ begin
 
  End;
 
- function TfrRevisor.removeQuebrasLinha(texto: string) : string ;
+ function removeQuebrasLinha(texto: string) : string ;
+ var temp: string ;
  Begin
    // Troca \n por espaco, remove \r
-   removeQuebrasLinha := texto
-            .Replace('\n', ' ')
-            .Replace('\r','')
-            .Replace('\t','')
-            .Replace('  ', ' ', [rfReplaceAll])
-            ;
+   texto := texto.Replace('\n', ' ').Replace('\r','').Replace('\t','') ;
+
+   // Remove duplos espacos
+   temp := texto ;
+   while (temp <> texto) do
+   Begin
+     temp := texto ;
+     texto := texto.Replace('  ', ' ') ;
+   End;
+
+   removeQuebrasLinha := texto ;
  End;
 
  //-------------------------------------------------------------------------------
@@ -1601,17 +1518,14 @@ Begin
     listaTextosIngles := TStringList.Create;
 
     // Inicializa a grid
-    With StringGrid1 do
-    begin
-        RowCount := StringsIngles.Count + 1;
-        FixedRows := 1;
-        Cells[0, 0] := 'Linha' ;
-        Cells[1, 0] := 'Inglês' ;
-        Cells[2, 0] := 'Traduzido' ;
-        Cells[3, 0] := 'Espanhol' ;
-    end;
-    // Carrega as linhas dados dos arquivos na StringGrid
+    StringGrid1.RowCount := StringsIngles.Count + 1;
+    StringGrid1.FixedRows := 1;
+    StringGrid1.Cells[0, 0] := 'Linha' ;
+    StringGrid1.Cells[1, 0] := 'Inglês' ;
+    StringGrid1.Cells[2, 0] := 'Traduzido' ;
+    StringGrid1.Cells[3, 0] := 'Espanhol' ;
 
+    // Carrega as linhas dados dos arquivos na StringGrid
     for Row := 0 to StringsIngles.Count-1 do
     begin
         // Linha
@@ -1698,85 +1612,139 @@ begin
    end;
 end;
 
-procedure TfrRevisor.btCarregarClick(Sender: TObject);  
-var
+procedure TfrRevisor.btCarregarClick(Sender: TObject);
+var i: integer ;
     //StringsIngles, StringsEspanhol, StringsTraduzido: TStringList;
     linhaAtualGrid: integer ;
 Begin
-      btCarregar.Enabled := False;
-      linhaAtualGrid := StringGrid1.Row ;
-      mudouTexto := false ;
-      pnProxArquivo.Visible := false ;
-     // Seta o encoding dos arquivos
-      if (rdAnsi.Checked) then
-         encodingArquivos := TEncoding.ANSI
-      else if (rdUTF8.Checked) then
-         encodingArquivos := TEncoding.UTF8 ;
 
-      with TThread.CreateAnonymousThread(
-      procedure
-      begin
-           carregarArquivosInglesTraduzido ;
+   mudouTexto := false ;
+   pnProxArquivo.Visible := false ;
 
-          // Seleciona a primeira linha do grid
-          if stringgrid1.RowCount > 1 then
-            stringgrid1.Row := 2;
+   // Seta o encodingo dos arquivos
+   if (rdAnsi.Checked) then
+       encodingArquivos := TEncoding.ANSI
+   else if (rdUTF8.Checked) then
+       encodingArquivos := TEncoding.UTF8 ;
 
-          // Restaura linha corrente
-          if(linhaAtualGrid < StringGrid1.RowCount) then
-             StringGrid1.Row := linhaAtualGrid ;
+   // Carrega arquivos
+   if rdCargaArquivos.Checked then
+      carregarArquivosInglesTraduzido ;
+   if rdCargaPastas.Checked then
+      carregarPastasInglesTraduzido ;
 
-          panel3.AutoSize := true ;
-          lbTotalArquivos.Caption := Integer.ToString(getArquivosCarregados.Count);
+   FormResize(Sender);
 
-        TThread.Synchronize(
-            TThread.CurrentThread,
-            procedure
-            begin
-                // Ajusta os memos
-                rdVerticalClick(Sender) ;
-                if rdHorizontal.Checked then
-                   rdHorizontalClick(Sender)
-                else
-                   rdVerticalClick(Sender) ;
+  // Ajusta os memos
+  rdVerticalClick(Sender) ;
+  if rdHorizontal.Checked then
+     rdHorizontalClick(Sender)
+  else
+     rdVerticalClick(Sender) ;
 
-                FormResize(Sender);
-            end
-        );
+  panel3.AutoSize := true ;
+  lbTotalArquivos.Caption := Integer.ToString(getArquivosCarregados.Count);
 
-        btCarregar.Enabled := True;
-        TThread.CurrentThread.Terminate;
-      end
-      ) do
-      begin
-        FreeOnTerminate := True;
-        OnTerminate := chamaThread;
-        Start();
-      end;
 
 End;
 
-procedure TfrRevisor.chamaThread(Sender : TObject);
-begin
-    with TThread.CreateAnonymousThread(
-    procedure
-    var i : Integer;
-    begin
-        with StringGrid1 do
-        for i := 1 to RowCount-1 do
-        RowHeights[i] := Canvas.TextHeight(Cells[0, i]) + 5;
+procedure ThreadRevisor.Execute;
+var listaTextosIngles: tstringlist ;
+    row, linhaAtualGrid : integer ;
+Begin
 
-        btCarregar.Enabled := True;
-        TThread.CurrentThread.Terminate;
-    end
-    ) do
+    linhaAtualGrid := Self.LStringGrid.Row ;
+
+    // Inicializa lista com textos em ingles, para marcar os textos repetidos
+    listaTextosIngles := TStringList.Create;
+
+    // Inicializa a grid
+    Self.LStringGrid.RowCount := LStringsIngles.Count + 1;
+    Self.LStringGrid.FixedRows := 1;
+    Self.LStringGrid.Cells[0, 0] := 'Linha' ;
+    Self.LStringGrid.Cells[1, 0] := 'Inglês' ;
+    Self.LStringGrid.Cells[2, 0] := 'Traduzido' ;
+    Self.LStringGrid.Cells[3, 0] := 'Espanhol' ;
+
+    // Carrega as linhas dados dos arquivos na StringGrid
+    for Row := 0 to LStringsIngles.Count-1 do
     begin
-       FreeOnTerminate := True;
-       Start();
+        // Linha
+        LStringGrid.Cells[0, Row+1] := LStringsLinhas[Row] ;
+        AutoRowHeight(LStringGrid, Row+1);
+        // Texto em ingles
+        //showmessage(removeQuebrasLinha(StringsIngles[Row]));
+        if( listaTextosIngles.IndexOf(removeQuebrasLinha(LStringsIngles[Row])) = -1 ) then
+        Begin
+            LStringGrid.Cells[1, Row+1] := LStringsIngles[Row];
+            listaTextosIngles.Add(removeQuebrasLinha(LStringsIngles[Row])) ;
+        End else
+        Begin
+            LStringGrid.Cells[1, Row+1] := '(REPETIDO)' + LStringsIngles[Row];
+        End;
+
+        // Texto traduzido
+        if (Row < LStringsTraduzido.Count) then
+           LStringGrid.Cells[2, Row+1] := LStringsTraduzido[Row]
+        else
+           LStringGrid.Cells[2, Row+1] := '';
+
+        // Texto expanhol
+         if (Row < LStringsEspanhol.Count) then
+           LStringGrid.Cells[3, Row+1] := LStringsEspanhol[Row]
+         else
+           LStringGrid.Cells[3, Row+1] := '';
     end;
+{
+    // Seleciona a primeira linha do grid
+    if Self.LStringGrid.RowCount > 1 then
+      Self.LStringGrid.Row := 2;
+
+    // Restaura linha corrente
+    if(linhaAtualGrid < Self.LStringGrid.RowCount) then
+       Self.LStringGrid.Row := linhaAtualGrid;
+}
+    Synchronize(Sincroniza);
+
+end;
+constructor ThreadRevisor.FillStringGrid(StringGrid : TStringGrid; StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList; const CreateSuspended : boolean = False);
+begin
+inherited Create(CreateSuspended);
+
+  Self.FreeOnTerminate  := true;
+
+  Self.tmpStringGrid := StringGrid;
+
+  Self.LStringGrid := TStringGrid.Create(Self.tmpStringGrid);
+  Self.LStringGrid.ColCount := Self.tmpStringGrid.ColCount;
+
+  Self.LStringsLinhas := StringsLinhas;
+  Self.LStringsIngles := (StringsIngles);
+  Self.LStringsEspanhol :=(StringsEspanhol);
+  Self.LStringsTraduzido := (StringsTraduzido);
+
+end;
+
+procedure ThreadRevisor.Sincroniza;
+var i : byte;
+begin
+      //mas que merda ta acontecendo ?
 
 
-    //leonam
+      for i := 1 to Self.LStringGrid.ColCount -1 do
+      begin
+          Self.tmpStringGrid.ColCount := Self.LStringGrid.ColCount;
+          Self.tmpStringGrid.RowCount := Self.LStringGrid.RowCount;
+//          Self.tmpStringGrid.Cols[i].AddStrings(Self.LStringGrid.Cols[i]);
+          Self.tmpStringGrid.Cols[i].Assign(Self.LStringGrid.Cols[i]);
+      end;
+
+
+      FreeAndNil(LStringsLinhas);
+      FreeAndNil(LStringsIngles);
+      FreeAndNil(LStringsTraduzido);
+      FreeAndNil(LStringsEspanhol);
+
 end;
 
 end.

@@ -672,7 +672,7 @@ object frRevisor: TfrRevisor
         Align = alBottom
         TabOrder = 0
         object btCarregar: TButton
-          Left = 571
+          Left = 576
           Top = 16
           Width = 75
           Height = 25
@@ -696,7 +696,7 @@ object frRevisor: TfrRevisor
           OnClick = btFecharClick
         end
         object btSair: TButton
-          Left = 738
+          Left = 745
           Top = 16
           Width = 82
           Height = 25
@@ -770,7 +770,7 @@ object frRevisor: TfrRevisor
             Caption = 'Carga:'
           end
           object rdCargaArquivos: TRadioButton
-            Left = 49
+            Left = 47
             Top = 9
             Width = 66
             Height = 17
@@ -798,7 +798,7 @@ object frRevisor: TfrRevisor
             ParentShowHint = False
             ShowHint = True
             TabOrder = 1
-            OnClick = rdCargaArquivosClick
+            OnClick = rdCargaPastasClick
           end
         end
         object GroupBox1: TGroupBox
@@ -859,7 +859,6 @@ object frRevisor: TfrRevisor
           Height = 120
           Align = alTop
           TabOrder = 0
-          OnClick = ButtonedEditClick
           DesignSize = (
             1241
             120)
@@ -885,7 +884,7 @@ object frRevisor: TfrRevisor
             Caption = 'Arquivo Espanhol:'
           end
           object btEscolherArquivoTraduzido: TButton
-            Left = 1161
+            Left = 1127
             Top = 61
             Width = 75
             Height = 24
@@ -895,13 +894,12 @@ object frRevisor: TfrRevisor
             ParentShowHint = False
             ShowHint = True
             TabOrder = 0
-            Visible = False
             OnClick = btEscolherArquivoTraduzidoClick
           end
           object btEscolherArquivoIngles: TButton
-            Left = 1184
-            Top = 30
-            Width = 52
+            Left = 1127
+            Top = 31
+            Width = 75
             Height = 25
             Hint = 'Seleciona o arquivo contendo os textos em ingl'#234's'
             Anchors = [akTop, akRight]
@@ -909,39 +907,35 @@ object frRevisor: TfrRevisor
             ParentShowHint = False
             ShowHint = True
             TabOrder = 1
-            Visible = False
             OnClick = btEscolherArquivoInglesClick
           end
           object edIngles: TEdit
-            Left = 96
+            Left = 83
             Top = 35
-            Width = 273
+            Width = 1037
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 2
-            Visible = False
           end
           object edTraduzido: TEdit
             Left = 100
             Top = 62
-            Width = 285
+            Width = 1020
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 3
-            Visible = False
           end
           object edEspanhol: TEdit
             Left = 96
             Top = 90
-            Width = 289
+            Width = 1024
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 4
-            Visible = False
           end
           object btEscolherArquivoEspanhol: TButton
-            Left = 1161
-            Top = 91
+            Left = 1126
+            Top = 89
             Width = 75
             Height = 24
             Hint = 'Seleciona o arquivo contendo os textos em espanhol'
@@ -950,77 +944,7 @@ object frRevisor: TfrRevisor
             ParentShowHint = False
             ShowHint = True
             TabOrder = 5
-            Visible = False
             OnClick = btEscolherArquivoEspanholClick
-          end
-          object ButtonedEditIngles: TButtonedEdit
-            Left = 83
-            Top = 31
-            Width = 1035
-            Height = 21
-            Anchors = [akLeft, akTop, akRight]
-            RightButton.Visible = True
-            TabOrder = 6
-            OnClick = ButtonedEditClick
-          end
-          object BtnCarregaTextoIngles: TButton
-            Left = 1124
-            Top = 29
-            Width = 75
-            Height = 25
-            Hint = 'Seleciona o arquivo contendo os textos em ingl'#234's'
-            Anchors = [akTop, akRight]
-            Caption = 'Selecionar'
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 7
-            OnClick = BtnCarregaTextoClick
-          end
-          object ButtonedEditTraduzido: TButtonedEdit
-            Left = 100
-            Top = 61
-            Width = 1018
-            Height = 21
-            Anchors = [akLeft, akTop, akRight]
-            RightButton.Visible = True
-            TabOrder = 8
-            OnClick = ButtonedEditClick
-          end
-          object BtnCarregaTextoTraduzido: TButton
-            Left = 1124
-            Top = 60
-            Width = 75
-            Height = 25
-            Hint = 'Seleciona o arquivo contendo os textos em ingl'#234's'
-            Anchors = [akTop, akRight]
-            Caption = 'Selecionar'
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 9
-            OnClick = BtnCarregaTextoClick
-          end
-          object ButtonedEditEspanhol: TButtonedEdit
-            Left = 96
-            Top = 91
-            Width = 1022
-            Height = 21
-            Anchors = [akLeft, akTop, akRight]
-            RightButton.Visible = True
-            TabOrder = 10
-            OnClick = ButtonedEditClick
-          end
-          object BtnCarregaTextoEspanhol: TButton
-            Left = 1124
-            Top = 90
-            Width = 75
-            Height = 25
-            Hint = 'Seleciona o arquivo contendo os textos em ingl'#234's'
-            Anchors = [akTop, akRight]
-            Caption = 'Selecionar'
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 11
-            OnClick = BtnCarregaTextoClick
           end
         end
         object pnAbrirPastasInglesTraduzidoEspanhol: TPanel
