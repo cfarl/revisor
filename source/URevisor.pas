@@ -1011,7 +1011,7 @@ begin
   salvarTodosArquivos ;
 
   // Atualiza a grid
-  stringgrid1.Repaint ;
+  StringGrid1.Repaint ;
   MemoTraduzido.SetFocus;
 end;
 
@@ -1047,7 +1047,7 @@ Begin
   salvarTodosArquivos ;
 
   // Atualiza a grid
-  stringgrid1.Repaint ;
+  StringGrid1.Repaint ;
   MemoTraduzido.SetFocus;
 End;
 
@@ -1067,26 +1067,26 @@ end;
 // Fecha os arquivos selecionados, limpando a grid
 //------------------------------------------------------------------------------
 procedure TfrRevisor.btFecharClick(Sender: TObject);
-var c, r: Integer;
+var c : Byte;
 begin
     // Inicializa componentes
-    edIngles.Text := '' ;
-    edTraduzido.Text := '' ;
-    edEspanhol.Text := '' ;
-    edPastaIngles.Text := '' ;
-    edPastaTraduzido.Text := '' ;
-    edPastaEspanhol.Text := '' ;
+    edIngles.Clear;
+    edTraduzido.Clear;
+    edEspanhol.Clear;
+    edPastaIngles.Clear;
+    edPastaTraduzido.Clear;
+    edPastaEspanhol.Clear;
 
     // Limpa a grid
     for c := 0 to Pred(StringGrid1.ColCount) do
-      for r := 0 to Pred(StringGrid1.RowCount) do
-        StringGrid1.Cells[c, r] := '';
+    StringGrid1.Cols[c].Clear;
+
     StringGrid1.RowCount := 2;
 
    // limpa memos
-   MemoIngles.Text := '' ;
-   MemoTraduzido.Text := '' ;
-   MemoEspanhol.Text := '' ;
+   MemoIngles.Clear;
+   MemoTraduzido.Clear;
+   MemoEspanhol.Clear;
 
 end;
 
@@ -1170,7 +1170,7 @@ end;
 //------------------------------------------------------
 procedure TfrRevisor.StringGrid1Click(Sender: TObject);
 begin
-StringGrid1.Repaint;
+  StringGrid1.Repaint;
 end;
 
 procedure TfrRevisor.StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
@@ -1619,25 +1619,27 @@ Begin
 
       TThread.CreateAnonymousThread(
       procedure
-      var listaTextosIngles: tstringlist ;
-      row, linhaAtualGrid : integer ;
+      var Row  : integer ;
       begin
 
-          listaTextosIngles := TStringList.Create;
-
           // Carrega as linhas dados dos arquivos na StringGrid
-          for Row := 0 to StringsIngles.Count-1 do
+          With TstringList.Create do
           begin
-              // Texto em ingles
-              //showmessage(removeQuebrasLinha(StringsIngles[Row]));
-              if( listaTextosIngles.IndexOf(removeQuebrasLinha(StringsIngles[Row])) = -1 ) then
-              Begin
-                  listaTextosIngles.Add(removeQuebrasLinha(StringsIngles[Row])) ;
-              End else
-              Begin
-                  StringsIngles[Row] := '(REPETIDO)' + StringsIngles[Row];
-              End;
+              for Row := 0 to StringsIngles.Count-1 do
+              begin
+                  // Texto em ingles
+                  //showmessage(removeQuebrasLinha(StringsIngles[Row]));
+                  if(IndexOf(removeQuebrasLinha(StringsIngles[Row])) = -1 ) then
+                  Begin
+                     Add(removeQuebrasLinha(StringsIngles[Row])) ;
+                  End else
+                  Begin
+                     StringsIngles[Row] := '(REPETIDO)' + StringsIngles[Row];
+                  End;
 
+              end;
+
+              Free;
           end;
 
           StringGrid1.Cols[1].Assign(StringsIngles);
@@ -1719,9 +1721,6 @@ begin
 end;
 
 procedure TfrRevisor.btCarregarClick(Sender: TObject);
-var i: integer ;
-    //StringsIngles, StringsEspanhol, StringsTraduzido: TStringList;
-    linhaAtualGrid: integer ;
 Begin
 
    mudouTexto := false ;
