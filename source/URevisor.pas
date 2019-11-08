@@ -1352,17 +1352,64 @@ begin
 
       // Carrega as linhas na grid
 //      preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
-      ThreadRevisor.FillStringGrid(StringGrid1,StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
+//      ThreadRevisor.FillStringGrid(StringGrid1,StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
+{      StringGrid1.RowCount := StringsIngles.Count -1;
+      StringGrid1.Cols[0].Assign(StringsLinhas);
+      StringGrid1.Cols[1].Assign(StringsIngles);
+      StringGrid1.Cols[2].Assign(StringsTraduzido);
+      if numeroColunasGrid = 4 then
+      StringGrid1.Cols[3].Assign(StringsEspanhol);
+}
+
+      // Inicializa a grid
+      StringGrid1.RowCount := StringsIngles.Count + 1;
+      StringGrid1.FixedRows := 1;
+      StringGrid1.Cells[0, 0] := 'Linha' ;
+      StringGrid1.Cells[1, 0] := 'Inglês' ;
+      StringGrid1.Cells[2, 0] := 'Traduzido' ;
+      StringGrid1.Cells[3, 0] := 'Espanhol' ;
+
+      TThread.CreateAnonymousThread(
+      procedure
+      var listaTextosIngles: tstringlist ;
+      row, linhaAtualGrid : integer ;
+      begin
+
+          listaTextosIngles := TStringList.Create;
+
+          // Carrega as linhas dados dos arquivos na StringGrid
+          for Row := 0 to StringsIngles.Count-1 do
+          begin
+              // Texto em ingles
+              //showmessage(removeQuebrasLinha(StringsIngles[Row]));
+              if( listaTextosIngles.IndexOf(removeQuebrasLinha(StringsIngles[Row])) = -1 ) then
+              Begin
+                  listaTextosIngles.Add(removeQuebrasLinha(StringsIngles[Row])) ;
+              End else
+              Begin
+                  StringsIngles[Row] := '(REPETIDO)' + StringsIngles[Row];
+              End;
+
+          end;
+
+          StringGrid1.Cols[1].Assign(StringsIngles);
+          FreeAndNil(StringsIngles);
+          TThread.CurrentThread.FreeOnTerminate := True;
+          TThread.CurrentThread.Terminate;
+      end).Start;
+
+      StringGrid1.Cols[0].Assign(StringsLinhas);
+      StringGrid1.Cols[2].Assign(StringsTraduzido);
+      if numeroColunasGrid = 4 then
+      StringGrid1.Cols[3].Assign(StringsEspanhol);
 
    finally
-{
-      StringsLinhas.Free ;
-      StringsIngles.Free;
-      StringsTraduzido.Free;
-      StringsEspanhol.Free;
-      StringGrid1.Refresh;
-}
+
+      FreeAndNil(StringsLinhas) ;
+      FreeAndNil(StringsTraduzido);
+      FreeAndNil(StringsEspanhol);
       linhaAnterior := 0 ;
+
    end;
 
  End;
@@ -1493,6 +1540,7 @@ begin
  function removeQuebrasLinha(texto: string) : string ;
  var temp: string ;
  Begin
+ try
    // Troca \n por espaco, remove \r
    texto := texto.Replace('\n', ' ').Replace('\r','').Replace('\t','') ;
 
@@ -1505,6 +1553,15 @@ begin
    End;
 
    removeQuebrasLinha := texto ;
+ Except
+   on E : Exception do
+   begin
+    ShowMessage(Format('%s : %s : %s', [E.Message, E.ClassName, texto]));
+
+   end;
+
+
+ end;
  End;
 
  //-------------------------------------------------------------------------------
@@ -1668,7 +1725,7 @@ Begin
 
     // Carrega as linhas dados dos arquivos na StringGrid
     for Row := 0 to LStringsIngles.Count-1 do
-    begin
+    try
         // Linha
         LStringGrid.Cells[0, Row+1] := LStringsLinhas[Row] ;
         AutoRowHeight(LStringGrid, Row+1);
@@ -1694,6 +1751,12 @@ Begin
            LStringGrid.Cells[3, Row+1] := LStringsEspanhol[Row]
          else
            LStringGrid.Cells[3, Row+1] := '';
+    except
+        On E: Exception do
+        begin
+          ShowMessage(Format('Erro: %s | Classe: %s | Linha: %d', [E.Message, E.ClassName, Row]));
+
+        end;
     end;
 {
     // Seleciona a primeira linha do grid
@@ -1719,9 +1782,9 @@ inherited Create(CreateSuspended);
   Self.LStringGrid.ColCount := Self.tmpStringGrid.ColCount;
 
   Self.LStringsLinhas := StringsLinhas;
-  Self.LStringsIngles := (StringsIngles);
-  Self.LStringsEspanhol :=(StringsEspanhol);
-  Self.LStringsTraduzido := (StringsTraduzido);
+  Self.LStringsIngles := StringsIngles;
+  Self.LStringsEspanhol :=StringsEspanhol;
+  Self.LStringsTraduzido := StringsTraduzido;
 
 end;
 
@@ -1729,17 +1792,14 @@ procedure ThreadRevisor.Sincroniza;
 var i : byte;
 begin
       //mas que merda ta acontecendo ?
-
-
-      for i := 1 to Self.LStringGrid.ColCount -1 do
+      Self.tmpStringGrid.ColCount := Self.LStringGrid.ColCount;
+      Self.tmpStringGrid.RowCount := Self.LStringGrid.RowCount;
+      for i := 0 to Self.LStringGrid.ColCount -1 do
       begin
-          Self.tmpStringGrid.ColCount := Self.LStringGrid.ColCount;
-          Self.tmpStringGrid.RowCount := Self.LStringGrid.RowCount;
-//          Self.tmpStringGrid.Cols[i].AddStrings(Self.LStringGrid.Cols[i]);
           Self.tmpStringGrid.Cols[i].Assign(Self.LStringGrid.Cols[i]);
       end;
 
-
+      FreeAndNil(LStringGrid);
       FreeAndNil(LStringsLinhas);
       FreeAndNil(LStringsIngles);
       FreeAndNil(LStringsTraduzido);
