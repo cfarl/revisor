@@ -1349,7 +1349,7 @@ object frRevisor: TfrRevisor
       DefaultDrawing = False
       FixedCols = 0
       RowCount = 2
-      Options = [goDrawFocusSelected, goRowSelect]
+      Options = [goDrawFocusSelected, goColSizing, goRowSelect]
       ParentColor = True
       ScrollBars = ssVertical
       TabOrder = 2
