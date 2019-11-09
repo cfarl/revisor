@@ -1354,6 +1354,7 @@ object frRevisor: TfrRevisor
       ScrollBars = ssVertical
       TabOrder = 2
       OnClick = StringGrid1Click
+      OnDblClick = StringGrid1DblClick
       OnDrawCell = StringGrid1DrawCell
       OnKeyUp = StringGrid1KeyUp
       OnSelectCell = StringGrid1SelectCell
