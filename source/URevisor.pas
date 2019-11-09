@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.Grids, Vcl.StdCtrls,
   Vcl.ExtCtrls, System.StrUtils, System.Types, Vcl.ComCtrls, Vcl.Buttons, System.IOUtils, System.Generics.Collections, Vcl.Themes,
   Vcl.Styles, IPPeerClient, REST.Client, Data.Bind.Components,
-  Data.Bind.ObjectScope, Web.HTTPApp  ;
+  Data.Bind.ObjectScope, Web.HTTPApp, System.Threading  ;
 
 
 type
@@ -379,9 +379,9 @@ End;
 //----------------------------------------------------------------
 procedure TfrRevisor.StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
- var  textoIngles, textoEspanhol, textoTraduzido: string ;
-      novaLinha : string ;
-      i: integer ;
+ var // textoIngles, textoEspanhol, textoTraduzido: string ;
+ //     novaLinha : string ;
+ //     i: integer ;
       posicao : TPoint ;
 begin
   // Mostra a linha atual da grid
@@ -392,8 +392,12 @@ begin
   end;
 
    // Se mudou de linha, atualiza a grid com o conteudo da traducao
-  if( (linhaAnterior <> 0) and (linhaAnterior <> ARow) ) then
+  if( (linhaAnterior <> 0) and (linhaAnterior <> ARow) and (StringGrid1.Cells[2, linhaAnterior] <> Trim(MemoTraduzido.Text)) ) then
   Begin
+
+        StringGrid1.Cells[2,linhaAnterior] := Trim(MemoTraduzido.Text);
+
+    {
     // Recupera o texto traduzido
     textoTraduzido := '' ;
     for i := 0 to memoTraduzido.Lines.Count-1 do
@@ -403,8 +407,10 @@ begin
 
     // Substitui o texto traduzido na grid
     StringGrid1.Cells[2,linhaAnterior] := textoTraduzido ;
-  End;
+    }
 
+  End;
+ {
    // Atualiza os campos do memo
  textoIngles := StringGrid1.Cells[1,Arow] ;
  textoTraduzido := StringGrid1.Cells[2,Arow] ;
@@ -420,14 +426,42 @@ begin
   posicao := MemoTraduzido.CaretPos ;
   MemoTraduzido.Lines.Clear() ;
   MemoTraduzido.Lines.Add(textoTraduzido) ;
+}
 
+//    memoIngles.Lines.Clear() ;
+//    memoIngles.Lines.Add(StringGrid1.Cells[1,Arow]) ;
+
+//    memoEspanhol.Lines.Clear() ;
+//    memoEspanhol.Lines.Add(StringGrid1.Cells[3,Arow]) ;
+
+    // Recupera posicao do cursor
+
+//    MemoTraduzido.Lines.Clear() ;
+//    MemoTraduzido.Lines.Add(StringGrid1.Cells[2,Arow]) ;
+
+    posicao := MemoTraduzido.CaretPos ;
+    memoIngles.Lines.Text    := StringGrid1.Cells[1,Arow] ;
+    memoEspanhol.Lines.Text  := StringGrid1.Cells[3,Arow] ;
+    MemoTraduzido.Lines.Text := StringGrid1.Cells[2,Arow];
+
+
+   // Se o caractere está em uma posicao alem do texto, move ele para a posicao zero
+    if( (posicao.X > StringGrid1.Cells[2,Arow].Length) or ((MemoTraduzido.Lines.Count-1) < posicao.Y) ) then begin
+        MemoTraduzido.CaretPos:= Point(StringGrid1.Cells[2,Arow].Length, 0) ;
+    end
+    else
+    begin
+        MemoTraduzido.CaretPos := posicao ;
+    end;
+    FreeAndNil(posicao);
+{
   // Se o caractere está em uma posicao alem do texto, move ele para a posicao zero
   if( (posicao.X > textoTraduzido.Length) or ((MemoTraduzido.Lines.Count-1) < posicao.Y)) then begin
       MemoTraduzido.CaretPos:= Point(0, 0) ;
   end else begin
     MemoTraduzido.CaretPos := posicao ;
   end;
-
+}
   linhaAnterior := ARow ;
 
   // Salva o conteudo da grid no arquivo original
@@ -435,6 +469,7 @@ begin
      salvarArquivoAtual;
      mudouTexto := false ;
   end;
+
 end;
 
 
@@ -1551,6 +1586,7 @@ Begin
               end;
 
               Free;
+
           end;
 
           StringGrid1.Cols[1].Assign(StringsIngles);
@@ -1559,6 +1595,8 @@ Begin
           TThread.CurrentThread.Terminate;
 
       end).Start;
+
+
 
       with StringGrid1 do
       begin
