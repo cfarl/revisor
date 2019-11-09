@@ -548,8 +548,6 @@ end;
 procedure TfrPesquisar.Button1Click(Sender: TObject);
 var Values: TStringList ;
     i, numLinhas: integer ;
-    termoGlossario: TStringDynArray;
-    valores: string ;
 begin
   if (edArquivoGlossario.Text = '') and (OpenDialog1.Execute) then
      edArquivoGlossario.Text := OpenDialog1.FileName ;
@@ -563,23 +561,22 @@ begin
      // Carrega glossario na grid
      numLinhas := 0 ;
      for i := 0 to Values.Count - 1 do begin
-        valores := Values[i] ;
-        if(valores.Trim.Length = 0) then continue ;
+        if(Values.Strings[i].Trim.Length = 0) then continue ;
 
         // Ignora linhas começando com #
-        numLinhas := numLinhas + 1 ;
-        if(valores.StartsWith('#')) then begin
-           gridGlossario.Cells[0, i] := valores ;
+        inc(numLinhas);
+        if(Values.Strings[i].StartsWith('#')) then begin
+           gridGlossario.Cells[0, i] := Values.Strings[i] ;
         end else begin
-           termoGlossario := frRevisor.Split(valores, '=');
-           gridGlossario.Cells[0, i] := termoGlossario[0] ;
-           gridGlossario.Cells[1, i] := termoGlossario[1] ;
+           gridGlossario.Cells[0, i] := Values.Names[i];
+           gridGlossario.Cells[1, i] := Values.ValueFromIndex[i];
+
         end;
      end;
   End;
 
   gridGlossario.RowCount := numLinhas ;
-  gridGlossario.Repaint;
+  FreeAndNil(Values);
 end;
 
 procedure TfrPesquisar.edLinhaFinalExit(Sender: TObject);

@@ -170,6 +170,7 @@ type
     procedure MemoInglesSelectionChange(Sender: TObject);
     procedure MemoEspanholSelectionChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure StringGrid1DblClick(Sender: TObject);
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
@@ -1173,6 +1174,17 @@ begin
   StringGrid1.Repaint;
 end;
 
+procedure TfrRevisor.StringGrid1DblClick(Sender: TObject);
+begin
+  frPesquisar.WindowState := wsNormal ;
+  frPesquisar.visible := true ;
+  frPesquisar.PageControl1.ActivePageIndex := 1;
+  frPesquisar.edTextoOriginal.Text := StringGrid1.Cells[1, StringGrid1.Row];
+  frPesquisar.edTextoSubstituir.Text := StringGrid1.Cells[2, StringGrid1.Row];
+  frPesquisar.show;
+
+end;
+
 procedure TfrRevisor.StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 var
@@ -1209,8 +1221,11 @@ begin
   // Se está no cenário escuro, pinta de preto
   else //if (estilo = 'Windows') then
       bgFill := clWhite ;
+  if estilo = 'Windows' then
+    grid.Canvas.Brush.Color := bgFill
+  else
+    grid.Canvas.Brush.Color := clGrayText;
 
-  grid.Canvas.Brush.Color := bgFill;
   grid.canvas.Brush.Style := bsSolid;
   grid.canvas.fillrect(Rect);
 
@@ -1506,10 +1521,12 @@ Begin
       // Inicializa a grid
       StringGrid1.RowCount := StringsIngles.Count + 1;
       StringGrid1.FixedRows := 1;
-      StringGrid1.Cells[0, 0] := 'Linha' ;
-      StringGrid1.Cells[1, 0] := 'Inglês' ;
-      StringGrid1.Cells[2, 0] := 'Traduzido' ;
-      StringGrid1.Cells[3, 0] := 'Espanhol' ;
+
+      StringsLinhas.Insert(0, 'Linha');
+      StringsIngles.Insert(0, 'Inglês');
+      StringsTraduzido.Insert(0, 'Traduzido');
+      StringsEspanhol.Insert(0, 'Espanhol');
+
 
       TThread.CreateAnonymousThread(
       procedure
@@ -1576,6 +1593,7 @@ begin
  else
     estilo := 'Windows' ;
  TStyleManager.TrySetStyle(estilo)  ;
+
 end;
 
 procedure TfrRevisor.BitBtn3Click(Sender: TObject);
