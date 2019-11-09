@@ -439,9 +439,10 @@ begin
 //    MemoTraduzido.Lines.Clear() ;
 //    MemoTraduzido.Lines.Add(StringGrid1.Cells[2,Arow]) ;
 
-    posicao := MemoTraduzido.CaretPos ;
+
     memoIngles.Lines.Text    := StringGrid1.Cells[1,Arow] ;
     memoEspanhol.Lines.Text  := StringGrid1.Cells[3,Arow] ;
+    posicao := MemoTraduzido.CaretPos ;
     MemoTraduzido.Lines.Text := StringGrid1.Cells[2,Arow];
 
 
@@ -453,7 +454,7 @@ begin
     begin
         MemoTraduzido.CaretPos := posicao ;
     end;
-    FreeAndNil(posicao);
+
 {
   // Se o caractere está em uma posicao alem do texto, move ele para a posicao zero
   if( (posicao.X > textoTraduzido.Length) or ((MemoTraduzido.Lines.Count-1) < posicao.Y)) then begin
