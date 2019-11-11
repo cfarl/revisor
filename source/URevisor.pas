@@ -353,6 +353,7 @@ Begin
       nomeArquivos.Add((StringsNomeArquivoTraduzido[i])) ;
   End;
   getArquivosCarregados := nomeArquivos ;
+
 End;
 
 //------------------------------------------------------
@@ -752,6 +753,7 @@ end;
 procedure TfrRevisor.FormCreate(Sender: TObject);
 begin
  estilo := 'Windows' ;
+ StringGrid1.DefaultDrawing := True;
 end;
 
 procedure TfrRevisor.FormResize(Sender: TObject);
@@ -1465,7 +1467,6 @@ begin
    finally
       // Carrega as linhas na grid
       preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
-
    end;
 
  End;
@@ -1511,6 +1512,7 @@ begin
 // Preenche a grid com os textos em ingles, traduzido e espanhol
 //-------------------------------------------------------------------------------
 procedure TfrRevisor.preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList) ;
+var Row : Integer;
 Begin
       // Inicializa a grid
       StringGrid1.RowCount := StringsIngles.Count + 1;
@@ -1544,15 +1546,15 @@ Begin
 
               end;
 
-              Free;
+            Free;
 
           end;
 
           StringGrid1.Cols[1].Assign(StringsIngles);
           FreeAndNil(StringsIngles);
+
           TThread.CurrentThread.FreeOnTerminate := True;
           TThread.CurrentThread.Terminate;
-
       end).Start;
 
 
@@ -1633,22 +1635,21 @@ end;
 procedure TfrRevisor.btCarregarClick(Sender: TObject);
 var col : byte;
     leonam : TStringList;
+
+    procedure DSiTrimWorkingSet;
+    var
+      hProcess: THandle;
+    begin
+      hProcess := OpenProcess(PROCESS_SET_QUOTA, false, GetCurrentProcessId);
+      try
+        SetProcessWorkingSetSize(hProcess, $FFFFFFFF, $FFFFFFFF);
+      finally CloseHandle(hProcess); end;
+    end;
 Begin
 
    leonam := TStringList.Create;
    mudouTexto := false ;
    pnProxArquivo.Visible := false ;
-
-   StringGrid1.RowCount := StringGrid1.FixedRows+1;
-   StringGrid1.DefaultDrawing := True;
-   if StringGrid1.RowCount > 2 then
-   for col := 0 to StringGrid1.ColCount-1 do
-   begin
-     StringGrid1.Cols[col].Clear;
-     StringGrid1.Cols[col].CleanupInstance;
-     StringGrid1.Cols[col].Assign(leonam);
-   end;
-
 
    // Seta o encodingo dos arquivos
    if (rdAnsi.Checked) then
@@ -1667,6 +1668,7 @@ Begin
   panel3.AutoSize := true ;
   lbTotalArquivos.Caption := getArquivosCarregados.Count.ToString; //Integer.ToString(getArquivosCarregados.Count);
 
+  DSiTrimWorkingSet;
 
 End;
 
