@@ -214,6 +214,7 @@ var
   PosDel: integer;
   TempText:string;
 begin
+
   i := 0;
   SetLength(Result, 1);
   Len := Length(Delimitador);
@@ -231,6 +232,7 @@ begin
       SetLength(Result, i + 1);
     end;
   Result[i] := Copy(TempText, PosStart, Length(TempText));
+
 end;
 
 //---------------------------------------------------------------------------------------
@@ -238,7 +240,7 @@ end;
 //---------------------------------------------------------------------------------------
 function TfrRevisor.getTamanhoMaiorFrase(textoMemo: String) : integer ;
 var  frases: TStringDynArray;
-     frase : string ;
+//     frase : string ;
      maxCaracteresFrase, i : integer ;
 begin
    // Quebra o texto informado em frases
@@ -250,12 +252,12 @@ begin
    // Conta o tamanho da maior frase
    maxCaracteresFrase := 0 ;
    for i := 0 to length(frases)-1 do begin
-     frase := frases[i] ;
-     if frase.Length > maxCaracteresFrase then
-        maxCaracteresFrase := frase.Length ;
+//     frase := frases[i] ;
+     if frases[i].Length > maxCaracteresFrase then
+        maxCaracteresFrase := frases[i].Length;
    end;
 
-   getTamanhoMaiorFrase:= maxCaracteresFrase;
+   getTamanhoMaiorFrase := maxCaracteresFrase;
 End;
 
 //------------------------------------------------------
@@ -392,52 +394,10 @@ begin
   end;
 
    // Se mudou de linha, atualiza a grid com o conteudo da traducao
-  if( (linhaAnterior <> 0) and (linhaAnterior <> ARow) and (StringGrid1.Cells[2, linhaAnterior] <> Trim(MemoTraduzido.Text)) ) then
-  Begin
-
-        StringGrid1.Cells[2,linhaAnterior] := Trim(MemoTraduzido.Text);
-
-    {
-    // Recupera o texto traduzido
-    textoTraduzido := '' ;
-    for i := 0 to memoTraduzido.Lines.Count-1 do
+    if( (linhaAnterior <> 0) and (linhaAnterior <> ARow) and (StringGrid1.Cells[2, linhaAnterior] <> Trim(MemoTraduzido.Text)) ) then
     Begin
-      textoTraduzido := textoTraduzido + memoTraduzido.Lines[i] ;
+         StringGrid1.Cells[2,linhaAnterior] := Trim(MemoTraduzido.Text);
     End;
-
-    // Substitui o texto traduzido na grid
-    StringGrid1.Cells[2,linhaAnterior] := textoTraduzido ;
-    }
-
-  End;
- {
-   // Atualiza os campos do memo
- textoIngles := StringGrid1.Cells[1,Arow] ;
- textoTraduzido := StringGrid1.Cells[2,Arow] ;
- textoEspanhol := StringGrid1.Cells[3,Arow] ;
-
-  memoIngles.Lines.Clear() ;
-  memoIngles.Lines.Add(textoIngles) ;
-
-  memoEspanhol.Lines.Clear() ;
-  memoEspanhol.Lines.Add(textoEspanhol) ;
-
-  // Recupera posicao do cursor
-  posicao := MemoTraduzido.CaretPos ;
-  MemoTraduzido.Lines.Clear() ;
-  MemoTraduzido.Lines.Add(textoTraduzido) ;
-}
-
-//    memoIngles.Lines.Clear() ;
-//    memoIngles.Lines.Add(StringGrid1.Cells[1,Arow]) ;
-
-//    memoEspanhol.Lines.Clear() ;
-//    memoEspanhol.Lines.Add(StringGrid1.Cells[3,Arow]) ;
-
-    // Recupera posicao do cursor
-
-//    MemoTraduzido.Lines.Clear() ;
-//    MemoTraduzido.Lines.Add(StringGrid1.Cells[2,Arow]) ;
 
 
     memoIngles.Lines.Text    := StringGrid1.Cells[1,Arow] ;
@@ -455,14 +415,6 @@ begin
         MemoTraduzido.CaretPos := posicao ;
     end;
 
-{
-  // Se o caractere está em uma posicao alem do texto, move ele para a posicao zero
-  if( (posicao.X > textoTraduzido.Length) or ((MemoTraduzido.Lines.Count-1) < posicao.Y)) then begin
-      MemoTraduzido.CaretPos:= Point(0, 0) ;
-  end else begin
-    MemoTraduzido.CaretPos := posicao ;
-  end;
-}
   linhaAnterior := ARow ;
 
   // Salva o conteudo da grid no arquivo original
@@ -866,10 +818,13 @@ begin
    if((edTraduzido.Text <> '') or  (edPastaTraduzido.Text <> '')) then
    Begin
       btCarregarClick(Sender) ;
-      edLinha.Text := Integer.ToString(linhaSelecionada) ;
+      edLinha.Text := linhaSelecionada.ToString; ;
       btSetarLinhaClick(Sender) ;
       mantemLinhaSelecionadaMeioGrid;
    End;
+
+   FreeAndNil(arquivoEstado);
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1230,6 +1185,7 @@ var
   bgFill: TColor;
   traducao, textoIngles : string ;
 begin
+
   grid := Sender as TStringGrid;
 
   if (Arow =  0) then
@@ -1283,6 +1239,8 @@ begin
 
   if gdFocused in State then
     grid.Canvas.DrawFocusRect(Rect);
+
+
 end;
 
 
@@ -1358,7 +1316,7 @@ begin
    StringsTraduzido := TStringList.Create;
    StringsEspanhol := TStringList.Create;
    try
-     StringsNomeArquivoTraduzido.Free ;
+     FreeAndNil(StringsNomeArquivoTraduzido) ;
    finally
      StringsNomeArquivoTraduzido := TStringList.Create;
    end;
@@ -1673,10 +1631,24 @@ begin
 end;
 
 procedure TfrRevisor.btCarregarClick(Sender: TObject);
+var col : byte;
+    leonam : TStringList;
 Begin
 
+   leonam := TStringList.Create;
    mudouTexto := false ;
    pnProxArquivo.Visible := false ;
+
+   StringGrid1.RowCount := StringGrid1.FixedRows+1;
+   StringGrid1.DefaultDrawing := True;
+   if StringGrid1.RowCount > 2 then
+   for col := 0 to StringGrid1.ColCount-1 do
+   begin
+     StringGrid1.Cols[col].Clear;
+     StringGrid1.Cols[col].CleanupInstance;
+     StringGrid1.Cols[col].Assign(leonam);
+   end;
+
 
    // Seta o encodingo dos arquivos
    if (rdAnsi.Checked) then
@@ -1693,7 +1665,7 @@ Begin
    FormResize(Sender);
 
   panel3.AutoSize := true ;
-  lbTotalArquivos.Caption := Integer.ToString(getArquivosCarregados.Count);
+  lbTotalArquivos.Caption := getArquivosCarregados.Count.ToString; //Integer.ToString(getArquivosCarregados.Count);
 
 
 End;

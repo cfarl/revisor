@@ -1358,6 +1358,7 @@ object frRevisor: TfrRevisor
       OnDrawCell = StringGrid1DrawCell
       OnKeyUp = StringGrid1KeyUp
       OnSelectCell = StringGrid1SelectCell
+      ExplicitTop = 300
     end
     object BitBtn1: TBitBtn
       Left = 6
