@@ -1346,7 +1346,6 @@ object frRevisor: TfrRevisor
       ColCount = 4
       DefaultColWidth = 20
       DefaultRowHeight = 10
-      DefaultDrawing = False
       FixedCols = 0
       RowCount = 2
       Options = [goDrawFocusSelected, goColSizing, goRowSelect]
