@@ -895,16 +895,14 @@ end;
 // Pega a primeira traducao do texto informado
 //------------------------------------------------------------------------------
 function TfrRevisor.pegarPrimeiraTraducao(textoBuscar: string) : string ;
-//var traducao: string ;
-//    achou: boolean ;
-//    i: integer ;
+var traducao: string;
 Begin
 //  textoBuscar := StringReplace(textoBuscar, '(REPETIDO)', '', []).TrimRight ;
-  textoBuscar := removeQuebrasLinha(textoBuscar.Replace('(REPETIDO)', '', []).TrimRight);
+//  textoBuscar := removeQuebrasLinha(textoBuscar.Replace('(REPETIDO)', '', []).TrimRight);
 
   // Procura texto em ingles. Se achou, recupera traducao
-  pegarPrimeiraTraducao := StringGrid1.Cells[2, StringGrid1.Cols[1].IndexOf(textoBuscar)];
 
+  pegarPrimeiraTraducao := StringGrid1.Cells[2, StringGrid1.Cols[1].IndexOf(textoBuscar.Replace('(REPETIDO)', '', []).TrimRight)];
 
 
 {
