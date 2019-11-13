@@ -18,5 +18,7 @@ begin
   Application.CreateForm(TfrSobre, frSobre);
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TfrPesquisar, frPesquisar);
+//  System.ReportMemoryLeaksOnShutdown := True;
   Application.Run;
+  
 end.

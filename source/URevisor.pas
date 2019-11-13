@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.Grids, Vcl.StdCtrls,
   Vcl.ExtCtrls, System.StrUtils, System.Types, Vcl.ComCtrls, Vcl.Buttons, System.IOUtils, System.Generics.Collections, Vcl.Themes,
   Vcl.Styles, IPPeerClient, REST.Client, Data.Bind.Components,
-  Data.Bind.ObjectScope, Web.HTTPApp  ;
+  Data.Bind.ObjectScope, Web.HTTPApp, System.Threading  ;
 
 
 type
@@ -181,6 +181,8 @@ type
     procedure salvarArquivo(nomeArquivo: string) ;
     procedure salvarArquivoAtual ;
     function getArquivosCarregados: TStringList ;
+    procedure carregaParametros;
+    procedure btnCarregaParametroClick(Sender: TObject);
   public
     function Split(const Texto, Delimitador: string): TStringDynArray;
     procedure mantemLinhaSelecionadaMeioGrid ;
@@ -214,6 +216,7 @@ var
   PosDel: integer;
   TempText:string;
 begin
+
   i := 0;
   SetLength(Result, 1);
   Len := Length(Delimitador);
@@ -231,6 +234,7 @@ begin
       SetLength(Result, i + 1);
     end;
   Result[i] := Copy(TempText, PosStart, Length(TempText));
+
 end;
 
 //---------------------------------------------------------------------------------------
@@ -238,7 +242,7 @@ end;
 //---------------------------------------------------------------------------------------
 function TfrRevisor.getTamanhoMaiorFrase(textoMemo: String) : integer ;
 var  frases: TStringDynArray;
-     frase : string ;
+//     frase : string ;
      maxCaracteresFrase, i : integer ;
 begin
    // Quebra o texto informado em frases
@@ -250,12 +254,12 @@ begin
    // Conta o tamanho da maior frase
    maxCaracteresFrase := 0 ;
    for i := 0 to length(frases)-1 do begin
-     frase := frases[i] ;
-     if frase.Length > maxCaracteresFrase then
-        maxCaracteresFrase := frase.Length ;
+//     frase := frases[i] ;
+     if frases[i].Length > maxCaracteresFrase then
+        maxCaracteresFrase := frases[i].Length;
    end;
 
-   getTamanhoMaiorFrase:= maxCaracteresFrase;
+   getTamanhoMaiorFrase := maxCaracteresFrase;
 End;
 
 //------------------------------------------------------
@@ -275,8 +279,6 @@ End;
 //------------------------------------------------------
 procedure TfrRevisor.salvarArquivo(nomeArquivo: string);
 var textoArquivo: TStringList ;
-    textoTraduzido: string ;
-    i, linhaGrid: integer ;
 Begin
     // Se foi selecionada a opcao de carga 'arquivos', salva todas as linhas da
     // grid no arquivo informado
@@ -286,14 +288,11 @@ Begin
 
       // Ps. Não pega a linha 0 da grid, porque ela é o título das colunas da grid
       // Ps2. A tradução está na terceira coluna (coluna 2) da grid
-      for i := 1 to StringGrid1.RowCount -1 do
-      Begin
-        textoTraduzido := StringGrid1.Cells[2, i] ;
-        textoArquivo.Add(textoTraduzido) ;
-      End;
+      textoArquivo.Assign(StringGrid1.Cols[2]);
 
       // Salva o arquivo, depois sai desse método
       textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
+      FreeAndNil(textoArquivo);
       exit ;
     End;
 
@@ -306,22 +305,28 @@ Begin
         textoArquivo.LoadFromFile(nomeArquivo, encodingArquivos);
 
         // Encontra a linha onde começa o texto do arquivo
-        linhaGrid := 0;
-        while (StringsNomeArquivoTraduzido[linhaGrid] <> ExtractFileName(nomeArquivo)) do
-          linhaGrid := linhaGrid + 1 ;
+//        linhaGrid := 0;
+//        while (StringsNomeArquivoTraduzido[linhaGrid] <> ExtractFileName(nomeArquivo)) do
+//          linhaGrid := linhaGrid + 1 ;
+
+//        linhaGrid := StringsNomeArquivoTraduzido.IndexOf(ExtractFileName(nomeArquivo));
 
         // Substitui as linhas do arquivo pelas linhas da grid
-        linhaGrid := linhaGrid + 1;
+//        linhaGrid := linhaGrid + 1;
+//        Inc(linhaGrid);
+{
         for i := 0 to textoArquivo.Count - 1 do Begin
             if(linhaGrid < StringGrid1.RowCount) then begin
               textoArquivo[i] := StringGrid1.Cells[2, linhaGrid];
-              linhaGrid := linhaGrid + 1 ;
+              Inc(linhaGrid);
             end;
         End;
-
+ }
+        // modifica o texto original.
+        textoArquivo[StringGrid1.Cells[0,linhaAnterior].ToInteger - 1] := StringGrid1.Cells[2, linhaAnterior];
         // Salva o arquivo
         textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
-        textoArquivo.Free ;
+        FreeAndNil(textoArquivo);
     End;
 End;
 
@@ -351,6 +356,7 @@ Begin
       nomeArquivos.Add((StringsNomeArquivoTraduzido[i])) ;
   End;
   getArquivosCarregados := nomeArquivos ;
+
 End;
 
 //------------------------------------------------------
@@ -379,9 +385,9 @@ End;
 //----------------------------------------------------------------
 procedure TfrRevisor.StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
- var  textoIngles, textoEspanhol, textoTraduzido: string ;
-      novaLinha : string ;
-      i: integer ;
+ var // textoIngles, textoEspanhol, textoTraduzido: string ;
+ //     novaLinha : string ;
+ //     i: integer ;
       posicao : TPoint ;
 begin
   // Mostra a linha atual da grid
@@ -392,49 +398,33 @@ begin
   end;
 
    // Se mudou de linha, atualiza a grid com o conteudo da traducao
-  if( (linhaAnterior <> 0) and (linhaAnterior <> ARow) ) then
-  Begin
-    // Recupera o texto traduzido
-    textoTraduzido := '' ;
-    for i := 0 to memoTraduzido.Lines.Count-1 do
+    if( (linhaAnterior <> 0) and (linhaAnterior <> ARow) and (StringGrid1.Cells[2, linhaAnterior] <> Trim(MemoTraduzido.Text)) ) then
     Begin
-      textoTraduzido := textoTraduzido + memoTraduzido.Lines[i] ;
+         StringGrid1.Cells[2,linhaAnterior] := Trim(MemoTraduzido.Text);
     End;
 
-    // Substitui o texto traduzido na grid
-    StringGrid1.Cells[2,linhaAnterior] := textoTraduzido ;
-  End;
 
-   // Atualiza os campos do memo
- textoIngles := StringGrid1.Cells[1,Arow] ;
- textoTraduzido := StringGrid1.Cells[2,Arow] ;
- textoEspanhol := StringGrid1.Cells[3,Arow] ;
+    memoIngles.Lines.Text    := StringGrid1.Cells[1,Arow] ;
+    memoEspanhol.Lines.Text  := StringGrid1.Cells[3,Arow] ;
+    posicao := MemoTraduzido.CaretPos ;
+    MemoTraduzido.Lines.Text := StringGrid1.Cells[2,Arow];
 
-  memoIngles.Lines.Clear() ;
-  memoIngles.Lines.Add(textoIngles) ;
 
-  memoEspanhol.Lines.Clear() ;
-  memoEspanhol.Lines.Add(textoEspanhol) ;
-
-  // Recupera posicao do cursor
-  posicao := MemoTraduzido.CaretPos ;
-  MemoTraduzido.Lines.Clear() ;
-  MemoTraduzido.Lines.Add(textoTraduzido) ;
-
-  // Se o caractere está em uma posicao alem do texto, move ele para a posicao zero
-  if( (posicao.X > textoTraduzido.Length) or ((MemoTraduzido.Lines.Count-1) < posicao.Y)) then begin
-      MemoTraduzido.CaretPos:= Point(0, 0) ;
-  end else begin
-    MemoTraduzido.CaretPos := posicao ;
-  end;
-
-  linhaAnterior := ARow ;
+   // Se o caractere está em uma posicao alem do texto, move ele para a posicao zero
+    if( (posicao.X > StringGrid1.Cells[2,Arow].Length) or ((MemoTraduzido.Lines.Count-1) < posicao.Y) ) then begin
+        MemoTraduzido.CaretPos:= Point(StringGrid1.Cells[2,Arow].Length, 0) ;
+    end
+    else
+    begin
+        MemoTraduzido.CaretPos := posicao ;
+    end;
 
   // Salva o conteudo da grid no arquivo original
   if(mudouTexto) then begin
      salvarArquivoAtual;
      mudouTexto := false ;
   end;
+     linhaAnterior := ARow ;
 end;
 
 
@@ -830,10 +820,13 @@ begin
    if((edTraduzido.Text <> '') or  (edPastaTraduzido.Text <> '')) then
    Begin
       btCarregarClick(Sender) ;
-      edLinha.Text := Integer.ToString(linhaSelecionada) ;
+      edLinha.Text := linhaSelecionada.ToString; ;
       btSetarLinhaClick(Sender) ;
       mantemLinhaSelecionadaMeioGrid;
    End;
+
+   FreeAndNil(arquivoEstado);
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1068,7 +1061,7 @@ end;
 // Fecha os arquivos selecionados, limpando a grid
 //------------------------------------------------------------------------------
 procedure TfrRevisor.btFecharClick(Sender: TObject);
-var c : Byte;
+var c : byte;
 begin
     // Inicializa componentes
     edIngles.Clear;
@@ -1078,12 +1071,11 @@ begin
     edPastaTraduzido.Clear;
     edPastaEspanhol.Clear;
 
-    // Limpa a grid
-    for c := 0 to Pred(StringGrid1.ColCount) do
-    StringGrid1.Cols[c].Clear;
+   // Limpa a grid
+    With StringGrid1 do
+    for c := 0 to Pred(ColCount) do Cols[c].Clear;
 
-    StringGrid1.RowCount := 2;
-
+    StringGrid1.RowCount := StringGrid1.FixedRows;
    // limpa memos
    MemoIngles.Clear;
    MemoTraduzido.Clear;
@@ -1124,22 +1116,25 @@ end;
 // Fecha a janela e sai do programa
 //------------------------------------------------------------------------------
 procedure TfrRevisor.btSairClick(Sender: TObject);
-var arquivoEstado: tstringlist ;
 begin
-   // Salva o estado do revisor
-   arquivoEstado := TStringList.Create;
-   arquivoEstado.AddPair('arquivoIngles', edIngles.Text) ;
-   arquivoEstado.AddPair('arquivoTraduzido', edTraduzido.Text) ;
-   arquivoEstado.AddPair('arquivoEspanhol', edEspanhol.Text) ;
-   arquivoEstado.AddPair('pastaIngles', edPastaIngles.Text) ;
-   arquivoEstado.AddPair('pastaTraduzido', edPastaTraduzido.Text) ;
-   arquivoEstado.AddPair('pastaEspanhol', edPastaEspanhol.Text) ;
-   arquivoEstado.AddPair('pastaEspanhol', edPastaEspanhol.Text) ;
-   arquivoEstado.AddPair('cargaArquivo', Boolean.ToString(rdCargaArquivos.Checked, TUseBoolStrs.true)) ;
-   arquivoEstado.AddPair('formatoAnsi', Boolean.ToString(rdAnsi.Checked, TUseBoolStrs.true)) ;
-   arquivoEstado.AddPair('disposicaoVertical', Boolean.ToString(rdVertical.Checked, TUseBoolStrs.true)) ;
-   arquivoEstado.AddPair('linhaSelecionada', edLinha.Text) ;
-   arquivoEstado.SaveToFile('estado_revisor.txt');
+
+  // Salva o estado do revisor
+   With TStringList.Create do
+   begin
+      AddPair('arquivoIngles', edIngles.Text) ;
+      AddPair('arquivoTraduzido', edTraduzido.Text) ;
+      AddPair('arquivoEspanhol', edEspanhol.Text) ;
+      AddPair('pastaIngles', edPastaIngles.Text) ;
+      AddPair('pastaTraduzido', edPastaTraduzido.Text) ;
+      AddPair('pastaEspanhol', edPastaEspanhol.Text) ;
+      AddPair('pastaEspanhol', edPastaEspanhol.Text) ;
+      AddPair('cargaArquivo', Boolean.ToString(rdCargaArquivos.Checked, TUseBoolStrs.true)) ;
+      AddPair('formatoAnsi', Boolean.ToString(rdAnsi.Checked, TUseBoolStrs.true)) ;
+      AddPair('disposicaoVertical', Boolean.ToString(rdVertical.Checked, TUseBoolStrs.true)) ;
+      AddPair('linhaSelecionada', edLinha.Text) ;
+      SaveToFile('estado_revisor.txt');
+      Free;
+   end;
 
    // Fecha o revisor
    btFecharClick(Sender);
@@ -1194,6 +1189,7 @@ var
   bgFill: TColor;
   traducao, textoIngles : string ;
 begin
+
   grid := Sender as TStringGrid;
 
   if (Arow =  0) then
@@ -1247,6 +1243,8 @@ begin
 
   if gdFocused in State then
     grid.Canvas.DrawFocusRect(Rect);
+
+
 end;
 
 
@@ -1322,7 +1320,7 @@ begin
    StringsTraduzido := TStringList.Create;
    StringsEspanhol := TStringList.Create;
    try
-     StringsNomeArquivoTraduzido.Free ;
+     FreeAndNil(StringsNomeArquivoTraduzido) ;
    finally
      StringsNomeArquivoTraduzido := TStringList.Create;
    end;
@@ -1471,7 +1469,6 @@ begin
    finally
       // Carrega as linhas na grid
       preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido);
-
    end;
 
  End;
@@ -1517,6 +1514,7 @@ begin
 // Preenche a grid com os textos em ingles, traduzido e espanhol
 //-------------------------------------------------------------------------------
 procedure TfrRevisor.preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList) ;
+var Row : Integer;
 Begin
       // Inicializa a grid
       StringGrid1.RowCount := StringsIngles.Count + 1;
@@ -1550,15 +1548,18 @@ Begin
 
               end;
 
-              Free;
+            Free;
+
           end;
 
           StringGrid1.Cols[1].Assign(StringsIngles);
           FreeAndNil(StringsIngles);
+
           TThread.CurrentThread.FreeOnTerminate := True;
           TThread.CurrentThread.Terminate;
-
       end).Start;
+
+
 
       with StringGrid1 do
       begin
@@ -1634,29 +1635,84 @@ begin
 end;
 
 procedure TfrRevisor.btCarregarClick(Sender: TObject);
+    procedure DSiTrimWorkingSet;
+    var
+      hProcess: THandle;
+    begin
+      hProcess := OpenProcess(PROCESS_SET_QUOTA, false, GetCurrentProcessId);
+      try
+        SetProcessWorkingSetSize(hProcess, $FFFFFFFF, $FFFFFFFF);
+      finally CloseHandle(hProcess); end;
+    end;
+
 Begin
 
-   mudouTexto := false ;
-   pnProxArquivo.Visible := false ;
+    mudouTexto := false ;
+    pnProxArquivo.Visible := false ;
 
-   // Seta o encodingo dos arquivos
-   if (rdAnsi.Checked) then
+    // Seta o encodingo dos arquivos
+    if (rdAnsi.Checked) then
        encodingArquivos := TEncoding.ANSI
-   else if (rdUTF8.Checked) then
+    else if (rdUTF8.Checked) then
        encodingArquivos := TEncoding.UTF8 ;
 
-   // Carrega arquivos
-   if rdCargaArquivos.Checked then
+    // Carrega arquivos
+    if rdCargaArquivos.Checked then
       carregarArquivosInglesTraduzido ;
-   if rdCargaPastas.Checked then
+    if rdCargaPastas.Checked then
       carregarPastasInglesTraduzido ;
 
-   FormResize(Sender);
+    FormResize(Sender);
 
-  panel3.AutoSize := true ;
-  lbTotalArquivos.Caption := Integer.ToString(getArquivosCarregados.Count);
+    panel3.AutoSize := true ;
+    lbTotalArquivos.Caption := getArquivosCarregados.Count.ToString; //Integer.ToString(getArquivosCarregados.Count);
 
+    DSiTrimWorkingSet;
+
+    carregaParametros;
 
 End;
+
+
+procedure TfrRevisor.carregaParametros;
+begin
+    with TButton.Create(self) do
+    begin
+      Left   := btSair.Left + btSair.Width + 10;
+      Top    := btSair.Top;
+      Height := btSair.Height;
+      Width  := btSair.Width;
+      Caption := 'Parametros';
+      OnClick := btnCarregaParametroClick;
+      Parent  := btSair.Parent;
+      Visible := True;
+    end;
+
+end;
+
+procedure TfrRevisor.btnCarregaParametroClick(Sender: TObject);
+var form : Integer;
+begin
+    With TForm.Create(Application) do
+    begin
+           Height := Screen.Height div 2;
+           Width  := screen.Width div 2;
+           Position := poScreenCenter;
+           WindowState := wsNormal ;
+           Show;
+           form := ComponentIndex;
+
+           With TButton.Create(TForm(Application.Components[ComponentIndex])) do
+           begin
+                Caption := 'oi';
+                Visible := True;
+                Height := 50;
+                Width := 100;
+                Parent := TForm(Application.Components[form]);
+           end;
+    end;
+
+end;
+
 
 end.
