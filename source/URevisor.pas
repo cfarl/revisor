@@ -181,8 +181,6 @@ type
     procedure salvarArquivo(nomeArquivo: string) ;
     procedure salvarArquivoAtual ;
     function getArquivosCarregados: TStringList ;
-    procedure carregaParametros;
-    procedure btnCarregaParametroClick(Sender: TObject);
   public
     function Split(const Texto, Delimitador: string): TStringDynArray;
     procedure mantemLinhaSelecionadaMeioGrid ;
@@ -280,6 +278,8 @@ End;
 procedure TfrRevisor.salvarArquivo(nomeArquivo: string);
 var textoArquivo: TStringList ;
 Begin
+
+{
     // Se foi selecionada a opcao de carga 'arquivos', salva todas as linhas da
     // grid no arquivo informado
     if((rdCargaArquivos.Checked) and (nomeArquivo <> '')) then
@@ -289,6 +289,7 @@ Begin
       // Ps. Não pega a linha 0 da grid, porque ela é o título das colunas da grid
       // Ps2. A tradução está na terceira coluna (coluna 2) da grid
       textoArquivo.Assign(StringGrid1.Cols[2]);
+      textoArquivo.Delete(0);
 
       // Salva o arquivo, depois sai desse método
       textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
@@ -321,13 +322,28 @@ Begin
               Inc(linhaGrid);
             end;
         End;
- }
+
         // modifica o texto original.
         textoArquivo[StringGrid1.Cells[0,linhaAnterior].ToInteger - 1] := StringGrid1.Cells[2, linhaAnterior];
         // Salva o arquivo
         textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
         FreeAndNil(textoArquivo);
     End;
+
+}
+    if(nomeArquivo <> '') then
+    begin
+        // carrega o arquivo.
+        textoArquivo := TStringList.Create;
+        textoArquivo.LoadFromFile(nomeArquivo, encodingArquivos);
+
+        // modifica o texto original.
+        textoArquivo[StringGrid1.Cells[0,linhaAnterior].ToInteger - 1] := StringGrid1.Cells[2, linhaAnterior];
+        // Salva o arquivo
+        textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
+        FreeAndNil(textoArquivo);
+    end;
+
 End;
 
 //------------------------------------------------------
@@ -879,14 +895,17 @@ end;
 // Pega a primeira traducao do texto informado
 //------------------------------------------------------------------------------
 function TfrRevisor.pegarPrimeiraTraducao(textoBuscar: string) : string ;
-var traducao: string ;
-    achou: boolean ;
-    i: integer ;
+var traducao: string;
 Begin
-  textoBuscar := StringReplace(textoBuscar, '(REPETIDO)', '', []).TrimRight ;
-  textoBuscar := removeQuebrasLinha(textoBuscar);
+//  textoBuscar := StringReplace(textoBuscar, '(REPETIDO)', '', []).TrimRight ;
+//  textoBuscar := removeQuebrasLinha(textoBuscar.Replace('(REPETIDO)', '', []).TrimRight);
 
   // Procura texto em ingles. Se achou, recupera traducao
+
+  pegarPrimeiraTraducao := StringGrid1.Cells[2, StringGrid1.Cols[1].IndexOf(textoBuscar.Replace('(REPETIDO)', '', []).TrimRight)];
+
+
+{
   traducao := '' ;
   achou := false ;
   for I := 1 to StringGrid1.RowCount -1 do
@@ -900,6 +919,7 @@ Begin
   End;
 
   pegarPrimeiraTraducao := traducao ;
+}
 End;
 
 
@@ -1477,22 +1497,6 @@ begin
  var temp: string ;
  Begin
  try
-   {
-   // Troca \n por espaco, remove \r
-   texto := texto.Replace('\n', ' ').Replace('\r','').Replace('\t','') ;
-
-   // Remove duplos espacos
-   temp := texto ;
-   while (temp <> texto) do
-   Begin
-     temp := texto ;
-     texto := texto.Replace('  ', ' ') ;
-   End;
-
-   removeQuebrasLinha := texto;
-
-   }
-
    removeQuebrasLinha := texto
                          .Replace('\n', ' ')
                          .Replace('\r','')
@@ -1571,10 +1575,12 @@ Begin
 
       end;
 
+
       FreeAndNil(StringsLinhas) ;
       FreeAndNil(StringsTraduzido);
       FreeAndNil(StringsEspanhol);
       linhaAnterior := 0 ;
+
 
 End;
 
@@ -1665,54 +1671,11 @@ Begin
     FormResize(Sender);
 
     panel3.AutoSize := true ;
-    lbTotalArquivos.Caption := getArquivosCarregados.Count.ToString; //Integer.ToString(getArquivosCarregados.Count);
+    lbTotalArquivos.Caption := getArquivosCarregados.Count.ToString;
 
     DSiTrimWorkingSet;
 
-    carregaParametros;
-
 End;
-
-
-procedure TfrRevisor.carregaParametros;
-begin
-    with TButton.Create(self) do
-    begin
-      Left   := btSair.Left + btSair.Width + 10;
-      Top    := btSair.Top;
-      Height := btSair.Height;
-      Width  := btSair.Width;
-      Caption := 'Parametros';
-      OnClick := btnCarregaParametroClick;
-      Parent  := btSair.Parent;
-      Visible := True;
-    end;
-
-end;
-
-procedure TfrRevisor.btnCarregaParametroClick(Sender: TObject);
-var form : Integer;
-begin
-    With TForm.Create(Application) do
-    begin
-           Height := Screen.Height div 2;
-           Width  := screen.Width div 2;
-           Position := poScreenCenter;
-           WindowState := wsNormal ;
-           Show;
-           form := ComponentIndex;
-
-           With TButton.Create(TForm(Application.Components[ComponentIndex])) do
-           begin
-                Caption := 'oi';
-                Visible := True;
-                Height := 50;
-                Width := 100;
-                Parent := TForm(Application.Components[form]);
-           end;
-    end;
-
-end;
 
 
 end.
