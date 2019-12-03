@@ -901,8 +901,7 @@ Begin
 //  textoBuscar := removeQuebrasLinha(textoBuscar.Replace('(REPETIDO)', '', []).TrimRight);
 
   // Procura texto em ingles. Se achou, recupera traducao
-
-  pegarPrimeiraTraducao := StringGrid1.Cells[2, StringGrid1.Cols[1].IndexOf(textoBuscar.Replace('(REPETIDO)', '', []).TrimRight)];
+  pegarPrimeiraTraducao := StringGrid1.Cells[2, StringGrid1.Cols[1].IndexOf(textoBuscar.Replace('(REPETIDO)', '',[rfReplaceAll]).TrimRight)];
 
 
 {
@@ -1542,9 +1541,9 @@ Begin
               begin
                   // Texto em ingles
                   //showmessage(removeQuebrasLinha(StringsIngles[Row]));
-                  if(IndexOf(removeQuebrasLinha(StringsIngles[Row])) = -1 ) then
+                  if(IndexOf(StringsIngles[Row]) = -1 ) then
                   Begin
-                     Add(removeQuebrasLinha(StringsIngles[Row])) ;
+                     Add(StringsIngles[Row]);
                   End else
                   Begin
                      StringsIngles[Row] := '(REPETIDO)' + StringsIngles[Row];
