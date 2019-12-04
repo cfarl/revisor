@@ -277,9 +277,10 @@ End;
 //------------------------------------------------------
 procedure TfrRevisor.salvarArquivo(nomeArquivo: string);
 var textoArquivo: TStringList ;
+    textoTraduzido: string ;
+    i, linhaGrid: integer ;
 Begin
 
-{
     // Se foi selecionada a opcao de carga 'arquivos', salva todas as linhas da
     // grid no arquivo informado
     if((rdCargaArquivos.Checked) and (nomeArquivo <> '')) then
@@ -288,12 +289,14 @@ Begin
 
       // Ps. Não pega a linha 0 da grid, porque ela é o título das colunas da grid
       // Ps2. A tradução está na terceira coluna (coluna 2) da grid
-      textoArquivo.Assign(StringGrid1.Cols[2]);
-      textoArquivo.Delete(0);
+      for i := 1 to StringGrid1.RowCount -1 do
+      Begin
+        textoTraduzido := StringGrid1.Cells[2, i] ;
+        textoArquivo.Add(textoTraduzido) ;
+      End;
 
       // Salva o arquivo, depois sai desse método
       textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
-      FreeAndNil(textoArquivo);
       exit ;
     End;
 
@@ -306,31 +309,25 @@ Begin
         textoArquivo.LoadFromFile(nomeArquivo, encodingArquivos);
 
         // Encontra a linha onde começa o texto do arquivo
-//        linhaGrid := 0;
-//        while (StringsNomeArquivoTraduzido[linhaGrid] <> ExtractFileName(nomeArquivo)) do
-//          linhaGrid := linhaGrid + 1 ;
-
-//        linhaGrid := StringsNomeArquivoTraduzido.IndexOf(ExtractFileName(nomeArquivo));
+        linhaGrid := 0;
+        while (StringsNomeArquivoTraduzido[linhaGrid] <> ExtractFileName(nomeArquivo)) do
+          linhaGrid := linhaGrid + 1 ;
 
         // Substitui as linhas do arquivo pelas linhas da grid
-//        linhaGrid := linhaGrid + 1;
-//        Inc(linhaGrid);
-{
+        linhaGrid := linhaGrid + 1;
         for i := 0 to textoArquivo.Count - 1 do Begin
             if(linhaGrid < StringGrid1.RowCount) then begin
               textoArquivo[i] := StringGrid1.Cells[2, linhaGrid];
-              Inc(linhaGrid);
+              linhaGrid := linhaGrid + 1 ;
             end;
         End;
 
-        // modifica o texto original.
-        textoArquivo[StringGrid1.Cells[0,linhaAnterior].ToInteger - 1] := StringGrid1.Cells[2, linhaAnterior];
         // Salva o arquivo
         textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
-        FreeAndNil(textoArquivo);
+        textoArquivo.Free ;
     End;
 
-}
+{
     if(nomeArquivo <> '') then
     begin
         // carrega o arquivo.
@@ -343,6 +340,7 @@ Begin
         textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
         FreeAndNil(textoArquivo);
     end;
+}
 
 End;
 
