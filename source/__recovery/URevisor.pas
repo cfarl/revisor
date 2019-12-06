@@ -121,6 +121,7 @@ type
     Label31: TLabel;
     lbSelEspanhol: TLabel;
     btnExportarGrid: TBitBtn;
+    btVerRepetidos: TBitBtn;
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure MemoInglesChange(Sender: TObject);
@@ -173,6 +174,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure StringGrid1DblClick(Sender: TObject);
     procedure btnExportarGridClick(Sender: TObject);
+    procedure btVerRepetidosClick(Sender: TObject);
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
@@ -238,7 +240,7 @@ begin
 end;
 
 //---------------------------------------------------------------------------------------
-// Dado o texto com v·rias frases, separadas por /n, retorna o tamanho da maior frase
+// Dado o texto com v√°rias frases, separadas por /n, retorna o tamanho da maior frase
 //---------------------------------------------------------------------------------------
 function TfrRevisor.getTamanhoMaiorFrase(textoMemo: String) : integer ;
 var  frases: TStringDynArray;
@@ -263,7 +265,7 @@ begin
 End;
 
 //------------------------------------------------------
-// MantÈm a linha selecionada no meio da grid
+// Mant√©m a linha selecionada no meio da grid
 //------------------------------------------------------
 procedure TfrRevisor.mantemLinhaSelecionadaMeioGrid ;
 var numeroLinhasAcimaAbaixoLinhaMeio: integer ;
@@ -289,15 +291,15 @@ Begin
     Begin
       textoArquivo := TStringList.Create;
 
-      // Ps. N„o pega a linha 0 da grid, porque ela È o tÌtulo das colunas da grid
-      // Ps2. A traduÁ„o est· na terceira coluna (coluna 2) da grid
+      // Ps. N√£o pega a linha 0 da grid, porque ela √© o t√≠tulo das colunas da grid
+      // Ps2. A tradu√ß√£o est√° na terceira coluna (coluna 2) da grid
       for i := 1 to StringGrid1.RowCount -1 do
       Begin
         textoTraduzido := StringGrid1.Cells[2, i] ;
         textoArquivo.Add(textoTraduzido) ;
       End;
 
-      // Salva o arquivo, depois sai desse mÈtodo
+      // Salva o arquivo, depois sai desse m√©todo
       textoArquivo.SaveToFile(nomeArquivo, encodingArquivos);
       exit ;
     End;
@@ -310,7 +312,7 @@ Begin
         textoArquivo := TStringList.Create;
         textoArquivo.LoadFromFile(nomeArquivo, encodingArquivos);
 
-        // Encontra a linha onde comeÁa o texto do arquivo
+        // Encontra a linha onde come√ßa o texto do arquivo
         linhaGrid := 0;
         while (StringsNomeArquivoTraduzido[linhaGrid] <> ExtractFileName(nomeArquivo)) do
           linhaGrid := linhaGrid + 1 ;
@@ -347,7 +349,7 @@ Begin
 End;
 
 //------------------------------------------------------
-// Salva o arquivo que est· sendo trabalhado
+// Salva o arquivo que est√° sendo trabalhado
 //------------------------------------------------------
 procedure TfrRevisor.salvarArquivoAtual ;
 Begin
@@ -397,7 +399,7 @@ End;
 
 
 //----------------------------------------------------------------
-// MÈtodo chamado quando uma nova linha È selecionada na grid
+// M√©todo chamado quando uma nova linha √© selecionada na grid
 //----------------------------------------------------------------
 procedure TfrRevisor.StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
@@ -426,7 +428,7 @@ begin
     MemoTraduzido.Lines.Text := StringGrid1.Cells[2,Arow];
 
 
-   // Se o caractere est· em uma posicao alem do texto, move ele para a posicao zero
+   // Se o caractere est√° em uma posicao alem do texto, move ele para a posicao zero
     if( (posicao.X > StringGrid1.Cells[2,Arow].Length) or ((MemoTraduzido.Lines.Count-1) < posicao.Y) ) then begin
         MemoTraduzido.CaretPos:= Point(StringGrid1.Cells[2,Arow].Length, 0) ;
     end
@@ -458,7 +460,7 @@ begin
         if(StringGrid1.Row < StringGrid1.RowCount-1) then
           StringGrid1.Row :=  StringGrid1.Row + 1;
 
-        // MantÈm a linha selecionada no meio da grid
+        // Mant√©m a linha selecionada no meio da grid
         mantemLinhaSelecionadaMeioGrid;
 
         // Cancela a tecla pressionada e redesenha a grid
@@ -473,7 +475,7 @@ begin
         if(StringGrid1.Row > 1) then
           StringGrid1.Row :=  StringGrid1.Row -1;
 
-        // MantÈm a linha selecionada no meio da grid
+        // Mant√©m a linha selecionada no meio da grid
         mantemLinhaSelecionadaMeioGrid ;
 
         // Cancela a tecla pressionada e redesenha a grid
@@ -481,7 +483,7 @@ begin
         StringGrid1.Repaint ;
     End;
 
-    // Se foi pressionado ctrt + G, procura traduÁ„o no google
+    // Se foi pressionado ctrt + G, procura tradu√ß√£o no google
     if (Key = Ord('G')) and (Shift = [ssCtrl]) then
     Begin
         if(MemoTraduzido.SelLength > 0) then
@@ -669,7 +671,7 @@ end;
 procedure TfrRevisor.MemoInglesKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-    // Se foi pressionado ctrt + G, procura traduÁ„o no google
+    // Se foi pressionado ctrt + G, procura tradu√ß√£o no google
     if (Key = Ord('G')) and (Shift = [ssCtrl]) then
     Begin
         if(MemoIngles.SelLength > 0) then
@@ -723,7 +725,7 @@ begin
    // Fundo verde
    MemoTraduzido.Color := $00D2FFD2 ;
 
-  // Se o repetido est· diferente do primeiro, mostra funco em vermelho
+  // Se o repetido est√° diferente do primeiro, mostra funco em vermelho
   if(pnRepetido.Visible and (textoTraduzido.Length > 0)) then
    Begin
       textoTraduzido := removeQuebrasLinha(textoTraduzido) ;
@@ -765,7 +767,7 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-// Ajusta o tamanho dos memos quando a janela È redimensionada
+// Ajusta o tamanho dos memos quando a janela √© redimensionada
 //------------------------------------------------------------------------------
 procedure TfrRevisor.FormCreate(Sender: TObject);
 begin
@@ -790,7 +792,7 @@ begin
      rdVerticalClick(Sender) ;
   MemoTraduzido.SetFocus;
 
-  // Ajusta a altura do painel, visto que somente uma opÁ„o de carga estar· ativa
+  // Ajusta a altura do painel, visto que somente uma op√ß√£o de carga estar√° ativa
   Panel3.Height := 180 ;
 
 end;
@@ -977,11 +979,11 @@ begin
         linhaAtual := linhaAtual + 1;
    End;
 
-   // Se achou, coloca arquivo na linha onde comeÁa
+   // Se achou, coloca arquivo na linha onde come√ßa
    if achou then begin
      StringGrid1.Row := linhaAtual + 1;
 
-     // MantÈm a linha selecionada no meio da grid
+     // Mant√©m a linha selecionada no meio da grid
      mantemLinhaSelecionadaMeioGrid;
 
      StringGrid1.Repaint ;
@@ -1026,6 +1028,21 @@ begin
   // Atualiza a grid
   StringGrid1.Repaint ;
   MemoTraduzido.SetFocus;
+end;
+
+procedure TfrRevisor.btVerRepetidosClick(Sender: TObject);
+var texto: string ;
+begin
+  texto := MemoIngles.Text ;
+  texto := texto.Replace('\N', ' ').Replace('\n', ' ').Replace('\R', '').Replace('\r', '').Replace('(REPETIDO)', '').Trim ;
+
+  // Abre janela de pesquisar
+  frPesquisar.PageControl1.ActivePageIndex := 0 ;
+  frPesquisar.edFraseIngles.Text := texto ;
+  frPesquisar.WindowState := wsNormal ;
+  frPesquisar.visible := true ;
+  frPesquisar.show;
+  frPesquisar.btPesquisarIngles.Click;
 end;
 
 //------------------------------------------------------------------------------
@@ -1136,8 +1153,8 @@ var i: integer ;
 begin
       with TStringList.Create do
       Begin
-        // Ps. N„o pega a linha 0 da grid, porque ela È o tÌtulo das colunas da grid
-        // Ps2. A traduÁ„o est· na terceira coluna (coluna 2) da grid
+        // Ps. N√£o pega a linha 0 da grid, porque ela √© o t√≠tulo das colunas da grid
+        // Ps2. A tradu√ß√£o est√° na terceira coluna (coluna 2) da grid
         for i := 1 to StringGrid1.RowCount -1 do
         Begin
           if StringGrid1.ColCount = 4 then
@@ -1240,11 +1257,11 @@ begin
   if (Arow =  0) then
     bgFill := clBtnFace
 
-  // Pinta dessa cor se a celula est· na mesma linha da selecionada
+  // Pinta dessa cor se a celula est√° na mesma linha da selecionada
   else if (gdSelected in State) or (Arow = Grid.Row) then
      bgFill := $FFF0D0
 
-  // Pinta de vermelho os textos repetidos que est„o diferentes da primeira traducao, de verde os que est„o iguais
+  // Pinta de vermelho os textos repetidos que est√£o diferentes da primeira traducao, de verde os que est√£o iguais
   else if(grid.Cells[1, ARow].StartsWith('(REPETIDO)') ) then
   Begin
      textoIngles := grid.Cells[1, ARow] ;
@@ -1259,7 +1276,7 @@ begin
   else if(grid.Cells[1, ARow] = grid.Cells[2, ARow]) then
    bgFill := $00D9FFFE
 
-  // Se est· no cen·rio escuro, pinta de preto
+  // Se est√° no cen√°rio escuro, pinta de preto
   else //if (estilo = 'Windows') then
       bgFill := clWhite ;
   if estilo = 'Windows' then
@@ -1294,7 +1311,7 @@ end;
 
 
 //------------------------------------------------------------------------------
-// Quando uma tecla È pressionada na grid, desenha ela de novo
+// Quando uma tecla √© pressionada na grid, desenha ela de novo
 //------------------------------------------------------------------------------
 procedure TfrRevisor.StringGrid1KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -1342,7 +1359,7 @@ end;
 
 
 //-------------------------------------------------------------------------------
-// OpÁ„o 1: carrega arquivos com textos em ingles, traduzido e espanhol
+// Op√ß√£o 1: carrega arquivos com textos em ingles, traduzido e espanhol
 //-------------------------------------------------------------------------------
 procedure TfrRevisor.carregarArquivosInglesTraduzido;
 var  StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList ;
@@ -1352,7 +1369,7 @@ begin
    // Verifica se os arquivos necessarios foram informados
    if (edTraduzido.Text = '') or (edIngles.Text = '') then
    Begin
-     ShowMessage('O arquivo em inglÍs e o arquivo traduzido precisam ser informados.');
+     ShowMessage('O arquivo em ingl√™s e o arquivo traduzido precisam ser informados.');
      exit ;
    End;
 
@@ -1448,7 +1465,7 @@ Begin
 End;
 
 //-------------------------------------------------------------------------------
-// OpÁ„o 2: carregar pastas com arquivos em ingles, traduzido e espanhol
+// Op√ß√£o 2: carregar pastas com arquivos em ingles, traduzido e espanhol
 //-------------------------------------------------------------------------------
 procedure TfrRevisor.carregarPastasInglesTraduzido;
 var  StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList ;
@@ -1459,7 +1476,7 @@ begin
    // Verifica se os arquivos necessarios foram informados
    if (edPastaTraduzido.Text = '') or (edPastaIngles.Text = '') then
    Begin
-     ShowMessage('As pastas contendo os arquivos em inglÍs e os arquivos traduzidos precisam ser informadas.');
+     ShowMessage('As pastas contendo os arquivos em ingl√™s e os arquivos traduzidos precisam ser informadas.');
      exit ;
    End;
 
@@ -1550,7 +1567,7 @@ Begin
       StringGrid1.FixedRows := 1;
 
       StringsLinhas.Insert(0, 'Linha');
-      StringsIngles.Insert(0, 'InglÍs');
+      StringsIngles.Insert(0, 'Ingl√™s');
       StringsTraduzido.Insert(0, 'Traduzido');
       StringsEspanhol.Insert(0, 'Espanhol');
 
@@ -1651,14 +1668,14 @@ begin
         linhaAtual := linhaAtual - 1;
    End;
 
-   // Se achou, coloca arquivo na linha onde comeÁa
+   // Se achou, coloca arquivo na linha onde come√ßa
    if achou then begin
      arquivoAtual := StringsNomeArquivoTraduzido[linhaAtual] ;
      while((linhaAtual >= 0) and (arquivoAtual = StringsNomeArquivoTraduzido[linhaAtual])) do
         linhaAtual := linhaAtual - 1;
      StringGrid1.Row := linhaAtual + 2;
 
-     // MantÈm a linha selecionada no meio da grid
+     // Mant√©m a linha selecionada no meio da grid
      mantemLinhaSelecionadaMeioGrid  ;
 
      StringGrid1.Repaint ;

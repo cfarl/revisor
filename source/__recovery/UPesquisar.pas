@@ -79,7 +79,7 @@ type
     procedure edLinhaFinalExit(Sender: TObject);
   private
     { Private declarations }
-    procedure pesquisar(coluna: integer; texto: string; linhaInicial: integer; linhaFinal: integer);
+    procedure pesquisar(coluna: integer; texto: string);
     procedure btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(colunaGrid: integer);
     function temTextoAntes(texto: string; pos: integer): boolean;
     function temTextoDepois(palavra: string; texto: string; pos: integer): boolean;
@@ -145,14 +145,14 @@ begin
   gridPesquisa.ColCount := gridRevisor.ColCount ;
   numEncontrados := 0;
 
-  // Coloca na grid as linhas correspondentes à pesquisa
+  // Coloca na grid as linhas correspondentes Ã  pesquisa
   //for i := 1 to gridRevisor.RowCount do begin  1, frRevisor.StringGrid1.RowCount
   texto := texto.ToUpper ;
   for i := linhaInicial to linhaFinal do begin
     textoLinha := gridRevisor.Cells[coluna,i].ToUpper.Replace('\N', ' ').Replace('\R', '') ;
     if(textoLinha.Contains(texto)) then begin
 
-      // Se não encontrou uma palavra inteira, ignora
+      // Se nÃ£o encontrou uma palavra inteira, ignora
       pos := textoLinha.IndexOf(texto) ;
       if temTextoAntes(textoLinha, pos) then continue ;
       if temTextoDepois(texto, textoLinha, pos) then continue ;
@@ -242,7 +242,7 @@ begin
   gridPesquisa.ColCount := gridRevisor.ColCount ;
   numEncontrados := 0;
 
-  // Coloca na grid as linhas correspondentes à pesquisa
+  // Coloca na grid as linhas correspondentes Ã  pesquisa
   for i := 1 to gridRevisor.RowCount do begin
     textoTraduzido := gridRevisor.Cells[2,i] ;
     textoIngles := gridRevisor.Cells[1,i] ;
@@ -264,12 +264,12 @@ end;
 procedure TfrPesquisar.BitBtn2Click(Sender: TObject);
 var linhaInicio, linhaFim: integer ;
 begin
-pesquisar(2, edTextoOriginal.Text, linhaInicio, linhaFim) ;
+pesquisar(2, edTextoOriginal.Text) ;
 end;
 
 procedure TfrPesquisar.btPesquisarSelecionadoClick(Sender: TObject);
 begin
-  pesquisar(1, gridGlossario.Cells[0, gridGlossario.Row].Trim, 1, frRevisor.StringGrid1.RowCount) ;
+  pesquisar(1, gridGlossario.Cells[0, gridGlossario.Row].Trim) ;
 end;
 
 procedure TfrPesquisar.btPesquisarViolacaoGlossarioClick(Sender: TObject);
@@ -287,7 +287,7 @@ begin
   gridPesquisa.ColCount := gridRevisor.ColCount ;
   numEncontrados := 0;
 
-  // Coloca na grid as linhas que não estão de acordo com o glossario
+  // Coloca na grid as linhas que nÃ£o estÃ£o de acordo com o glossario
   for i := 1 to gridRevisor.RowCount do begin
     inglesRevisor := gridRevisor.Cells[1, i].ToLower.Replace('\n', ' ').Replace('\r', '') ; ;
     traduzidoRevisor := gridRevisor.Cells[2, i].ToLower.Replace('\n', ' ').Replace('\r', '') ; ;
@@ -384,7 +384,7 @@ begin
   gridPesquisa.ColCount := gridRevisor.ColCount ;
   numEncontrados := 0;
 
-  // Coloca na grid as linhas que não estão de acordo com o glossario
+  // Coloca na grid as linhas que nÃ£o estÃ£o de acordo com o glossario
   for i := 1 to gridRevisor.RowCount do begin
     inglesRevisor := gridRevisor.Cells[1, i].ToLower.Replace('\n', ' ').Replace('\r', '') ;
     traduzidoRevisor := gridRevisor.Cells[2, i].ToLower.Replace('\n', ' ').Replace('\r', '') ;
@@ -437,7 +437,7 @@ end;
 
 procedure TfrPesquisar.btPesquisarInglesClick(Sender: TObject);
 begin
-  pesquisar(1, edFraseIngles.Text, 1, frRevisor.StringGrid1.RowCount) ;
+  pesquisar(1, edFraseIngles.Text) ;
 end;
 
 //--------------------------------------------------------------------------------
@@ -467,7 +467,7 @@ begin
   if (length(edLinhaInicial.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicial.Text) ;
   if (length(edLinhaFinal.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinal.Text) ;
 
-  // Coloca na grid as linhas correspondentes à pesquisa
+  // Coloca na grid as linhas correspondentes Ã  pesquisa
   for i := linhaInicio to linhaFim do begin
     // Recupera o texto da coluna
     textoColuna := gridRevisor.Cells[colunaGrid,i] ;
@@ -507,7 +507,7 @@ end;
 
 procedure TfrPesquisar.btPesquisarTraduzidoClick(Sender: TObject);
 begin
-  pesquisar(2, edFraseTraduzida.Text, 1, frRevisor.StringGrid1.RowCount) ;
+  pesquisar(2, edFraseTraduzida.Text) ;
 end;
 
 procedure TfrPesquisar.btSubstituirClick(Sender: TObject);
@@ -542,7 +542,7 @@ begin
      frRevisor.MemoTraduzido.Text := txtMemoTraduzido.Replace(txOriginal, txSubstituir) ;
   end;
 
-  lbInfo.Caption := 'Foram feitas ' + Integer.ToString(numEncontrados) + ' substituições.' ;
+  lbInfo.Caption := 'Foram feitas ' + Integer.ToString(numEncontrados) + ' substituiÃ§Ãµes.' ;
   gridPesquisa.Repaint ;
   frRevisor.salvarTodosArquivos;
 end;
@@ -565,7 +565,7 @@ begin
      for i := 0 to Values.Count - 1 do begin
         if(Values.Strings[i].Trim.Length = 0) then continue ;
 
-        // Ignora linhas começando com #
+        // Ignora linhas comeÃ§ando com #
         inc(numLinhas);
         if(Values.Strings[i].StartsWith('#')) then begin
            gridGlossario.Cells[0, i] := Values.Strings[i] ;
@@ -633,7 +633,7 @@ var
 begin
   grid := Sender as TStringGrid;
 
-  // Pinta dessa cor se a celula está na mesma linha da selecionada
+  // Pinta dessa cor se a celula estÃ¡ na mesma linha da selecionada
   if (gdSelected in State) or (Arow = Grid.Row) then
      bgFill := $FFF0D0
   else
@@ -645,7 +645,7 @@ begin
 
   S := grid.Cells[ACol, ARow];
 
-  // Ajusta a largura e altura das células da grid
+  // Ajusta a largura e altura das cÃ©lulas da grid
   S := grid.Cells[ACol, ARow];
   if Length(S) > 0 then
   begin
