@@ -79,7 +79,7 @@ type
     procedure edLinhaFinalExit(Sender: TObject);
   private
     { Private declarations }
-    procedure pesquisar(coluna: integer; texto: string; linhaInicial: integer; linhaFinal: integer);
+    procedure pesquisar(coluna: integer; texto: string);
     procedure btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(colunaGrid: integer);
     function temTextoAntes(texto: string; pos: integer): boolean;
     function temTextoDepois(palavra: string; texto: string; pos: integer): boolean;
@@ -264,12 +264,12 @@ end;
 procedure TfrPesquisar.BitBtn2Click(Sender: TObject);
 var linhaInicio, linhaFim: integer ;
 begin
-pesquisar(2, edTextoOriginal.Text, linhaInicio, linhaFim) ;
+pesquisar(2, edTextoOriginal.Text) ;
 end;
 
 procedure TfrPesquisar.btPesquisarSelecionadoClick(Sender: TObject);
 begin
-  pesquisar(1, gridGlossario.Cells[0, gridGlossario.Row].Trim, 1, frRevisor.StringGrid1.RowCount) ;
+  pesquisar(1, gridGlossario.Cells[0, gridGlossario.Row].Trim) ;
 end;
 
 procedure TfrPesquisar.btPesquisarViolacaoGlossarioClick(Sender: TObject);
@@ -437,7 +437,7 @@ end;
 
 procedure TfrPesquisar.btPesquisarInglesClick(Sender: TObject);
 begin
-  pesquisar(1, edFraseIngles.Text, 1, frRevisor.StringGrid1.RowCount) ;
+  pesquisar(1, edFraseIngles.Text) ;
 end;
 
 //--------------------------------------------------------------------------------
@@ -507,7 +507,7 @@ end;
 
 procedure TfrPesquisar.btPesquisarTraduzidoClick(Sender: TObject);
 begin
-  pesquisar(2, edFraseTraduzida.Text, 1, frRevisor.StringGrid1.RowCount) ;
+  pesquisar(2, edFraseTraduzida.Text) ;
 end;
 
 procedure TfrPesquisar.btSubstituirClick(Sender: TObject);

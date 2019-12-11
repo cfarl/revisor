@@ -121,6 +121,7 @@ type
     Label31: TLabel;
     lbSelEspanhol: TLabel;
     btnExportarGrid: TBitBtn;
+    btVerRepetidos: TBitBtn;
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure MemoInglesChange(Sender: TObject);
@@ -173,6 +174,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure StringGrid1DblClick(Sender: TObject);
     procedure btnExportarGridClick(Sender: TObject);
+    procedure btVerRepetidosClick(Sender: TObject);
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
@@ -901,7 +903,8 @@ Begin
 //  textoBuscar := removeQuebrasLinha(textoBuscar.Replace('(REPETIDO)', '', []).TrimRight);
 
   // Procura texto em ingles. Se achou, recupera traducao
-  pegarPrimeiraTraducao := StringGrid1.Cells[2, StringGrid1.Cols[1].IndexOf(textoBuscar.Replace('(REPETIDO)', '',[rfReplaceAll]).TrimRight)];
+  //pegarPrimeiraTraducao := StringGrid1.Cells[2, StringGrid1.Cols[1].IndexOf(textoBuscar.Replace('(REPETIDO)', '',[rfReplaceAll]).TrimRight)];
+  pegarPrimeiraTraducao := StringGrid1.Cells[2, StringGrid1.Cols[1].IndexOf(textoBuscar.TrimRight)] ;
 
 
 {
@@ -1028,6 +1031,22 @@ begin
   MemoTraduzido.SetFocus;
 end;
 
+procedure TfrRevisor.btVerRepetidosClick(Sender: TObject);
+var texto: string ;
+begin
+  texto := MemoIngles.Text ;
+  //texto := texto.Replace('\N', ' ').Replace('\n', ' ').Replace('\R', '').Replace('\r', '').Replace('(REPETIDO)', '').Trim ;
+  texto := texto.Replace('\N', ' ').Replace('\n', ' ').Replace('\R', '').Replace('\r', '').Trim ;
+
+  // Abre janela de pesquisar
+  frPesquisar.PageControl1.ActivePageIndex := 0 ;
+  frPesquisar.edFraseIngles.Text := texto ;
+  frPesquisar.WindowState := wsNormal ;
+  frPesquisar.visible := true ;
+  frPesquisar.show;
+  frPesquisar.btPesquisarIngles.Click;
+end;
+
 //------------------------------------------------------------------------------
 // Usa a traducao repetida como primeira traducao
 //------------------------------------------------------------------------------
@@ -1036,8 +1055,9 @@ var textoIngles, traducao: string ;
     i: integer ;
 Begin
   // Recupera texto em ingles da linha selecionada
-  textoIngles := MemoIngles.Text ;
-  textoIngles := StringReplace(textoIngles, '(REPETIDO)', '', []).TrimRight ;
+  textoIngles := MemoIngles.Text  ;
+  //textoIngles := StringReplace(textoIngles, '(REPETIDO)', '', []).TrimRight ;
+  textoIngles := textoIngles.TrimRight ;
 
   // Recupera traducao da linha selecionada
   traducao := MemoTraduzido.Text ;
@@ -1300,6 +1320,9 @@ procedure TfrRevisor.StringGrid1KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
    StringGrid1.Repaint;
+
+   // Mantém a linha selecionada no meio da grid
+   mantemLinhaSelecionadaMeioGrid;
 end;
 
 
@@ -1544,6 +1567,7 @@ begin
 //-------------------------------------------------------------------------------
 procedure TfrRevisor.preencherGrid(StringsLinhas, StringsIngles, StringsEspanhol, StringsTraduzido: TStringList) ;
 var Row : Integer;
+    StringsRepetidas: TStringList;
 Begin
       // Inicializa a grid
       StringGrid1.RowCount := StringsIngles.Count + 1;
@@ -1563,22 +1587,36 @@ Begin
           // Carrega as linhas dados dos arquivos na StringGrid
           With TstringList.Create do
           begin
+              // Cria lista para guardar as string repetidas
+              StringsRepetidas := TstringList.Create ;
+
+              // Percorre a lista de strings em ingles
               for Row := 0 to StringsIngles.Count-1 do
               begin
-                  // Texto em ingles
-                  //showmessage(removeQuebrasLinha(StringsIngles[Row]));
+                  // Se a string em ingles ainda nao foi encontrada, adiciona na lista do with
                   if(IndexOf(StringsIngles[Row]) = -1 ) then
                   Begin
                      Add(StringsIngles[Row]);
-                  End else
+                  End
+                  // Senão, adiciona na lista de string repeticas
+                  else if(StringsRepetidas.IndexOf(StringsIngles[Row]) = -1 ) then
+                  Begin
+                     StringsRepetidas.Add(StringsIngles[Row]);
+                  End;
+              end;
+
+              // Olha novamente para as strings em ingles, mas agora adiciona (REPETIDO)
+              // antes de cada frase se ela aparece mais de uma vez na lista.
+              for Row := 0 to StringsIngles.Count-1 do
+              begin
+                  if(StringsRepetidas.IndexOf(StringsIngles[Row]) <> -1 ) then
                   Begin
                      StringsIngles[Row] := '(REPETIDO)' + StringsIngles[Row];
                   End;
-
               end;
-
+              StringsRepetidas.Clear ;
+              StringsRepetidas.Free ;
             Free;
-
           end;
 
           StringGrid1.Cols[1].Assign(StringsIngles);

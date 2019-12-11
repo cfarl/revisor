@@ -2,8 +2,8 @@ object frRevisor: TfrRevisor
   Left = 0
   Top = 0
   Caption = 'Tool para revis'#227'o de tradu'#231#245'es - By Brazilian Warriors, 2019'
-  ClientHeight = 953
-  ClientWidth = 1247
+  ClientHeight = 1049
+  ClientWidth = 1238
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object frRevisor: TfrRevisor
   object Splitter3: TSplitter
     Left = 0
     Top = 400
-    Width = 1247
+    Width = 1238
     Height = 8
     Cursor = crVSplit
     Align = alTop
@@ -34,14 +34,14 @@ object frRevisor: TfrRevisor
   object pnMemos: TPanel
     Left = 0
     Top = 408
-    Width = 1247
-    Height = 545
+    Width = 1238
+    Height = 641
     Align = alClient
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 1
-      Top = 393
-      Width = 1245
+      Top = 459
+      Width = 1236
       Height = 8
       Cursor = crVSplit
       Align = alTop
@@ -55,7 +55,7 @@ object frRevisor: TfrRevisor
     object Splitter2: TSplitter
       Left = 1
       Top = 121
-      Width = 1245
+      Width = 1236
       Height = 8
       Cursor = crVSplit
       Align = alTop
@@ -69,7 +69,7 @@ object frRevisor: TfrRevisor
     object pnIngles: TPanel
       Left = 1
       Top = 1
-      Width = 1245
+      Width = 1236
       Height = 120
       Align = alTop
       Alignment = taLeftJustify
@@ -77,7 +77,7 @@ object frRevisor: TfrRevisor
       object MemoIngles: TRichEdit
         Left = 89
         Top = 1
-        Width = 1155
+        Width = 1146
         Height = 118
         Align = alClient
         Color = 16777177
@@ -163,9 +163,9 @@ object frRevisor: TfrRevisor
     end
     object pnEspanhol: TPanel
       Left = 1
-      Top = 401
-      Width = 1245
-      Height = 143
+      Top = 467
+      Width = 1236
+      Height = 173
       Align = alClient
       Alignment = taLeftJustify
       TabOrder = 1
@@ -173,14 +173,14 @@ object frRevisor: TfrRevisor
         Left = 1
         Top = 1
         Width = 88
-        Height = 141
+        Height = 171
         Align = alLeft
         TabOrder = 0
         object Label2: TLabel
           Left = 1
           Top = 1
           Width = 53
-          Height = 139
+          Height = 169
           Align = alLeft
           Caption = 'Espanhol:'
           Font.Charset = DEFAULT_CHARSET
@@ -237,8 +237,8 @@ object frRevisor: TfrRevisor
       object MemoEspanhol: TRichEdit
         Left = 89
         Top = 1
-        Width = 1155
-        Height = 141
+        Width = 1146
+        Height = 171
         Align = alClient
         Color = 16777177
         Font.Charset = ANSI_CHARSET
@@ -258,15 +258,15 @@ object frRevisor: TfrRevisor
     object pnTraduzido: TPanel
       Left = 1
       Top = 129
-      Width = 1245
-      Height = 264
+      Width = 1236
+      Height = 330
       Align = alTop
       TabOrder = 2
       object Panel6: TPanel
         Left = 1
         Top = 1
         Width = 88
-        Height = 262
+        Height = 328
         Align = alLeft
         TabOrder = 0
         object Label3: TLabel
@@ -356,8 +356,8 @@ object frRevisor: TfrRevisor
       object MemoTraduzido: TRichEdit
         Left = 186
         Top = 1
-        Width = 1058
-        Height = 262
+        Width = 1049
+        Height = 328
         Align = alClient
         Color = 13816575
         Font.Charset = ANSI_CHARSET
@@ -379,7 +379,7 @@ object frRevisor: TfrRevisor
         Left = 89
         Top = 1
         Width = 97
-        Height = 262
+        Height = 328
         Align = alLeft
         TabOrder = 2
         Visible = False
@@ -517,7 +517,7 @@ object frRevisor: TfrRevisor
         end
         object btUsarComoPrimeiraTraducao: TBitBtn
           Left = 6
-          Top = 181
+          Top = 183
           Width = 86
           Height = 56
           Hint = 'Coloca essa tradu'#231#227'o no lugar da primeira tradu'#231#227'o.'
@@ -646,20 +646,78 @@ object frRevisor: TfrRevisor
           WordWrap = True
           OnClick = btJuntarPrimeiraTraducaoClick
         end
+        object btVerRepetidos: TBitBtn
+          Left = 6
+          Top = 245
+          Width = 86
+          Height = 56
+          Hint = 'Coloca essa tradu'#231#227'o no lugar da primeira tradu'#231#227'o.'
+          Caption = 'Mostrar Repetidos'
+          Default = True
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Glyph.Data = {
+            36040000424D3604000000000000360000002800000010000000100000000100
+            20000000000000040000120B0000120B00000000000000000000000000000000
+            0000000000000000000000000000ACB5B0FFACB5B0FFACB5B0FFACB5B0FFACB5
+            B0FFACB5B0FFACB5B0FFACB5B0FFACB5B0FFACB5B0FFACB5B0FF000000000000
+            0000000000000000000000000000ACB5B0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFACB5B0FF000000000000
+            0000000000000000000000000000ACB5B0FFFFFFFFFFF0F1F1FFF1F2F2FFF2F3
+            F3FFF3F4F4FFF5F5F5FFF6F6F6FFF6F6F6FFFFFFFFFFACB5B0FFABB5AF80ABB5
+            AF80ABB5AF80ABB5AF80ABB5AF80ACB5B0FFFFFFFFFFF0F1F1FFF1F2F2FFF2F3
+            F3FFF3F4F4FFF5F5F5FFF6F6F6FFF6F6F6FFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80FFFFFF80FFFFFF80FFFFFF80ACB5B0FFFFFFFFFFEFF1F1FFF1F2F2FFF2F3
+            F3FFF3F4F4FFF4F5F5FFF5F5F5FFF5F5F5FFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80EFF1F180F1F1F180F1F3F380ACB5B0FFFFFFFFFFEFF1F1FFF0F1F1FFF1F2
+            F2FFF2F3F3FFF3F4F4FFF4F4F4FFF4F4F4FFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80EFF1F180F1F1F180F1F3F380ACB5B0FFFFFFFFFFEFF0F0FFF0F1F1FFF1F2
+            F2FFF2F3F3FFF2F3F3FFF3F4F4FFF3F4F4FFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80EFF1F180F1F1F180F1F3F380ACB5B0FFFFFFFFFFEEF0F0FFEFF1F1FFF0F1
+            F1FFF1F2F2FFF2F2F2FFF2F3F3FFF2F3F3FFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80EFF1F180EFF1F180F1F1F180ACB5B0FFFFFFFFFFEEEFEFFFEFF0F0FFEFF1
+            F1FFF0F1F1FFF1F2F2FFF1F2F2FFF1F2F2FFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80EFEFEF80EFF1F180F1F1F180ACB5B0FFFFFFFFFFEDEFEFFFEEEFEFFFEEF0
+            F0FFEFF0F0FFF0F1F1FFF0F1F1FFF0F1F1FFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80EDEFEF80EFF1F180EFF1F180ACB5B0FFFFFFFFFFECEEEEFFEDEFEFFFEEEF
+            EFFFEEF0F0FFEFF0F0FFEFF0F0FFEFF0F0FFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80EDEFEF80EFEFEF80EFF1F180ACB5B0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFACB5B0FFABB5AF80FFFF
+            FF80EDEFEF80EDEFEF80EDEFEF80ACB5B0FFACB5B0FFACB5B0FFACB5B0FFACB5
+            B0FFACB5B0FFACB5B0FFACB5B0FFACB5B0FFACB5B0FFACB5B0FFABB5AF80FFFF
+            FF80EBEDED80EDEFEF80EDEFEF80EDEFEF80EFEFEF80EFEFEF80EFEFEF80FFFF
+            FF80ABB5AF800000000000000000000000000000000000000000ABB5AF80FFFF
+            FF80FFFFFF80FFFFFF80FFFFFF80FFFFFF80FFFFFF80FFFFFF80FFFFFF80FFFF
+            FF80ABB5AF800000000000000000000000000000000000000000ABB5AF80ABB5
+            AF80ABB5AF80ABB5AF80ABB5AF80ABB5AF80ABB5AF80ABB5AF80ABB5AF80ABB5
+            AF80ABB5AF800000000000000000000000000000000000000000}
+          Layout = blGlyphTop
+          ModalResult = 6
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          Spacing = 0
+          TabOrder = 4
+          WordWrap = True
+          OnClick = btVerRepetidosClick
+        end
       end
     end
   end
   object Panel7: TPanel
     Left = 0
     Top = 0
-    Width = 1247
+    Width = 1238
     Height = 400
     Align = alTop
     TabOrder = 1
     object Panel3: TPanel
       Left = 1
       Top = 1
-      Width = 1245
+      Width = 1236
       Height = 304
       Align = alTop
       Anchors = [akTop, akRight]
@@ -667,7 +725,7 @@ object frRevisor: TfrRevisor
       object pnBotoesCarregar: TPanel
         Left = 1
         Top = 243
-        Width = 1243
+        Width = 1234
         Height = 60
         Align = alBottom
         TabOrder = 0
@@ -848,19 +906,19 @@ object frRevisor: TfrRevisor
       object pnTipoCarga: TPanel
         Left = 1
         Top = 1
-        Width = 1243
+        Width = 1234
         Height = 242
         Align = alClient
         TabOrder = 1
         object pnAbrirArquivosInglesTraduzidoEspanhol: TPanel
           Left = 1
           Top = 121
-          Width = 1241
+          Width = 1232
           Height = 120
           Align = alTop
           TabOrder = 0
           DesignSize = (
-            1241
+            1232
             120)
           object Label9: TLabel
             Left = 4
@@ -884,7 +942,7 @@ object frRevisor: TfrRevisor
             Caption = 'Arquivo Espanhol:'
           end
           object btEscolherArquivoTraduzido: TButton
-            Left = 1127
+            Left = 1118
             Top = 61
             Width = 75
             Height = 24
@@ -897,7 +955,7 @@ object frRevisor: TfrRevisor
             OnClick = btEscolherArquivoTraduzidoClick
           end
           object btEscolherArquivoIngles: TButton
-            Left = 1127
+            Left = 1118
             Top = 31
             Width = 75
             Height = 25
@@ -912,7 +970,7 @@ object frRevisor: TfrRevisor
           object edIngles: TEdit
             Left = 83
             Top = 35
-            Width = 1037
+            Width = 1028
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 2
@@ -920,7 +978,7 @@ object frRevisor: TfrRevisor
           object edTraduzido: TEdit
             Left = 100
             Top = 62
-            Width = 1020
+            Width = 1011
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 3
@@ -928,13 +986,13 @@ object frRevisor: TfrRevisor
           object edEspanhol: TEdit
             Left = 96
             Top = 90
-            Width = 1024
+            Width = 1015
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 4
           end
           object btEscolherArquivoEspanhol: TButton
-            Left = 1126
+            Left = 1117
             Top = 89
             Width = 75
             Height = 24
@@ -950,14 +1008,13 @@ object frRevisor: TfrRevisor
         object pnAbrirPastasInglesTraduzidoEspanhol: TPanel
           Left = 1
           Top = 1
-          Width = 1241
+          Width = 1232
           Height = 120
           Align = alTop
           TabOrder = 1
           Visible = False
-          ExplicitTop = -5
           DesignSize = (
-            1241
+            1232
             120)
           object Label17: TLabel
             Left = 4
@@ -983,13 +1040,13 @@ object frRevisor: TfrRevisor
           object edPastaIngles: TEdit
             Left = 72
             Top = 30
-            Width = 1039
+            Width = 1030
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 0
           end
           object btEscolherPastaIngles: TButton
-            Left = 1117
+            Left = 1108
             Top = 28
             Width = 75
             Height = 25
@@ -1004,13 +1061,13 @@ object frRevisor: TfrRevisor
           object edPastaTraduzido: TEdit
             Left = 90
             Top = 60
-            Width = 1022
+            Width = 1013
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 2
           end
           object btEscolherPastaTraduzido: TButton
-            Left = 1117
+            Left = 1108
             Top = 57
             Width = 75
             Height = 24
@@ -1025,13 +1082,13 @@ object frRevisor: TfrRevisor
           object edPastaEspanhol: TEdit
             Left = 86
             Top = 87
-            Width = 1026
+            Width = 1017
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 4
           end
           object btEscolherPastaEspanhol: TButton
-            Left = 1118
+            Left = 1109
             Top = 84
             Width = 75
             Height = 24
@@ -1049,7 +1106,7 @@ object frRevisor: TfrRevisor
     object Panel2: TPanel
       Left = 1
       Top = 364
-      Width = 1245
+      Width = 1236
       Height = 35
       Align = alBottom
       TabOrder = 1
@@ -1339,7 +1396,7 @@ object frRevisor: TfrRevisor
     object StringGrid1: TStringGrid
       Left = 1
       Top = 305
-      Width = 1245
+      Width = 1236
       Height = 59
       TabStop = False
       Align = alClient
@@ -1358,6 +1415,7 @@ object frRevisor: TfrRevisor
       OnDrawCell = StringGrid1DrawCell
       OnKeyUp = StringGrid1KeyUp
       OnSelectCell = StringGrid1SelectCell
+      ExplicitTop = 300
     end
     object BitBtn1: TBitBtn
       Left = 6
