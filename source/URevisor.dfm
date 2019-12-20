@@ -370,6 +370,8 @@ object frRevisor: TfrRevisor
         TabOrder = 1
         Zoom = 100
         OnChange = MemoTraduzidoChange
+        OnClick = MemoTraduzidoClick
+        OnEnter = MemoTraduzidoEnter
         OnKeyDown = MemoTraduzidoKeyDown
         OnKeyPress = MemoTraduzidoKeyPress
         OnKeyUp = MemoTraduzidoKeyUp
@@ -1390,6 +1392,7 @@ object frRevisor: TfrRevisor
           ParentCtl3D = False
           TabOrder = 0
           Text = '0'
+          OnKeyDown = edLinhaKeyDown
         end
       end
     end
@@ -1415,7 +1418,6 @@ object frRevisor: TfrRevisor
       OnDrawCell = StringGrid1DrawCell
       OnKeyUp = StringGrid1KeyUp
       OnSelectCell = StringGrid1SelectCell
-      ExplicitTop = 300
     end
     object BitBtn1: TBitBtn
       Left = 6
@@ -1511,6 +1513,18 @@ object frRevisor: TfrRevisor
       Caption = 'E'
       TabOrder = 6
       OnClick = btnExportarGridClick
+    end
+    object btnImportarGrid: TBitBtn
+      Left = 168
+      Top = 7
+      Width = 23
+      Height = 24
+      Hint = 'Exportar grid'
+      BiDiMode = bdLeftToRight
+      Caption = 'I'
+      ParentBiDiMode = False
+      TabOrder = 7
+      OnClick = btnImportarGridClick
     end
   end
   object btPesquisar: TBitBtn

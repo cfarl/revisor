@@ -122,6 +122,7 @@ type
     lbSelEspanhol: TLabel;
     btnExportarGrid: TBitBtn;
     btVerRepetidos: TBitBtn;
+    btnImportarGrid: TBitBtn;
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure MemoInglesChange(Sender: TObject);
@@ -175,6 +176,11 @@ type
     procedure StringGrid1DblClick(Sender: TObject);
     procedure btnExportarGridClick(Sender: TObject);
     procedure btVerRepetidosClick(Sender: TObject);
+    procedure btnImportarGridClick(Sender: TObject);
+    procedure edLinhaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure MemoTraduzidoEnter(Sender: TObject);
+    procedure MemoTraduzidoClick(Sender: TObject);
   private
     { Private declarations }
     function pegarPrimeiraTraducao(textoBuscar: string) : string ;
@@ -382,16 +388,23 @@ End;
 //------------------------------------------------------
 procedure TfrRevisor.salvarTodosArquivos ;
 var nomeArquivos: TStringList ;
+    pasta: string ;
     i: integer ;
 Begin
   // Recupera o nome dos arquivos, a partir da string que guarda a associacao de
   // linhas da grid com os arquivos
   nomeArquivos := getArquivosCarregados;
 
+  // Recupera a pasta onde os arquivos devem ser salvos
+  if(rdCargaArquivos.Checked) then
+      pasta := ExtractFilePath(edTraduzido.Text)
+   else
+      pasta := ExtractFilePath(edPastaTraduzido.Text) ;
+
   // Salva cada arquivo da lista
   for i:= 0 to nomeArquivos.Count-1 do
   Begin
-    salvarArquivo(edPastaTraduzido.Text + nomeArquivos[i]);
+    salvarArquivo(pasta + nomeArquivos[i]);
   End;
 
   nomeArquivos.Free ;
@@ -738,6 +751,17 @@ begin
 
 end;
 
+procedure TfrRevisor.MemoTraduzidoClick(Sender: TObject);
+begin
+  lbLin.Caption := Integer.ToString(memoTraduzido.CaretPos.Y+1) ;
+  lbCol.Caption := Integer.ToString(memoTraduzido.CaretPos.X+1) ;
+end;
+
+procedure TfrRevisor.MemoTraduzidoEnter(Sender: TObject);
+begin
+
+end;
+
 //------------------------------------------------------------------------------
 // Quando o texto do memo espanhol muda, destaca \n
 //------------------------------------------------------------------------------
@@ -930,8 +954,8 @@ End;
 //------------------------------------------------------------------------------
 procedure TfrRevisor.btPegarPrimeiraTraducaoClick(Sender: TObject);
 var textoBuscar, traducao: string ;
-    achou: boolean ;
-    I: Integer;
+  //  achou: boolean ;
+  //  I: Integer;
 begin
   // Recupera texto em ingles da celula selecionada
   textoBuscar := MemoIngles.Text ;
@@ -996,7 +1020,7 @@ end;
 //------------------------------------------------------------------------------
 procedure TfrRevisor.btUsarPrimeiraTraducaoTodosClick(Sender: TObject);
 var textoBuscar, traducao: string ;
-    achou: boolean ;
+   // achou: boolean ;
     I: Integer;
 begin
   // Recupera texto em ingles da celula selecionada
@@ -1177,6 +1201,44 @@ begin
       End;
 end;
 
+procedure TfrRevisor.btnImportarGridClick(Sender: TObject);
+var i: integer ;
+    StringsLinhas: TStringList ;
+    frases: TStringDynArray;
+    linhaArquivo: string ;
+begin
+   StringsLinhas := TStringList.Create;
+
+   // Carrega o arquivo
+   if(rdCargaArquivos.Checked) then
+      StringsLinhas.LoadFromFile(ExtractFilePath(edIngles.Text)+'..\exportacao.txt', TEncoding.UTF8 )
+   else
+      StringsLinhas.LoadFromFile(ExtractFilePath(edPastaIngles.Text)+'..\exportacao.txt', TEncoding.UTF8 );
+
+   // Verifica se o arquivo está correto
+   if(StringsLinhas.Count <> ((StringGrid1.RowCount*2) -2)) then
+   Begin
+     ShowMessage('O arquivo exportacao.txt precisa ter exatas ' + Integer.ToString(StringGrid1.RowCount*2 -1) + ' linhas.') ;
+   End
+
+   // Atualiza grid com os textos traduzidos
+   else
+   Begin
+     for i := 1 to StringGrid1.RowCount -1 do
+     Begin
+        linhaArquivo := StringsLinhas[2*i-2] ;
+        frases := Split(linhaArquivo, '|----|');
+        StringGrid1.Cells[2, i] := frases[1] ;
+     End;
+     salvarTodosArquivos ;
+     ShowMessage('O arquivo exportacao.txt foi importado com sucesso!') ;
+   End;
+
+   StringsLinhas.Clear;
+   StringsLinhas.Free;
+
+end;
+
 //------------------------------------------------------------------------------
 // Fecha a janela e sai do programa
 //------------------------------------------------------------------------------
@@ -1224,6 +1286,7 @@ begin
     StringGrid1.Row := linha ;
   End;
 
+  mantemLinhaSelecionadaMeioGrid ;
 end;
 
 //------------------------------------------------------
@@ -1541,7 +1604,17 @@ begin
 
  End;
 
- function removeQuebrasLinha(texto: string) : string ;
+ procedure TfrRevisor.edLinhaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    // Se foi pressionado ctrt + >> no memo da traducao, avanca para prox. linha
+    if (Key = VK_RETURN) then
+    Begin
+      btSetarLinhaClick(Sender);
+    End;
+end;
+
+function removeQuebrasLinha(texto: string) : string ;
  var temp: string ;
  Begin
  try
@@ -1715,7 +1788,6 @@ procedure TfrRevisor.btCarregarClick(Sender: TObject);
     end;
 
 Begin
-
     mudouTexto := false ;
     pnProxArquivo.Visible := false ;
 

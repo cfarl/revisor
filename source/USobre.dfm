@@ -1959,7 +1959,7 @@ object frSobre: TfrSobre
     Top = 152
     Width = 75
     Height = 16
-    Caption = '1.2019.11.07'
+    Caption = '1.2019.12.19'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -1969,7 +1969,7 @@ object frSobre: TfrSobre
   end
   object Label2: TLabel
     Left = 159
-    Top = 60
+    Top = 75
     Width = 99
     Height = 16
     Caption = 'Colaboradores:'
@@ -1984,7 +1984,7 @@ object frSobre: TfrSobre
     Left = 159
     Top = 23
     Width = 210
-    Height = 33
+    Height = 50
     BorderStyle = bsNone
     Color = clBtnFace
     Font.Charset = DEFAULT_CHARSET
@@ -1994,6 +1994,7 @@ object frSobre: TfrSobre
     Font.Style = []
     Lines.Strings = (
       'Cfarl'
+      'Dark Lord'
       'Delutto')
     ParentFont = False
     TabOrder = 1
@@ -2009,9 +2010,9 @@ object frSobre: TfrSobre
   end
   object Memo2: TMemo
     Left = 159
-    Top = 78
+    Top = 97
     Width = 210
-    Height = 65
+    Height = 49
     BorderStyle = bsNone
     Color = clBtnFace
     Font.Charset = DEFAULT_CHARSET
@@ -2020,7 +2021,6 @@ object frSobre: TfrSobre
     Font.Name = 'Tahoma'
     Font.Style = []
     Lines.Strings = (
-      'Dark Lord'
       'Gledson999'
       'Angel333119 '
       'Ushinin_DS')

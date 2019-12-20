@@ -58,7 +58,7 @@ object frPesquisar: TfrPesquisar
       Top = 1
       Width = 964
       Height = 178
-      ActivePage = TabSheet2
+      ActivePage = TabSheet3
       Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet
