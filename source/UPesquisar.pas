@@ -57,6 +57,9 @@ type
     edLinhaInicial: TEdit;
     Label7: TLabel;
     edLinhaFinal: TEdit;
+    Label12: TLabel;
+    lbTamanhosEspanhol: TLabel;
+    btPesquisarLinhasEspanholTamanhoMaiorTamanhoFrase: TBitBtn;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -77,6 +80,8 @@ type
     procedure btPesquisarViolacaoSelecionadoClick(Sender: TObject);
     procedure edLinhaInicialExit(Sender: TObject);
     procedure edLinhaFinalExit(Sender: TObject);
+    procedure btPesquisarLinhasEspanholTamanhoMaiorTamanhoFraseClick(
+      Sender: TObject);
   private
     { Private declarations }
     procedure pesquisar(coluna: integer; texto: string);
@@ -167,7 +172,8 @@ begin
   end;
 
   lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
-  gridPesquisa.Repaint ;
+  //gridPesquisa.Repaint ;
+  FormResize(gridPesquisa);
 end;
 
 function SortDesc(List: TStringList; Index1, Index2: Integer): Integer;
@@ -177,8 +183,8 @@ begin
 end;
 
 procedure TfrPesquisar.TabSheet3Show(Sender: TObject);
-var i, tamanhoIngles, tamanhoTraduzido: integer ;
-    listaIngles, listaTraduzido: TStringList ;
+var i, tamanhoIngles, tamanhoTraduzido, tamanhoEspanhol: integer ;
+    listaIngles, listaTraduzido, listaEspanhol: TStringList ;
     gridRevisor: TStringGrid;
     linhaInicio, linhaFim: integer;
 begin
@@ -186,6 +192,7 @@ begin
  gridRevisor := frRevisor.StringGrid1 ;
  lbTamanhosIngles.Caption := '' ;
  lbTamanhosTraduzido.Caption := '' ;
+ lbTamanhosEspanhol.Caption := '' ;
  listaIngles := TStringList.Create;
  listaIngles.Duplicates := dupIgnore ;
  //listaIngles.CustomSort(SortDesc);
@@ -196,13 +203,16 @@ begin
  //listaTraduzido.CustomSort(SortDesc);
  //listaTraduzido.Sorted := true ;
 
+ listaEspanhol := TStringList.Create;
+ listaEspanhol.Duplicates := dupIgnore ;
+
    // Recupera linha de inicio e fim
   linhaInicio := 1 ;
   linhaFim := frRevisor.StringGrid1.RowCount ;
   if (length(edLinhaInicial.Text) > 0) then linhaInicio := Integer.Parse(edLinhaInicial.Text) ;
   if (length(edLinhaFinal.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinal.Text) ;
 
- // Constroi lista com os tamanhos maximos das frases em ingles e traduzido
+ // Constroi lista com os tamanhos maximos das frases
  for i := linhaInicio to linhaFim do begin
     if(ckIgnorarLinhasComentario.Checked and (gridRevisor.Cells[1,i].StartsWith('--'))) //or gridRevisor.Cells[1,i].StartsWith('(REPETIDO)--')))
       then continue ;
@@ -221,13 +231,26 @@ begin
       listaTraduzido.Add(Integer.ToString(tamanhoTraduzido)) ;
  end;
 
+ if(frRevisor.pnEspanhol.visible) then
+ for i := linhaInicio to linhaFim do begin
+    if(ckIgnorarLinhasComentario.Checked and (gridRevisor.Cells[3,i].StartsWith('--'))) //or gridRevisor.Cells[1,i].StartsWith('(REPETIDO)--')))
+      then continue ;
+
+    tamanhoEspanhol := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[3,i]);
+    if(listaEspanhol.IndexOf(Integer.ToString(tamanhoEspanhol)) < 0) then
+      listaEspanhol.Add(Integer.ToString(tamanhoEspanhol)) ;
+ end;
+
  // Atualiza labels
 // listaIngles.Sort;
 // listaTraduzido.Sort;
  listaIngles.CustomSort(SortDesc);
  listaTraduzido.CustomSort(SortDesc);
+ listaEspanhol.CustomSort(SortDesc);
+
  lbTamanhosIngles.Caption := listaIngles.CommaText ;
  lbTamanhosTraduzido.Caption := listaTraduzido.CommaText ;
+ lbTamanhosEspanhol.Caption := listaEspanhol.CommaText ;
 
 end;
 
@@ -258,7 +281,8 @@ begin
   end;
 
   lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
-  gridPesquisa.Repaint ;
+  //gridPesquisa.Repaint ;
+  FormResize(gridPesquisa);
 end;
 
 procedure TfrPesquisar.BitBtn2Click(Sender: TObject);
@@ -366,7 +390,8 @@ begin
   end;
 
   lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
-  gridPesquisa.Repaint ;
+  //gridPesquisa.Repaint ;
+  FormResize(gridPesquisa);
 end;
 
 procedure TfrPesquisar.btPesquisarViolacaoSelecionadoClick(Sender: TObject);
@@ -432,7 +457,8 @@ begin
   end;
 
   lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
-  gridPesquisa.Repaint ;
+  //gridPesquisa.Repaint ;
+  FormResize(gridPesquisa);
 end;
 
 procedure TfrPesquisar.btPesquisarInglesClick(Sender: TObject);
@@ -490,7 +516,8 @@ begin
   end;
 
   lbInfo.Caption := 'Foram encontradas ' + Integer.ToString(numEncontrados) + ' linhas de texto.' ;
-  gridPesquisa.Repaint ;
+  //gridPesquisa.Repaint ;
+  FormResize(gridPesquisa);
 end;
 
 
@@ -498,6 +525,12 @@ procedure TfrPesquisar.btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFraseClick(
   Sender: TObject);
 begin
   btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(2) ;
+end;
+
+procedure TfrPesquisar.btPesquisarLinhasEspanholTamanhoMaiorTamanhoFraseClick(
+  Sender: TObject);
+begin
+  btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(3) ;
 end;
 
 procedure TfrPesquisar.btPesquisarLinhasInglesTamanhoMaiorTamanhoFraseClick(Sender: TObject);
@@ -543,7 +576,8 @@ begin
   end;
 
   lbInfo.Caption := 'Foram feitas ' + Integer.ToString(numEncontrados) + ' substituições.' ;
-  gridPesquisa.Repaint ;
+  //gridPesquisa.Repaint ;
+  FormResize(gridPesquisa);
   frRevisor.salvarTodosArquivos;
 end;
 
@@ -606,6 +640,7 @@ begin
   gridPesquisa.DefaultColWidth := (frPesquisar.Width-10) div (numColunas-1);
   gridGlossario.DefaultColWidth := (frPesquisar.Width-pnBotoesConsultaGlossario.Width-10) div 2;
   gridPesquisa.ColWidths[0] := 50 ;
+  gridPesquisa.Repaint ;
 end;
 
 procedure TfrPesquisar.gridPesquisaClick(Sender: TObject);

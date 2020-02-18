@@ -3,7 +3,7 @@ object frPesquisar: TfrPesquisar
   Top = 0
   Caption = 'Pesquisar/Substituir Frases'
   ClientHeight = 557
-  ClientWidth = 966
+  ClientWidth = 968
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,7 +17,7 @@ object frPesquisar: TfrPesquisar
   object Splitter1: TSplitter
     Left = 0
     Top = 209
-    Width = 966
+    Width = 968
     Height = 3
     Cursor = crVSplit
     Align = alTop
@@ -27,7 +27,7 @@ object frPesquisar: TfrPesquisar
   object gridPesquisa: TStringGrid
     Left = 0
     Top = 212
-    Width = 966
+    Width = 968
     Height = 345
     TabStop = False
     Align = alClient
@@ -49,22 +49,22 @@ object frPesquisar: TfrPesquisar
   object pnPesquisa: TPanel
     Left = 0
     Top = 0
-    Width = 966
+    Width = 968
     Height = 209
     Align = alTop
     TabOrder = 1
     object PageControl1: TPageControl
       Left = 1
       Top = 1
-      Width = 964
+      Width = 966
       Height = 178
-      ActivePage = TabSheet3
+      ActivePage = TabSheet4
       Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet
         Caption = 'Pesquisar'
         DesignSize = (
-          956
+          958
           150)
         object Label3: TLabel
           Left = 10
@@ -83,7 +83,7 @@ object frPesquisar: TfrPesquisar
         object edFraseIngles: TEdit
           Left = 79
           Top = 17
-          Width = 864
+          Width = 866
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
@@ -91,18 +91,17 @@ object frPesquisar: TfrPesquisar
         object edFraseTraduzida: TEdit
           Left = 95
           Top = 55
-          Width = 848
+          Width = 850
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
         end
         object btPesquisarIngles: TBitBtn
-          Left = 10
+          Left = 12
           Top = 96
           Width = 173
           Height = 25
           Hint = 'Pesquisar frases em ingl'#234's'
-          Anchors = [akTop, akRight]
           Caption = 'Pesquisar Frase Ingl'#234's'
           Kind = bkAll
           NumGlyphs = 2
@@ -112,12 +111,11 @@ object frPesquisar: TfrPesquisar
           OnClick = btPesquisarInglesClick
         end
         object btPesquisarTraduzido: TBitBtn
-          Left = 202
+          Left = 204
           Top = 96
           Width = 170
           Height = 25
           Hint = 'Pesquisar frrr'
-          Anchors = [akTop, akRight]
           Caption = 'Pesquisar Frase Traduzida'
           Kind = bkAll
           NumGlyphs = 2
@@ -145,13 +143,14 @@ object frPesquisar: TfrPesquisar
         Caption = 'Substituir'
         ImageIndex = 1
         DesignSize = (
-          956
+          958
           150)
         object Label2: TLabel
           Left = 8
           Top = 24
           Width = 82
           Height = 13
+          AutoSize = False
           Caption = 'Texto Traduzido:'
         end
         object Label4: TLabel
@@ -159,12 +158,13 @@ object frPesquisar: TfrPesquisar
           Top = 59
           Width = 60
           Height = 13
+          AutoSize = False
           Caption = 'Novo Texto:'
         end
         object edTextoOriginal: TEdit
           Left = 96
           Top = 21
-          Width = 841
+          Width = 843
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
@@ -172,17 +172,16 @@ object frPesquisar: TfrPesquisar
         object edTextoSubstituir: TEdit
           Left = 94
           Top = 56
-          Width = 843
+          Width = 845
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
         end
         object btSubstituir: TBitBtn
-          Left = 194
+          Left = 196
           Top = 96
           Width = 97
           Height = 25
-          Anchors = [akTop, akRight]
           Caption = 'Substituir'
           Kind = bkRetry
           NumGlyphs = 2
@@ -192,12 +191,11 @@ object frPesquisar: TfrPesquisar
           OnClick = btSubstituirClick
         end
         object BitBtn2: TBitBtn
-          Left = 8
+          Left = 10
           Top = 96
           Width = 170
           Height = 25
           Hint = 'Pesquisar frrr'
-          Anchors = [akTop, akRight]
           Caption = 'Pesquisar Frase Traduzida'
           Kind = bkAll
           NumGlyphs = 2
@@ -211,34 +209,34 @@ object frPesquisar: TfrPesquisar
         Caption = 'Pesquisar Por Tamanho Frase'
         ImageIndex = 2
         OnShow = TabSheet3Show
-        DesignSize = (
-          956
-          150)
         object Label5: TLabel
           Left = 10
           Top = 20
           Width = 78
           Height = 13
+          AutoSize = False
           Caption = 'Tamanho Frase:'
         end
         object Label9: TLabel
           Left = 10
-          Top = 104
+          Top = 84
           Width = 83
           Height = 13
+          AutoSize = False
           Caption = 'Tamanhos ingl'#234's:'
         end
         object Label10: TLabel
           Left = 10
-          Top = 125
+          Top = 105
           Width = 99
           Height = 13
+          AutoSize = False
           Caption = 'Tamanhos tradu'#231#227'o:'
         end
         object lbTamanhosIngles: TLabel
           AlignWithMargins = True
           Left = 99
-          Top = 106
+          Top = 86
           Width = 4
           Height = 13
           Caption = '-'
@@ -246,7 +244,23 @@ object frPesquisar: TfrPesquisar
         object lbTamanhosTraduzido: TLabel
           AlignWithMargins = True
           Left = 115
-          Top = 125
+          Top = 105
+          Width = 4
+          Height = 13
+          Caption = '-'
+        end
+        object Label12: TLabel
+          Left = 10
+          Top = 126
+          Width = 99
+          Height = 13
+          AutoSize = False
+          Caption = 'Tamanhos espanhol:'
+        end
+        object lbTamanhosEspanhol: TLabel
+          AlignWithMargins = True
+          Left = 115
+          Top = 126
           Width = 4
           Height = 13
           Caption = '-'
@@ -254,14 +268,14 @@ object frPesquisar: TfrPesquisar
         object edTamanhoFrase: TEdit
           Left = 94
           Top = 17
-          Width = 79
+          Width = 81
           Height = 21
-          Anchors = [akLeft, akTop, akRight]
+          AutoSize = False
           TabOrder = 0
         end
         object btPesquisarLinhasInglesTamanhoMaiorTamanhoFrase: TBitBtn
           Left = 10
-          Top = 64
+          Top = 51
           Width = 377
           Height = 25
           Hint = 'Pesquisar frases com diferentes n'#250'meros de frases'
@@ -275,13 +289,11 @@ object frPesquisar: TfrPesquisar
         end
         object btPesquisarLinhasTraduzidasTamanhoMaiorTamanhoFrase: TBitBtn
           Left = 393
-          Top = 64
-          Width = 377
+          Top = 51
+          Width = 200
           Height = 25
           Hint = 'Pesquisar frases com diferentes n'#250'meros de frases'
-          Caption = 
-            'Pesquisar linhas traduzidas com frases maiores que tamanho da fr' +
-            'ase'
+          Caption = 'Pesquisar linhas traduzidas ...'
           Kind = bkAll
           NumGlyphs = 2
           ParentShowHint = False
@@ -292,12 +304,26 @@ object frPesquisar: TfrPesquisar
         object ckIgnorarLinhasComentario: TCheckBox
           Left = 192
           Top = 19
-          Width = 241
+          Width = 169
           Height = 17
           Caption = 'Ignorar linhas iniciadas com --'
           Checked = True
           State = cbChecked
           TabOrder = 3
+        end
+        object btPesquisarLinhasEspanholTamanhoMaiorTamanhoFrase: TBitBtn
+          Left = 599
+          Top = 51
+          Width = 210
+          Height = 25
+          Hint = 'Pesquisar frases com diferentes n'#250'meros de frases'
+          Caption = 'Pesquisar linhas espanhol ...'
+          Kind = bkAll
+          NumGlyphs = 2
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 4
+          OnClick = btPesquisarLinhasEspanholTamanhoMaiorTamanhoFraseClick
         end
       end
       object TabSheet4: TTabSheet
@@ -306,18 +332,19 @@ object frPesquisar: TfrPesquisar
         object Panel1: TPanel
           Left = 0
           Top = 0
-          Width = 956
+          Width = 958
           Height = 49
           Align = alTop
           TabOrder = 0
           DesignSize = (
-            956
+            958
             49)
           object Label8: TLabel
             Left = 2
             Top = 12
             Width = 47
             Height = 13
+            AutoSize = False
             Caption = 'Gloss'#225'rio:'
           end
           object Label11: TLabel
@@ -325,6 +352,7 @@ object frPesquisar: TfrPesquisar
             Top = 33
             Width = 567
             Height = 13
+            AutoSize = False
             Caption = 
               'Um arquivo de gloss'#225'rio cont'#233'm pares ingles=traduzido, onde trad' +
               'uzido pode conter v'#225'rias tradu'#231#245'es separadas por ;'
@@ -332,7 +360,7 @@ object frPesquisar: TfrPesquisar
           object edArquivoGlossario: TEdit
             Left = 55
             Top = 9
-            Width = 705
+            Width = 707
             Height = 21
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 0
@@ -343,6 +371,7 @@ object frPesquisar: TfrPesquisar
             Width = 98
             Height = 25
             Hint = 'Um arquivo de gloss'#225'rio cont'#233'm pa'
+            Anchors = [akTop, akRight]
             Caption = 'Carregar'
             ParentShowHint = False
             ShowHint = True
@@ -354,28 +383,25 @@ object frPesquisar: TfrPesquisar
             Top = 7
             Width = 75
             Height = 25
+            Anchors = [akTop, akRight]
             Caption = 'Limpar'
             TabOrder = 2
             OnClick = btLimparEdGlossrioClick
           end
         end
         object pnBotoesConsultaGlossario: TPanel
-          Left = 760
+          Left = 762
           Top = 49
           Width = 196
           Height = 101
           Align = alRight
           TabOrder = 1
-          DesignSize = (
-            196
-            101)
           object btPesquisarSelecionado: TBitBtn
             Left = 6
             Top = 6
             Width = 179
             Height = 25
             Hint = 'Pesquisar frases que cont'#233'm o termo do gloss'#225'rio'
-            Anchors = [akTop, akRight]
             Caption = 'Pesquisar Selecionado'
             Kind = bkAll
             NumGlyphs = 2
@@ -390,7 +416,6 @@ object frPesquisar: TfrPesquisar
             Width = 179
             Height = 25
             Hint = 'Pesquisar frases que cont'#233'm uma viola'#231#227'o do gloss'#225'rio'
-            Anchors = [akTop, akRight]
             Caption = 'Pesquisar Viola'#231#227'o Gloss'#225'rio'
             Kind = bkAll
             NumGlyphs = 2
@@ -405,7 +430,6 @@ object frPesquisar: TfrPesquisar
             Width = 179
             Height = 25
             Hint = 'Pesquisar frases em ingl'#234's'
-            Anchors = [akTop, akRight]
             Caption = 'Pesquisar Viola'#231#227'o Selecionado'
             Kind = bkAll
             NumGlyphs = 2
@@ -419,7 +443,7 @@ object frPesquisar: TfrPesquisar
           AlignWithMargins = True
           Left = 3
           Top = 52
-          Width = 754
+          Width = 756
           Height = 95
           Align = alClient
           ColCount = 2
@@ -436,12 +460,12 @@ object frPesquisar: TfrPesquisar
     object Panel2: TPanel
       Left = 1
       Top = 179
-      Width = 964
+      Width = 966
       Height = 29
       Align = alBottom
       TabOrder = 1
       DesignSize = (
-        964
+        966
         29)
       object lbInfo: TLabel
         Left = 12
@@ -460,6 +484,8 @@ object frPesquisar: TfrPesquisar
         Top = 11
         Width = 59
         Height = 13
+        Anchors = [akTop, akRight]
+        AutoSize = False
         Caption = 'Linha Inicial:'
       end
       object Label7: TLabel
@@ -467,23 +493,27 @@ object frPesquisar: TfrPesquisar
         Top = 11
         Width = 54
         Height = 13
+        Anchors = [akTop, akRight]
+        AutoSize = False
         Caption = 'Linha Final:'
       end
       object edLinhaInicial: TEdit
         Left = 717
         Top = 3
-        Width = 79
+        Width = 81
         Height = 21
-        Anchors = [akLeft, akTop, akRight]
+        Anchors = [akTop, akRight]
+        AutoSize = False
         TabOrder = 0
         OnExit = edLinhaInicialExit
       end
       object edLinhaFinal: TEdit
         Left = 868
         Top = 3
-        Width = 79
+        Width = 81
         Height = 21
-        Anchors = [akLeft, akTop, akRight]
+        Anchors = [akTop, akRight]
+        AutoSize = False
         TabOrder = 1
         OnExit = edLinhaFinalExit
       end

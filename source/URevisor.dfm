@@ -40,7 +40,7 @@ object frRevisor: TfrRevisor
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 1
-      Top = 459
+      Top = 377
       Width = 1236
       Height = 8
       Cursor = crVSplit
@@ -163,24 +163,27 @@ object frRevisor: TfrRevisor
     end
     object pnEspanhol: TPanel
       Left = 1
-      Top = 467
+      Top = 385
       Width = 1236
-      Height = 173
+      Height = 255
       Align = alClient
       Alignment = taLeftJustify
       TabOrder = 1
+      ExplicitTop = 467
+      ExplicitHeight = 173
       object Panel5: TPanel
         Left = 1
         Top = 1
         Width = 88
-        Height = 171
+        Height = 253
         Align = alLeft
         TabOrder = 0
+        ExplicitHeight = 171
         object Label2: TLabel
           Left = 1
           Top = 1
           Width = 53
-          Height = 169
+          Height = 251
           Align = alLeft
           Caption = 'Espanhol:'
           Font.Charset = DEFAULT_CHARSET
@@ -238,7 +241,7 @@ object frRevisor: TfrRevisor
         Left = 89
         Top = 1
         Width = 1146
-        Height = 171
+        Height = 253
         Align = alClient
         Color = 16777177
         Font.Charset = ANSI_CHARSET
@@ -253,22 +256,24 @@ object frRevisor: TfrRevisor
         Zoom = 100
         OnChange = MemoEspanholChange
         OnSelectionChange = MemoEspanholSelectionChange
+        ExplicitHeight = 171
       end
     end
     object pnTraduzido: TPanel
       Left = 1
       Top = 129
       Width = 1236
-      Height = 330
+      Height = 248
       Align = alTop
       TabOrder = 2
       object Panel6: TPanel
         Left = 1
         Top = 1
         Width = 88
-        Height = 328
+        Height = 246
         Align = alLeft
         TabOrder = 0
+        ExplicitHeight = 328
         object Label3: TLabel
           Left = 1
           Top = 1
@@ -357,7 +362,7 @@ object frRevisor: TfrRevisor
         Left = 186
         Top = 1
         Width = 1049
-        Height = 328
+        Height = 246
         Align = alClient
         Color = 13816575
         Font.Charset = ANSI_CHARSET
@@ -376,20 +381,22 @@ object frRevisor: TfrRevisor
         OnKeyPress = MemoTraduzidoKeyPress
         OnKeyUp = MemoTraduzidoKeyUp
         OnSelectionChange = MemoTraduzidoSelectionChange
+        ExplicitHeight = 328
       end
       object pnRepetido: TPanel
         Left = 89
         Top = 1
         Width = 97
-        Height = 328
+        Height = 246
         Align = alLeft
         TabOrder = 2
         Visible = False
+        ExplicitHeight = 328
         object btPegarPrimeiraTraducao: TBitBtn
           Left = 6
-          Top = 62
+          Top = 50
           Width = 85
-          Height = 56
+          Height = 46
           Hint = 'Aplica a primeira tradu'#231#227'o nessa linha.'
           Caption = 'Aplicar Primeira Tradu'#231#227'o'
           Default = True
@@ -452,9 +459,9 @@ object frRevisor: TfrRevisor
         end
         object btUsarPrimeiraTraducaoTodos: TBitBtn
           Left = 5
-          Top = 121
+          Top = 96
           Width = 86
-          Height = 56
+          Height = 46
           Hint = 
             'Aplica a primeira tradu'#231#227'o em todas as linhas com tradu'#231#227'o repet' +
             'ida.'
@@ -519,9 +526,9 @@ object frRevisor: TfrRevisor
         end
         object btUsarComoPrimeiraTraducao: TBitBtn
           Left = 6
-          Top = 183
+          Top = 142
           Width = 86
-          Height = 56
+          Height = 46
           Hint = 'Coloca essa tradu'#231#227'o no lugar da primeira tradu'#231#227'o.'
           Caption = 'Usar como Primeira Tradu'#231#227'o'
           Font.Charset = DEFAULT_CHARSET
@@ -586,7 +593,7 @@ object frRevisor: TfrRevisor
           Left = 6
           Top = 3
           Width = 85
-          Height = 56
+          Height = 46
           Hint = 'Juntar Primeira Tradu'#231#227'o'
           Cancel = True
           Caption = 'Juntar Primeira Tradu'#231#227'o'
@@ -650,9 +657,9 @@ object frRevisor: TfrRevisor
         end
         object btVerRepetidos: TBitBtn
           Left = 6
-          Top = 245
+          Top = 188
           Width = 86
-          Height = 56
+          Height = 46
           Hint = 'Coloca essa tradu'#231#227'o no lugar da primeira tradu'#231#227'o.'
           Caption = 'Mostrar Repetidos'
           Default = True
