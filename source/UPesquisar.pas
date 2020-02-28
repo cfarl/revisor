@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Grids, Vcl.StdCtrls, System.Types,
-  Vcl.Buttons, Vcl.ComCtrls, Character;
+  Vcl.Buttons, Vcl.ComCtrls, Character, Vcl.Menus;
 
 type
   TfrPesquisar = class(TForm)
@@ -60,6 +60,8 @@ type
     Label12: TLabel;
     lbTamanhosEspanhol: TLabel;
     btPesquisarLinhasEspanholTamanhoMaiorTamanhoFrase: TBitBtn;
+    PopupMenu1: TPopupMenu;
+    IgnorarVe1: TMenuItem;
     procedure gridPesquisaDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btPesquisarTraduzidoClick(Sender: TObject);
@@ -82,12 +84,17 @@ type
     procedure edLinhaFinalExit(Sender: TObject);
     procedure btPesquisarLinhasEspanholTamanhoMaiorTamanhoFraseClick(
       Sender: TObject);
+    procedure IgnorarVe1Click(Sender: TObject);
   private
     { Private declarations }
+    nomeArquivoIgnorarGlossario: string ;
+    linhasIgnorarGlossario: TStringList ;
+
     procedure pesquisar(coluna: integer; texto: string);
     procedure btPesquisarLinhasTamanhoMaiorTamanhoFrasePorTipo(colunaGrid: integer);
     function temTextoAntes(texto: string; pos: integer): boolean;
     function temTextoDepois(palavra: string; texto: string; pos: integer): boolean;
+    function estaListaIgnorarGlossario(linhaArquivo:integer; termoGlossario: string): boolean ;
     //procedure inicializaComponentesParaPesquisa ;
   public
     { Public declarations }
@@ -187,12 +194,16 @@ var i, tamanhoIngles, tamanhoTraduzido, tamanhoEspanhol: integer ;
     listaIngles, listaTraduzido, listaEspanhol: TStringList ;
     gridRevisor: TStringGrid;
     linhaInicio, linhaFim: integer;
+    maxFrasesIngles, maxFrasesTraduzido, maxFrasesEspanhol, aux: integer ;
 begin
  // Inicializa componentes
  gridRevisor := frRevisor.StringGrid1 ;
  lbTamanhosIngles.Caption := '' ;
  lbTamanhosTraduzido.Caption := '' ;
  lbTamanhosEspanhol.Caption := '' ;
+ maxFrasesIngles := 0;
+ maxFrasesTraduzido := 0;
+ maxFrasesEspanhol := 0;
  listaIngles := TStringList.Create;
  listaIngles.Duplicates := dupIgnore ;
  //listaIngles.CustomSort(SortDesc);
@@ -213,29 +224,47 @@ begin
   if (length(edLinhaFinal.Text) > 0) then linhaFim := Integer.Parse(edLinhaFinal.Text) ;
 
  // Constroi lista com os tamanhos maximos das frases
+ aux := 0 ;
  for i := linhaInicio to linhaFim do begin
     if(ckIgnorarLinhasComentario.Checked and (gridRevisor.Cells[1,i].StartsWith('--'))) //or gridRevisor.Cells[1,i].StartsWith('(REPETIDO)--')))
       then continue ;
 
+    // Recupera o número de frases e guarda se ele for o maior até agora
+    aux := length(frRevisor.Split(gridRevisor.Cells[1,i], '\n'));
+    if(aux > maxFrasesIngles) then maxFrasesIngles := aux ;
+
+    // Recupera o tamanho das frases e adiciona na lista
     tamanhoIngles := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[1,i]);
     if(listaIngles.IndexOf(Integer.ToString(tamanhoIngles)) < 0) then
       listaIngles.Add(Integer.ToString(tamanhoIngles)) ;
  end;
 
-  for i := linhaInicio to linhaFim do begin
+ aux := 0 ;
+ for i := linhaInicio to linhaFim do begin
     if(ckIgnorarLinhasComentario.Checked and (gridRevisor.Cells[2,i].StartsWith('--'))) //or gridRevisor.Cells[2,i].StartsWith('(REPETIDO) --')))
       then continue ;
 
+    // Recupera o número de frases e guarda se ele for o maior até agora
+    aux := length(frRevisor.Split(gridRevisor.Cells[2,i], '\n'));
+    if(aux > maxFrasesTraduzido) then maxFrasesTraduzido := aux ;
+
+    // Recupera o tamanho das frases e adiciona na lista
     tamanhoTraduzido := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[2,i]);
     if(listaTraduzido.IndexOf(Integer.ToString(tamanhoTraduzido)) < 0) then
       listaTraduzido.Add(Integer.ToString(tamanhoTraduzido)) ;
  end;
 
+ aux := 0 ;
  if(frRevisor.pnEspanhol.visible) then
  for i := linhaInicio to linhaFim do begin
     if(ckIgnorarLinhasComentario.Checked and (gridRevisor.Cells[3,i].StartsWith('--'))) //or gridRevisor.Cells[1,i].StartsWith('(REPETIDO)--')))
       then continue ;
 
+    // Recupera o número de frases e guarda se ele for o maior até agora
+    aux := length(frRevisor.Split(gridRevisor.Cells[3,i], '\n'));
+    if(aux > maxFrasesEspanhol) then maxFrasesEspanhol := aux ;
+
+    // Recupera o tamanho das frases e adiciona na lista
     tamanhoEspanhol := frRevisor.getTamanhoMaiorFrase(gridRevisor.Cells[3,i]);
     if(listaEspanhol.IndexOf(Integer.ToString(tamanhoEspanhol)) < 0) then
       listaEspanhol.Add(Integer.ToString(tamanhoEspanhol)) ;
@@ -248,9 +277,9 @@ begin
  listaTraduzido.CustomSort(SortDesc);
  listaEspanhol.CustomSort(SortDesc);
 
- lbTamanhosIngles.Caption := listaIngles.CommaText ;
- lbTamanhosTraduzido.Caption := listaTraduzido.CommaText ;
- lbTamanhosEspanhol.Caption := listaEspanhol.CommaText ;
+ lbTamanhosIngles.Caption := '(máx ' + Integer.ToString(maxFrasesIngles) + ' frases) ' + listaIngles.CommaText ;
+ lbTamanhosTraduzido.Caption := '(máx ' + Integer.ToString(maxFrasesTraduzido) + ' frases) ' + listaTraduzido.CommaText ;
+ lbTamanhosEspanhol.Caption := '(máx ' + Integer.ToString(maxFrasesEspanhol) + ' frases) ' + listaEspanhol.CommaText ;
 
 end;
 
@@ -295,6 +324,43 @@ procedure TfrPesquisar.btPesquisarSelecionadoClick(Sender: TObject);
 begin
   pesquisar(1, gridGlossario.Cells[0, gridGlossario.Row].Trim) ;
 end;
+
+//---------------------------------------------------------------------------------
+// Verifica se a linha com o termo em ingles está no ignore list do glossario
+//---------------------------------------------------------------------------------
+function TfrPesquisar.estaListaIgnorarGlossario(linhaArquivo:integer; termoGlossario: string): boolean ;
+var posRegraIgnorarGlossario: integer;
+    linhaIgnorarGlossario, termosIgnorarGlossario: string ;
+    termosIgnorar: TStringDynArray ;
+    k: integer ;
+Begin
+    // Se não foi carregada a lista de ignorar glossario, retorna aqui
+    if(linhasIgnorarGlossario = nil) then begin
+      estaListaIgnorarGlossario:= false ;
+      exit ;
+    end;
+
+    // Verifica se exite na lista de ignorar glossario uma entrada com a linha do arquivo
+    posRegraIgnorarGlossario := linhasIgnorarGlossario.IndexOfName(Integer.ToString(linhaArquivo)) ;
+    if(posRegraIgnorarGlossario < 0) then begin
+       estaListaIgnorarGlossario := false ;
+       exit ;
+    end;
+
+    // Recupera a regra para ignorar glossario
+    linhaIgnorarGlossario := linhasIgnorarGlossario.Names[posRegraIgnorarGlossario];
+    termosIgnorarGlossario := linhasIgnorarGlossario.ValueFromIndex[posRegraIgnorarGlossario];
+
+    // Verifica os valores que devem ser ignorados individuais
+    termoGlossario := termoGlossario.ToLower ;
+    termosIgnorar := frRevisor.Split(termosIgnorarGlossario, ';');
+    for k := 0 to length(termosIgnorar)-1 do Begin
+        if(termosIgnorar[k].ToLower = termoGlossario) then begin
+           estaListaIgnorarGlossario:= true ;
+            exit ;
+        end;
+    End;
+End;
 
 procedure TfrPesquisar.btPesquisarViolacaoGlossarioClick(Sender: TObject);
 var i, ig, pos, j, k, trad, numEncontrados : integer ;
@@ -342,6 +408,9 @@ begin
              break ;
           end;
       End;
+
+      // Verifica se a linha com o termo em ingles está no ignore list do glossario
+      if(not achou) and estaListaIgnorarGlossario(i, inglesGlossario) then achou:= true ;
 
       if(not achou) then begin
           numEncontrados := numEncontrados + 1;
@@ -440,6 +509,9 @@ begin
              break ;
           end;
     End;
+
+    // Verifica se a linha com o termo em ingles está no ignore list do glossario
+    if(not achou) and estaListaIgnorarGlossario(i, inglesGlossario) then achou:= true ;
 
     if(not achou) then begin
         numEncontrados := numEncontrados + 1;
@@ -583,7 +655,7 @@ end;
 
 procedure TfrPesquisar.Button1Click(Sender: TObject);
 var Values: TStringList ;
-    i, numLinhas: integer ;
+    i, numLinhas, teste: integer ;
 begin
   if (edArquivoGlossario.Text = '') and (OpenDialog1.Execute) then
      edArquivoGlossario.Text := OpenDialog1.FileName ;
@@ -593,6 +665,15 @@ begin
     Values := TStringList.Create;
     Values.LoadFromFile(edArquivoGlossario.Text);
     gridGlossario.RowCount := 0;
+
+    // Tenta carregar o arquivo contendo as linhas do glossario que serao ignoradas
+    nomeArquivoIgnorarGlossario := edArquivoGlossario.Text + '.ignorar_glossario' ;
+    if FileExists(nomeArquivoIgnorarGlossario) then
+    Begin
+      if(linhasIgnorarGlossario <> nil) then FreeAndNil(linhasIgnorarGlossario);
+      linhasIgnorarGlossario := TStringList.Create ;
+      linhasIgnorarGlossario.LoadFromFile(nomeArquivoIgnorarGlossario);
+    End;
 
      // Carrega glossario na grid
      numLinhas := 0 ;
@@ -604,8 +685,8 @@ begin
         if(Values.Strings[i].StartsWith('#')) then begin
            gridGlossario.Cells[0, i] := Values.Strings[i] ;
         end else begin
-           gridGlossario.Cells[0, i] := Values.Names[i];
-           gridGlossario.Cells[1, i] := Values.ValueFromIndex[i];
+           gridGlossario.Cells[0, i] := Values.Names[i].Trim;
+           gridGlossario.Cells[1, i] := Values.ValueFromIndex[i].Trim;
 
         end;
      end;
@@ -628,6 +709,8 @@ end;
 procedure TfrPesquisar.btLimparEdGlossrioClick(Sender: TObject);
 begin
 edArquivoGlossario.Text := '' ;
+nomeArquivoIgnorarGlossario := '' ;
+lbInfo.Caption := '' ;
 end;
 
 procedure TfrPesquisar.FormResize(Sender: TObject);
@@ -699,6 +782,49 @@ begin
 
   if gdFocused in State then
     grid.Canvas.DrawFocusRect(Rect);
+end;
+
+//Delete a row of a TStringGrid
+procedure DeleteRow(StringGrid: TStringGrid; ARow: integer);
+var
+  i, j: integer;
+begin
+  with StringGrid do
+  begin
+    for i := ARow to RowCount - 2 do
+      for j := 0 to ColCount - 1 do
+        Cells[j, i] := Cells[j, i + 1];
+    RowCount := RowCount - 1;
+  end;
+end;
+
+procedure TfrPesquisar.IgnorarVe1Click(Sender: TObject);
+var linha: string ;
+    termo: string ;
+    antigosValores: string ;
+    inicio, fim: integer ;
+begin
+  // Recupera a linha e o termo selecionados
+  linha := gridPesquisa.Cells[0, gridPesquisa.Row] ;
+  termo := gridPesquisa.Cells[1, gridPesquisa.Row] ;
+  inicio := termo.LastIndexOf('(') ;
+  fim := termo.LastIndexOf('->') ;
+  termo := termo.Substring(inicio+1, fim-inicio-1) ;
+  if(termo.Trim.Length = 0) then exit ;
+
+  // Adiciona o par na lista de linhas ignoradas
+  if(linhasIgnorarGlossario = nil) then linhasIgnorarGlossario := TStringList.Create ;
+  antigosValores := linhasIgnorarGlossario.Values[linha] ;
+  if (length(antigosValores) > 0) and (not antigosValores.Contains(termo)) then begin
+    termo := antigosValores + ';' + termo ;
+    linhasIgnorarGlossario.Delete(linhasIgnorarGlossario.IndexOfName(linha));
+  end;
+  linhasIgnorarGlossario.AddPair(linha, termo) ;
+  // Remove a linha da grid
+  DeleteRow(gridPesquisa, gridPesquisa.Row);
+  // Salva o arquivo
+  linhasIgnorarGlossario.Sort;
+  linhasIgnorarGlossario.SaveToFile(nomeArquivoIgnorarGlossario);
 end;
 
 end.

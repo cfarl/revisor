@@ -2,7 +2,7 @@ Ferramenta de Apoio para Tradução e Revisão de Textos
 
 <a href="https://ibb.co/St8XwGG"><img src="https://i.ibb.co/Mc4DkQQ/tool.jpg" alt="tool" border="0"></a>
 
-Última versão: 1.2019.11.07 <a href="https://github.com/cfarl/revisor/blob/master/distribuicao/ProjetoRevisor_2019_11_07.zip">Download</a>
+Última versão: 1.2020.02.28 <a href="https://github.com/cfarl/revisor/blob/master/distribuicao/ProjetoRevisor_2020_02_28.zip">Download</a>
 
 Funcionalidades básicas: 
 
@@ -30,11 +30,17 @@ Você pode passar para a próxima linha da grid clicando nela ou, usando crtl + 
 
 Selecione um texto no editor de tradução ou no editor contendo a frase em inglês e pressione a tecla ctrl + G. Será exibida uma janela com a tradução da seleção no Google Translator, Reverso Context, Urban Dictionary, Bing e Imagens do Google.
 
-6) Recursos adicionais
+6) Pesquisa por tamanho de frases, por frases em inglês e frases traduzidas
+
+7) Pesquisa por glossário
+
+Crie um arquivo de texto (glossário) com linhas no formato termo=tradução1;tradução2;...;traduçãoN e use esse arquivo para verificar a conformidade do texto com o glossário.
+
+8) Recursos adicionais
 
 A tool permite visualizar as frases em inglês, traduzida e espanhol com um editor em cima do outro, ou um ao lado do outro. Ela mostra o número de linhas carregadas na grid. Ela mostra a quantidade de arquivos carregados na grid, quando selecionada a carga por pasta. Na carga por pasta, são exibidos botões que permitem navegar para o próximo arquivo e o arquivo anterior. A tool possui um mode de edição noturna, que exibe a interface em cores escuras.
 
-7) Proxy
+9) Proxy
 
 A consulta nos sites de tradução pode requerer o uso de um proxy. Se isso for necessário, crie um arquivo de nome proxy.properties, na pasta do revisor, e adicione nesse arquivo as seguintes linhas:
 
@@ -43,11 +49,8 @@ porta=<porta do servidor proxy>
 user=<usuário do servidor proxy>
 password=<senha do usuário do servidor proxy>
 
-8) Recursos para o futuro
 
-Adição de pesquisa por palavras.
 
-Adição de glossário para análise da tradução de seus termos nas frases da grid.
 
 
 

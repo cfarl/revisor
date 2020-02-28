@@ -41,6 +41,7 @@ object frPesquisar: TfrPesquisar
     FixedRows = 0
     Options = [goDrawFocusSelected, goRowSelect]
     ParentColor = True
+    PopupMenu = PopupMenu1
     ScrollBars = ssVertical
     TabOrder = 0
     OnClick = gridPesquisaClick
@@ -58,7 +59,7 @@ object frPesquisar: TfrPesquisar
       Top = 1
       Width = 966
       Height = 178
-      ActivePage = TabSheet4
+      ActivePage = TabSheet3
       Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet
@@ -522,5 +523,13 @@ object frPesquisar: TfrPesquisar
   object OpenDialog1: TOpenDialog
     Left = 768
     Top = 40
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 528
+    Top = 304
+    object IgnorarVe1: TMenuItem
+      Caption = 'Ignorar essa verifica'#231#227'o'
+      OnClick = IgnorarVe1Click
+    end
   end
 end
